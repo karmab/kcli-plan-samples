@@ -8,3 +8,9 @@ this is a collection of plans i use to deploy :
 - foreman
 
 and others!
+
+It can also be used through product by adding the repo with
+
+```
+kcli repo -u https://github.com/karmab/kcli-plans karmab
+```

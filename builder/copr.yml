@@ -7,7 +7,7 @@ parameters:
     template: Fedora-Cloud-Base-28-1.1.x86_64.qcow2
 
 copr:
- teaplate: {{ template }}
+ template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ memory }}
  nets:
