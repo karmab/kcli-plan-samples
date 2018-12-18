@@ -1,0 +1,42 @@
+apiVersion: kubevirt.io/v1alpha2
+kind: VirtualMachine
+metadata:
+  creationTimestamp: 2018-07-04T15:03:08Z
+  generation: 1
+  labels:
+    kubevirt.io/os: linux
+  name: ocp
+spec:
+  running: true
+  template:
+    labels:
+      kubevirt.io/domain: ocp
+    metadata:
+      creationTimestamp: null
+    spec:
+      domain:
+        cpu:
+          cores: 2
+        devices:
+          disks:
+          - disk:
+              bus: virtio
+            name: disk0
+            volumeName: ocp-vol0
+          - cdrom:
+              bus: sata
+              readonly: true
+            name: cloudinitdisk
+            volumeName: cloudinitvolume
+        machine:
+          type: q35
+        resources:
+          requests:
+            memory: 8192M
+      volumes:
+      - name: ocp-vol0
+        containerDisk:
+          image: kubevirt/fedora-cloud-container-disk-demo
+      - cloudInitNoCloud:
+		  userDataBase64: "DATA"
+        name: cloudinitvolume

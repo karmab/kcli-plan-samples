@@ -238,3 +238,8 @@
   file: tower/downstream.yml
   description:  Downstream tower 3.0.3
   numvms: 1
+
+- name: example
+  file: example.yml
+  description: Sample plan
+  numvms: 1
