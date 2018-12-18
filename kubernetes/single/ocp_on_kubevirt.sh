@@ -5,7 +5,7 @@ service iptables save
 echo fedora | passwd --stdin fedora
 mkdir /home/fedora/.ssh
 chmod 700 /home/fedora/.ssh
-echo PUBKEY >> /home/fedora/ssh/authorized_keys
+echo PUBKEY >> /home/fedora/.ssh/authorized_keys
 chmod 600 /home/fedora/.ssh/authorized_keys
 yum -y install wget docker git
 wget -P /root/ https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64

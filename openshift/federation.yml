@@ -13,8 +13,22 @@ parameters:
   knative: false
   notifycmd: kubectl -n federation-system describe federatedclusters
   go_version: 1.11.1
-  cluster1: federer1
-  cluster2: federer2
+  cluster: federer
+  loadbalancer: false
+
+  
+{% if loadbalancer %}
+{{ cluster }}lb:
+ type: loadbalancer
+ ports:
+ - 80
+{% for port in range(30000, 30010) %}
+ - {{ "%03.d" | format(port) }}
+{% endfor %}
+ vms:
+  - {{ cluster }}1
+  - {{ cluster }}2
+{% endif %}
 
 nfs:
  template: {{ template }}
@@ -25,7 +39,7 @@ nfs:
  scripts: 
   - nfs.sh
 
-{{ cluster1 }}:
+{{ cluster }}1:
  template: {{ template }}
  numcpus: 2
  memory: {{ memory }}
@@ -62,7 +76,7 @@ nfs:
   - skydive.yml
 {% endif %}
 
-{{ cluster2 }}:
+{{ cluster }}2:
  template: {{ template }}
  numcpus: 2
  memory: {{ memory }}

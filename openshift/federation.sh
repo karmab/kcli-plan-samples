@@ -7,8 +7,8 @@ echo alias contextlist=\"oc config get-contexts\" >> /root/.bashrc
 echo alias oc1=\"oc --context=cluster1\" >> /root/.bashrc
 echo alias oc2=\"oc --context=cluster2\" >> /root/.bashrc
 echo alias oclogin=\"oc config use cluster2 && oc login -u admin -p admin ; oc config use cluster1 && oc login -u admin -p admin\" >> /root/.bashrc
-export CLUSTER1=`dig +short {{ cluster1 }}.default`.xip.io
-export CLUSTER2=`dig +short {{ cluster2 }}.default`.xip.io
+export CLUSTER1=`dig +short {{ cluster }}1.default`.xip.io
+export CLUSTER2=`dig +short {{ cluster }}2.default`.xip.io
 sleep 120
 oc login --insecure-skip-tls-verify=true -u admin -p admin https://$CLUSTER2:8443
 oc config rename-context `oc config current-context` cluster2
