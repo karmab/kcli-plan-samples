@@ -41,8 +41,8 @@ m0{{ master + 1 }}:
   - path: /root/ovirt_fix_inventory.sh
     origin: multi/ovirt_fix_inventory.sh
 {% endif %}
-  - path: /root/install.sh
-    origin: multi/install.sh
+  - path: /root/install_openshift.sh
+    origin: multi/install_openshift.sh
  scripts: 
   - multi/subscription.sh
   - multi/pre.sh
