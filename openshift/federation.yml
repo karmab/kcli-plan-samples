@@ -34,8 +34,10 @@ nfs:
  template: {{ template }}
  numcpus: 2
  memory: {{ memory }}
- domain: default
+ domain: {{ domain }}
  reservedns: true
+ disks:
+  -  60
  scripts: 
   - nfs.sh
 
@@ -43,7 +45,7 @@ nfs:
  template: {{ template }}
  numcpus: 2
  memory: {{ memory }}
- domain: default
+ domain: {{ domain }}
  reservedns: true
  notify: true
  notifycmd: {{ notifycmd }}
@@ -80,7 +82,7 @@ nfs:
  template: {{ template }}
  numcpus: 2
  memory: {{ memory }}
- domain: default
+ domain: {{ domain }}
  reservedns: true
  nets:
   - default
