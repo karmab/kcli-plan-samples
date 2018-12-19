@@ -8,7 +8,6 @@ parameters:
   domain: default
   reservedns: false
   disk_size: 30
-  skydive: false
   istio: false
   knative: false
 
@@ -26,20 +25,14 @@ origin:
  scripts: 
   - requirements.sh
   - origin.sh
-{% if skydive %}
-  - skydive.sh
-{% endif %}
 {% if istio %}
   - istio.sh
 {% if knative %}
   - knative.sh
 {% endif %}
 {% endif %}
- files:
 {% if istio %}
+ files:
   - istio_patch.sh
   - istio_fix_sidecar.sh
-{% endif %}
-{% if skydive %}
-  - skydive.yml
 {% endif %}
