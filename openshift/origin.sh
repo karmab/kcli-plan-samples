@@ -4,6 +4,7 @@ sed -i 's@OPTIONS=.*@OPTIONS="--selinux-enabled --insecure-registry 172.30.0.0/1
 systemctl start docker --ignore-dependencies
 export HOME=/root
 {% if type == 'aws' or type == 'gcp' %}
+sysctl -w net.ipv4.ip_forward=1
 export DNS={{ name }}.{{ domain }}
 {% else %}
 export DNS=`ip a l  eth0 | grep 'inet ' | cut -d' ' -f6 | awk -F'/' '{ print $1}'`.xip.io
