@@ -7,3 +7,6 @@ cp /root/openshift.local.clusterup/openshift-controller-manager/master-config.ya
 oc ex config patch /root/openshift.local.clusterup/kube-apiserver/master-config.yaml.prepatch -p "$(cat /root/openshift.local.clusterup/kube-apiserver/master-config.patch)" > /root/openshift.local.clusterup/kube-apiserver/master-config.yaml
 oc ex config patch /root/openshift.local.clusterup/openshift-apiserver/master-config.yaml.prepatch -p "$(cat /root/openshift.local.clusterup/openshift-apiserver/master-config.patch)" > /root/openshift.local.clusterup/openshift-apiserver/master-config.yaml
 oc ex config patch /root/openshift.local.clusterup/openshift-controller-manager/master-config.yaml.prepatch -p "$(cat /root/openshift.local.clusterup/openshift-controller-manager/master-config.patch)" > /root/openshift.local.clusterup/openshift-controller-manager/master-config.yaml
+{% if not istio %}
+reboot
+{% endif %}

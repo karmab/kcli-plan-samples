@@ -1,22 +1,12 @@
 parameters:
-  template: CentOS-7-x86_64-GenericCloud.qcow2
-  memory: 8192
-  openshift_version: v3.11
-  federation_version: "canary"
-  asb: false
-  admin_user: admin
-  admin_password: admin
-  domain: default
-  disk_size: 30
-  skydive: false
-  istio: false
-  knative: false
-  notifycmd: kubectl -n federation-system describe federatedclusters
-  go_version: 1.11.1
+  baseplan: origin.yml
   cluster: federer
+  federation_version: "canary"
+  go_version: 1.11.1
   loadbalancer: false
+  patch_master: false
+  notifycmd: kubectl -n federation-system describe federatedclusters
 
-  
 {% if loadbalancer %}
 {{ cluster }}lb:
  type: loadbalancer
@@ -50,7 +40,10 @@ nfs:
  notify: true
  notifycmd: {{ notifycmd }}
  nets:
-  - default
+ - name: default
+{% if type == 'gcp'%}
+   alias: ['*']
+{% endif %}
  disks:
   - size: {{ disk_size }}
  pool: default
@@ -59,24 +52,13 @@ nfs:
   - origin.sh
   - nfs_federation.sh
   - federation.sh
-{% if skydive %}
-  - skydive.sh
-{% endif %}
-{% if istio %}
-  - istio.sh
-{% if knative %}
-  - knative.sh
-{% endif %}
+{% if patch_master %}
+  - patch_master.sh
 {% endif %}
  files:
   - nfs.yml
-{% if istio %}
-  - istio_patch.sh
-  - istio_fix_sidecar.sh
-{% endif %}
-{% if skydive %}
-  - skydive.yml
-{% endif %}
+  - path: /root/master-config.patch
+    origin: istio.patch
 
 {{ cluster }}2:
  template: {{ template }}
@@ -93,21 +75,10 @@ nfs:
   - requirements.sh
   - origin.sh
   - nfs_federation.sh
-{% if skydive %}
-  - skydive.sh
-{% endif %}
-{% if istio %}
-  - istio.sh
-{% if knative %}
-  - knative.sh
-{% endif %}
+{% if patch_master %}
+  - patch_master.sh
 {% endif %}
  files:
   - nfs.yml
-{% if istio %}
-  - istio_patch.sh
-  - istio_fix_sidecar.sh
-{% endif %}
-{% if skydive %}
-  - skydive.yml
-{% endif %}
+  - path: /root/master-config.patch
+    origin: istio.patch
