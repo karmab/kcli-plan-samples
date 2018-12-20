@@ -18,7 +18,10 @@ origin:
  domain: default
  reservedns: {{ reservedns }}
  nets:
-  - default
+ - name: default
+{% if type == 'gcp'%}
+   alias: ['*']
+{% endif %}
  disks:
   - size: {{ disk_size }}
  pool: default
