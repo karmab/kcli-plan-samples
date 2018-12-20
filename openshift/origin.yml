@@ -9,7 +9,9 @@ parameters:
   reservedns: false
   disk_size: 30
   istio: false
+  istio_version: 1.0.4
   knative: false
+  notifycmd: oc get pod --all-namespaces && reboot
 
 origin:
  template: {{ template }}
@@ -17,6 +19,7 @@ origin:
  memory: {{ memory }}
  domain: default
  reservedns: {{ reservedns }}
+ notify: true
  nets:
  - name: default
 {% if type == 'gcp'%}

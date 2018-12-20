@@ -1,5 +1,10 @@
-curl -L https://github.com/istio/istio/releases/download/1.0.3/istio-1.0.3-linux.tar.gz | tar xz
-cd istio-1.0.3
+ISTIO={{ istio_version }}
+if [ "$ISTIO" == "latest" ] ; then
+curl -L https://git.io/getLatestIstio | sh -
+else
+curl -L https://github.com/istio/istio/releases/download/$ISTIO/istio-$ISTIO-linux.tar.gz | tar xz
+fi
+cd istio-*.*.*
 export ISTIO_HOME=`pwd`
 export PATH=$ISTIO_HOME/bin:$PATH
 oc apply -f install/kubernetes/helm/istio/templates/crds.yaml
@@ -14,6 +19,7 @@ oc adm policy add-scc-to-user anyuid -z istio-security-post-install-account -n i
 oc adm policy add-scc-to-user anyuid -z istio-sidecar-injector-service-account -n istio-system
 oc adm policy add-scc-to-user anyuid -z prometheus -n istio-system
 oc adm policy add-scc-to-user anyuid -z istio-citadel-service-account -n istio-system
+oc label namespace default istio-injection=enabled
 oc adm policy add-scc-to-user privileged -z default -n default
 oc apply -f install/kubernetes/istio-demo.yaml
 oc project istio-system

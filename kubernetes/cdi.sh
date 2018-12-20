@@ -6,5 +6,5 @@ kubectl create clusterrolebinding cdi --clusterrole=edit --user=system:serviceac
 kubectl create clusterrolebinding cdi-apiserver --clusterrole=cluster-admin --user=system:serviceaccount:kubevirt:cdi-apiserver
 wget https://github.com/kubevirt/containerized-data-importer/releases/download/${CDI}/cdi-controller.yaml
 sed -i "s/kube-system/kubevirt/" cdi-controller.yaml
-kubectl apply -f cdi-controller.yaml -n kubevirt
+kubectl apply -f cdi-controller.yaml -n kubevirt --validate=false
 kubectl expose svc cdi-uploadproxy -n kubevirt
