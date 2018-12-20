@@ -1,5 +1,5 @@
 parameters:
- nodes: 3
+ nodes: 2
  domain: karmalabs.com
  template: CentOS-7-x86_64-GenericCloud.qcow2
  deploy_app: false
@@ -7,14 +7,22 @@ parameters:
  dashboard: true
  nfs: false
  sdn: flannel
+ k8s_version: 1.11.6
+ flannel_version: master
+ multus: true
+ master_memory: 6144
+ node_memory: 4096
+ notifycmd: "kubectl get pod --all-namespaces"
 
 kumaster:
  template: {{ template }}
  numcpus: 2
- memory: 4096
+ memory: {{ master_memory }}
  reservedns: true
  sharedkey: true
  domain: {{ domain }}
+ notifycmd: {{ notifycmd }}
+ notify: true
  nets:
   - default
  disks:
@@ -23,26 +31,32 @@ kumaster:
  files:
   - path: /etc/yum.repos.d/kubernetes.repo
     origin: kubernetes.repo
-  - path: /root/kube-flannel.yml
-    origin: kube-flannel.yml
-  - path: /root/kube-flannel-rbac.yml
-    origin: kube-flannel-rbac.yml
 {% if nfs %}
-  - path: /root/nfs.yml
-    origin: nfs.yml
-  - path: /root/nfs.sh
-    origin: nfs.sh
+  - nfs.yml
+  - nfs.sh
+{% endif %}
+{% if multus %}
+  - multus.yml
+  - cni-plugins.yml
+  - l2-bridge.yml
 {% endif %}
  scripts: 
+{% if 'xenial' in template or 'yaketty' in template or 'zesty' in template or 'artful' in template or 'bionic' in template or 'cosmic' in template %}
+  - pre_ubuntu.sh
+{% else %}
   - pre.sh
-  - master.sh
+{% endif %}
+  - kubernetes.sh
+{% if dashboard %}
+  - dashboard.sh
+{% endif %}
+{% if multus %}
+  - multus.sh
+{% endif %}
 {% if deploy_app %}
   - app.sh
 {% endif %}
   - heapster.sh
-{% if dashboard %}
-  - dashboard.sh
-{% endif %}
 {% if skydive %}
   - skydive.sh
 {% endif %}
@@ -52,7 +66,7 @@ kumaster:
 kunode0{{ number + 1 }}:
  template: {{ template }}
  numcpus: 2
- memory: 4096
+ memory: {{ node_memory }}
  reservedns: true
  sharedkey: true
  domain: {{ domain }}
@@ -65,6 +79,10 @@ kunode0{{ number + 1 }}:
   - path: /etc/yum.repos.d/kubernetes.repo
     origin: kubernetes.repo
  scripts: 
+{% if 'xenial' in template or 'yaketty' in template or 'zesty' in template or 'artful' in template or 'bionic' in template or 'cosmic' in template %}
+  - pre_ubuntu.sh
+{% else %}
   - pre.sh
+{% endif %}
 {% endfor %}
 {% endif %}

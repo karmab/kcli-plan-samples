@@ -37,5 +37,6 @@ origin:
 {% if istio %}
  files:
   - istio_patch.sh
-  - istio_fix_sidecar.sh
+  - path: /root/master-config.patch
+    origin: istio.patch
 {% endif %}

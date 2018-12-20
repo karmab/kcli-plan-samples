@@ -18,6 +18,7 @@ parameters:
  glusterfs: false
  version: '3.11'
  deploy: true
+ notifycmd: "tail -10 /var/log/ansible.log"
 
 {% for master in range(0, masters) %}
 m0{{ master + 1 }}:
@@ -49,7 +50,7 @@ m0{{ master + 1 }}:
 {% if deploy and master == 0 %}
   - multi/install.sh
  notify: true
- notifycmd: "oc get pod --all-namespaces"
+ notifycmd: {{ notifycmd }}
 {% endif %}
 {% endfor %}
 
