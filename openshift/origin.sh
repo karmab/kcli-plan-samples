@@ -16,7 +16,10 @@ oc cluster add automation-service-broker
 {% endif %}
 oc login -u system:admin
 oc adm policy add-cluster-role-to-user cluster-admin {{ admin_user }}
-{% if istio %}
+{% if istio or patch_master %}
 sh /root/istio_patch.sh
 {% endif %}
 docker update --restart=always origin
+{% if patch_master %}
+reboot
+{% endif %}

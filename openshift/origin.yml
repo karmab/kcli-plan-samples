@@ -11,6 +11,7 @@ parameters:
   istio: false
   istio_version: 1.0.4
   knative: false
+  patch_master: false
   notifycmd: oc get pod --all-namespaces
 
 origin:
@@ -31,7 +32,7 @@ origin:
  scripts: 
   - requirements.sh
   - origin.sh
-{% if istio %}
+{% if istio or patch_master %}
   - istio_knative.sh
  files:
   - istio_patch.sh

@@ -65,7 +65,7 @@
 
 - name: kubevirt_kubernetes
   file: kubernetes/kubevirt.yml
-  description: Latest kubernetes and kubevirt with single master and multiple nodes
+  description: Latest kubernetes and kubevirt with single master and multiple nodes, along with cdi and web ui
   numvms: 2
 
 - name: manageiq
@@ -87,7 +87,7 @@
 
 - name: origin
   file: openshift/origin.yml
-  description: Upstream Openshift based on oc cluster up
+  description: Upstream Openshift based on oc cluster up with istio, knative and asb
   numvms: 1
   comments: openshift_version can also be set to to an older one and asb enabled
 
