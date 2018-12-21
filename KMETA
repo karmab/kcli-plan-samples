@@ -2,6 +2,7 @@
   file: builder/copr.yml
   description: Build kcli rpm ( Only useful for me)
   numvms: 1
+  stars: 5
 
 - name: foreman
   file: foreman/upstream.yml
@@ -57,6 +58,7 @@
   description: Latest kubernetes with single master and multiple nodes
   comments: set nodes to 0 for a single all in one with master
   numvms: 3
+  stars: 5
 
 - name: minikube
   file: kubernetes/minikube.yml
@@ -67,6 +69,7 @@
   file: kubernetes/kubevirt.yml
   description: Latest kubernetes and kubevirt with single master and multiple nodes, along with cdi and web ui
   numvms: 2
+  stars: 5
 
 - name: manageiq
   file: manageiq/upstream.yml
@@ -90,12 +93,14 @@
   description: Upstream Openshift based on oc cluster up with istio, knative and asb
   numvms: 1
   comments: openshift_version can also be set to to an older one and asb enabled
+  stars: 5
 
 - name: installer
   file: openshift/installer.yml
   description: Upstream Compilation of openshift new installer
   numvms: 1
   comments: you ll need to download rhcos-qemu.qcow2 from somewhere 
+  stars: 4
 
 - name: ocp
   file: openshift/downstream.yml
@@ -108,6 +113,7 @@
   description: Downstream ocp with arbitrary number of nodes
   comments: router and registry located on infra if present. gluster uses first 3 infra if present, otherwise 1 master and 2 infra
   numvms: 4
+  stars: 5
 
 - name: multi39
   file: openshift/multi39.yml
@@ -119,6 +125,7 @@
   file: openshift/helm.yml
   description: Helm based on oc cluster up
   numvms: 1
+  stars: 4
 
 - name: minishift
   file: openshift/minishift.yml
@@ -129,6 +136,7 @@
   file: openshift/kubevirt.yml
   description: Upstream Kubevirt all in one
   numvms: 1
+  stars: 5
 
 - name: fission
   file: openshift/fission.yml
@@ -150,6 +158,7 @@
   description: Upstream packstack
   numvms: 1
   comments: Version can be set to queens,pike,ocata,newton,liberty
+  stars: 5
 
 - name: downstream
   file: openstack/downstream.yml
@@ -186,6 +195,7 @@
   file: ovirt/upstream.yml
   description: Upstream ovirt 4.2 all in one with nfs
   numvms: 1
+  stars: 5
 
 - name: ovirt3
   file: ovirt/upstream3.yml
@@ -227,13 +237,9 @@
   file: pxe/kcli_plan.yml
   description: pxeserver with optional kickstart and test machine. Override iso url if needed
   numvms: 1
+  stars: 5
 
 - name: tower
   file: tower/downstream.yml
   description:  Downstream tower 3.0.3
-  numvms: 1
-
-- name: example
-  file: example.yml
-  description: Sample plan
   numvms: 1

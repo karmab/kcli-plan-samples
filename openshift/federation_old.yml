@@ -10,11 +10,6 @@ parameters:
 {% if loadbalancer %}
 {{ cluster }}lb:
  type: loadbalancer
- nets:
- - name: default
-{% if alias is defined %}
-   alias: {{ alias }}
-{% endif %}
  ports:
  - 80
 {% for port in range(30000, 30010) %}
@@ -37,10 +32,24 @@ nfs:
   - nfs.sh
 
 {{ cluster }}1:
- basevm: origin
+ template: {{ template }}
+ numcpus: 2
+ memory: {{ memory }}
+ domain: {{ domain }}
  reservedns: true
+ notify: true
  notifycmd: {{ notifycmd }}
+ nets:
+ - name: default
+{% if type == 'gcp'%}
+   alias: ['*']
+{% endif %}
+ disks:
+  - size: {{ disk_size }}
+ pool: default
  scripts: 
+  - requirements.sh
+  - origin.sh
   - nfs_federation.sh
   - federation.sh
 {% if patch_master %}
@@ -52,10 +61,19 @@ nfs:
     origin: istio.patch
 
 {{ cluster }}2:
- basevm: origin
+ template: {{ template }}
+ numcpus: 2
+ memory: {{ memory }}
+ domain: {{ domain }}
  reservedns: true
- notifycmd: false
+ nets:
+  - default
+ disks:
+  - size: {{ disk_size }}
+ pool: default
  scripts: 
+  - requirements.sh
+  - origin.sh
   - nfs_federation.sh
 {% if patch_master %}
   - patch_master.sh

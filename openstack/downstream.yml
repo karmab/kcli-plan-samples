@@ -1,10 +1,10 @@
 parameters:
- template: rhel-server-7.5-x86_64-kvm.qcow2
+ template: rhel-server-7.6-x86_64-kvm.qcow2
  user: testk
  password: testk
  project: testk
  admin_password: unix1234
- version: queen
+ version: rocky
 
 {{ version }}:
  template: {{ template }}

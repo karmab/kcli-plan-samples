@@ -1,16 +1,9 @@
 parameters:
+ baseplan: origin.yml
  docker_disk_size: 60
- openshift_version: v3.11
 
 openfaas:
- template: CentOS-7-x86_64-GenericCloud.qcow2
- numcpus: 2
- memory: 6144
- nets:
-  - default
- disks:
-  - size: 10
-  - size: {{ docker_disk_size }}
+ basevm: origin
  pool: default
  files:
   - path: /root/test.sh
@@ -23,6 +16,4 @@ openfaas:
   - path: /etc/profile.d/openfaas.sh
     origin: openfaas_profile.sh
  scripts: 
-  - requirements.sh
-  - origin.sh
   - openfaas.sh
