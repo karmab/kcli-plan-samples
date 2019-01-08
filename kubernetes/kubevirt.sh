@@ -6,8 +6,6 @@ yum -y install xorg-x11-xauth virt-viewer wget
 sed -i "s/SELINUX=enforcing/SELINUX=permissive/" /etc/selinux/config
 setenforce 0
 kubectl config set-context `kubectl config current-context` --namespace=kube-system
-#grep -q vmx /proc/cpuinfo || kubectl create configmap -n kubevirt kubevirt-config --from-literal debug.useEmulation=true
-kubectl create configmap kubevirt-config --from-literal feature-gates=LiveMigration,DataVolumes -n kubevirt
 if [ "$KUBEVIRT" == 'master' ] || [ "$KUBEVIRT" -eq "$KUBEVIRT" ] ; then
   yum -y install git make
   cd /root
@@ -34,3 +32,4 @@ else
   chmod u+x /usr/bin/virtctl
 fi
 kubectl config set-context `kubectl config current-context` --namespace=default
+kubectl create configmap kubevirt-config --from-literal feature-gates=LiveMigration,DataVolumes -n kubevirt
