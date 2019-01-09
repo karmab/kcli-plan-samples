@@ -29,7 +29,11 @@ openshift_portal_net=172.30.0.0/16
 openshift_disable_check=disk_availability,memory_availability,docker_image_availability
 openshift_storageclass_default = False
 
+{% if crio %}
+openshift_node_groups=[{'name': 'master', 'labels': ['node-role.kubernetes.io/master=true', 'node-role.kubernetes.io/compute=true', 'runtime=cri-o'],'edits': [{ 'key': 'kubeletArguments.container-runtime','value': ['remote']}, { 'key': 'kubeletArguments.container-runtime-endpoint','value': ['/var/run/crio/crio.sock']}, { 'key': 'kubeletArguments.image-service-endpoint','value': ['/var/run/crio/crio.sock']}, { 'key': 'kubeletArguments.runtime-request-timeout','value': ['10m']}]}, {'name': 'infra', 'labels': ['node-role.kubernetes.io/infra=true', 'node-role.kubernetes.io/compute=true', 'runtime=cri-o'],'edits': [{ 'key': 'kubeletArguments.container-runtime','value': ['remote']}, { 'key': 'kubeletArguments.container-runtime-endpoint','value': ['/var/run/crio/crio.sock']}, { 'key': 'kubeletArguments.image-service-endpoint','value': ['/var/run/crio/crio.sock']}, { 'key': 'kubeletArguments.runtime-request-timeout','value': ['10m']}]}, {'name': 'compute', 'labels': ['node-role.kubernetes.io/compute=true', 'runtime=cri-o'],'edits': [{ 'key': 'kubeletArguments.container-runtime','value': ['remote']}, { 'key': 'kubeletArguments.container-runtime-endpoint','value': ['/var/run/crio/crio.sock']}, { 'key': 'kubeletArguments.image-service-endpoint','value': ['/var/run/crio/crio.sock']}, { 'key': 'kubeletArguments.runtime-request-timeout','value': ['10m']}]}]
+{% else %}
 openshift_node_groups=[{'name': 'master', 'labels': ['node-role.kubernetes.io/master=true', 'node-role.kubernetes.io/compute=true']},{'name': 'infra', 'labels': ['node-role.kubernetes.io/infra=true', 'node-role.kubernetes.io/compute=true']},{'name': 'compute', 'labels': ['node-role.kubernetes.io/compute=true']}]
+{% endif %}
 openshift_disable_check=disk_availability,memory_availability,docker_image_availability
 
 {% if infras > 0 -%} 

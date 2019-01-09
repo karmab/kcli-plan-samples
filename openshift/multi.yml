@@ -12,7 +12,7 @@ parameters:
  infras: 1
  nodes: 1
  registry: registry.redhat.io
- crio: true
+ crio: false
  asb: true
  metrics: false
  glusterfs: false
