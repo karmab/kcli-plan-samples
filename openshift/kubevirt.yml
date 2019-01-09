@@ -7,7 +7,7 @@ parameters:
    cdi: true
    ui: true
    ui_version: latest
-   template: Fedora-Cloud-Base-28-1.1.x86_64.qcow2
+   template: CentOS-7-x86_64-GenericCloud.qcow2
 
 kubevirt:
  template: {{ template }}

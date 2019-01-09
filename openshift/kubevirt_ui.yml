@@ -51,7 +51,7 @@ kind: Route
 metadata:
   labels:
     app: kubevirt-web-ui
-  name: kubevirt-web-ui
+  name: web
 spec:
   port:
     targetPort: https
