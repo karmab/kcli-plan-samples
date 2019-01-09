@@ -54,7 +54,7 @@ nfs:
 {{ cluster }}2:
  basevm: origin
  reservedns: true
- notifycmd: false
+ notify: false
  scripts: 
   - nfs_federation.sh
 {% if patch_master %}
