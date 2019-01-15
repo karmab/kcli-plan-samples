@@ -1,10 +1,10 @@
 VERSION="{{ kubevirt_version }}"
-NS="kube-system"
+NS="kubevirt"
 yum -y install xorg-x11-xauth virt-viewer
 if [ "$VERSION" == "latest" ] ; then
 VERSION=`curl -s https://api.github.com/repos/kubevirt/kubevirt/releases/latest | jq -r .tag_name`
 fi
-oc project kube-system
+oc project $NS
 grep -q vmx /proc/cpuinfo || oc create configmap -n $NS kubevirt-config --from-literal debug.useEmulation=true
 wget https://github.com/kubevirt/kubevirt/releases/download/${VERSION}/kubevirt.yaml
 oc adm policy add-scc-to-user privileged -z kubevirt-privileged -n $NS
