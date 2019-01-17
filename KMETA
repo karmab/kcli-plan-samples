@@ -115,12 +115,6 @@
   numvms: 4
   stars: 5
 
-- name: multi39
-  file: openshift/multi39.yml
-  description: Openshift 3.9 with arbitrary number of nodes
-  comments: This plan uses specific tag. an extra lb node is created when there are more than 1 master. The first node is also tagged as infra to host router and docker registry. You can create a dedicated nfs node with nfs parameter or have the master do that for you with nfs_master
-  numvms: 7
-
 - name: helm
   file: openshift/helm.yml
   description: Helm based on oc cluster up
