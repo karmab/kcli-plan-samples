@@ -241,5 +241,10 @@
 
 - name: tower
   file: tower/downstream.yml
-  description:  Downstream tower 3.0.3
+  description: Downstream tower 3.0.3
   numvms: 1
+
+- name: federation
+  file: openshift/federation.yml
+  description: 2 federated vms with federated control plan from canary images
+  numvms: 2
