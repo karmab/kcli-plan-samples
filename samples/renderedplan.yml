@@ -1,0 +1,6 @@
+parameters:
+  password: hendrix
+vm3:
+  template: CentOS-7-x86_64-GenericCloud.qcow2
+  cmds:
+    - echo {{ password }} | passwd --stdin root

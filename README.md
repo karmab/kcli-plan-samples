@@ -6,6 +6,7 @@ this is a collection of plans i use to deploy :
 - openstack
 - ovirt
 - foreman
+- samples 
 
 and others!
 
