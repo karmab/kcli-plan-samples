@@ -8,6 +8,7 @@ parameters:
   domain: default
   reservedns: false
   disk_size: 30
+  patch_master: false
   istio: false
   istio_version: 1.0.4
   knative: false
