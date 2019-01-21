@@ -26,10 +26,9 @@ git clone https://github.com/openshift/installer.git
 cd installer
 dep ensure
 hack/get-terraform.sh
-TAGS=libvirt_destroy hack/build.sh
+TAGS=libvirt hack/build.sh
 GOBIN=~/.terraform.d/plugins go get -u github.com/dmacvicar/terraform-provider-libvirt
 PUBKEY=`cat ~/.ssh/authorized_keys`
 echo export OPENSHIFT_INSTALL_SSH_PUB_KEY=\"${PUBKEY}\" >> ~/env.sh
 source ~/env.sh
 # bin/openshift-install create cluster --log-level=debug
-## oc set volume deploy/clusterapi-manager-controllers --add --name=libvirt-socket --type=hostPath --path=/var/run/libvirt --mount-path=/var/run/libvirt -n openshift-cluster-api
