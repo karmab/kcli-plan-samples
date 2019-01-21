@@ -14,7 +14,7 @@ copr-cli build kcli /root/rpmbuild/SRPMS/kcli-${VERSION}-${RELEASE}.src.rpm
 BUILD=00`copr-cli get-package --with-latest-build --name {{ package }} {{ user }}/{{ package }} | jq -r '.latest_build.id'`
 {% if debian %}
 gem install package_cloud
-wget -P /root https://copr-be.cloud.fedoraproject.org/results/{{ user }}/{{ package }}/fedora-25-x86_64/${BUILD}-{{ package}}/{{ package }}-${VERSION}-${RELEASE}.x86_64.rpm
+wget -P /root https://copr-be.cloud.fedoraproject.org/results/{{ user }}/{{ package }}/fedora-29-x86_64/${BUILD}-{{ package}}/{{ package }}-${VERSION}-${RELEASE}.x86_64.rpm
 cd /root
 alien -d *rpm
 /usr/local/bin/package_cloud push {{ user }}/{{ package }}/ubuntu/zesty /root/*deb
