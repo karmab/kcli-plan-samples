@@ -32,7 +32,7 @@ origin:
  scripts: 
   - requirements.sh
   - origin.sh
-{% if istio or patch_master %}
+{% if istio or patch_master or knative %}
   - istio_knative.sh
  files:
   - patch_master.sh
