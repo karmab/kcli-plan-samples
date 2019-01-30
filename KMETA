@@ -139,7 +139,13 @@
 
 - name: copr
   file: builder/copr.yml
-  description: Build kcli rpm ( Only useful for me)
+  description: Build and publish kcli rpm ( Only useful for me)
+  numvms: 1
+  stars: 5
+
+- name: packagecloud
+  file: builder/packagecloud.yml
+  description: Build and publish kcli deb ( Only useful for me)
   numvms: 1
   stars: 5
 
