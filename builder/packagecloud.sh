@@ -1,8 +1,9 @@
-apt-get -y install python3-stdeb ruby ruby-dev
-gem install rake
-gem install package_cloud
+export VERSION=`grep Version: /root/package.spec  | cut -d":" -f2 | xargs`
+apt-get update 
+apt-get -y install python3-stdeb ruby ruby-dev wget python-all
+gem install rake package_cloud
 export DEB_BUILD_OPTIONS=nocheck debuild
-wget http://pypi.python.org/packages/source/k/kcli/kcli-$VERSION.tar.gz
+wget https://pypi.python.org/packages/source/k/kcli/kcli-$VERSION.tar.gz
 tar xzf kcli-$VERSION.tar.gz
 cd kcli-$VERSION
 python3 setup.py --command-packages=stdeb.command sdist_dsc --depends python3-dateutil,python3-prettytable,python3-flask,python3-netaddr,python3-libvirt,genisoimage bdist_deb
@@ -14,5 +15,4 @@ python3 setup.py --command-packages=stdeb.command sdist_dsc --depends python3-da
 /usr/local/bin/package_cloud push {{ user }}/{{ package }}/ubuntu/cosmic deb_dist/*deb
 /usr/local/bin/package_cloud push {{ user }}/{{ package }}/debian/jessie deb_dist/*deb
 /usr/local/bin/package_cloud push {{ user }}/{{ package }}/debian/stretch deb_dist/*deb
-/usr/local/bin/package_cloud push {{ user }}/{{ package }}/debian/buster deb_dist/*deb
-poweroff
+/usr/local/bin/package_cloud push {{ user }}/{{ package }}/debian/buster deb_dist/*deb && poweroff

@@ -10,5 +10,4 @@ export SHORT=${SOURCE##*/}
 mkdir -p /root/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 mv /root/${SHORT} /root/rpmbuild/SOURCES
 rpmbuild -bs /root/package.spec
-copr-cli build kcli /root/rpmbuild/SRPMS/kcli-${VERSION}-${RELEASE}.src.rpm
-poweroff
+copr-cli build kcli /root/rpmbuild/SRPMS/kcli-${VERSION}-${RELEASE}.src.rpm && poweroff
