@@ -31,6 +31,9 @@ mkdir -p ${GOPATH}/src/github.com/kubernetes-sigs
 cd ${GOPATH}/src/github.com/kubernetes-sigs
 git clone https://github.com/kubernetes-sigs/federation-v2.git
 cd federation-v2
+{% if federation_version != "canary" %} 
+git checkout tags/$FED
+{% endif %}
 ./scripts/download-binaries.sh
 export PATH=${GOPATH}/src/github.com/kubernetes-sigs/federation-v2/bin:${PATH}:/usr/local/go/bin:${GOPATH}/bin
 echo export PATH=\${GOPATH}/src/github.com/kubernetes-sigs/federation-v2/bin:\${PATH}:/usr/local/go/bin:\${GOPATH}/bin >> /root/.bashrc
