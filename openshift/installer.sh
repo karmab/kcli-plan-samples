@@ -29,6 +29,12 @@ hack/get-terraform.sh
 TAGS=libvirt hack/build.sh
 GOBIN=~/.terraform.d/plugins go get -u github.com/dmacvicar/terraform-provider-libvirt
 PUBKEY=`cat ~/.ssh/authorized_keys`
-echo export OPENSHIFT_INSTALL_SSH_PUB_KEY=\"${PUBKEY}\" >> ~/env.sh
-source ~/env.sh
-# bin/openshift-install create cluster --log-level=debug
+PULLSECRET=`cat ~/openshift_pull.json`
+sed -i "s%PUBKEY%$PUBKEY%" /root/install-config.yaml
+sed -i "s%PULLSECRET%$PULLSECRET%" /root/install-config.yaml
+cp bin/openshift-install /usr/bin
+chmod +x /usr/bin/openshift-install
+mkdir /root/assets
+cp /root/install-config.yaml /root/assets
+openshift-install create manifests --dir=/root/assets --log-level=debug
+# openshift-install create cluster --dir=/root/assets --log-level=debug

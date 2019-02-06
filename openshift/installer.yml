@@ -5,7 +5,6 @@ parameters:
   uri: qemu+tcp://192.168.122.1/system
   cluster: testk
   domain: openshift.testing
-  email_address: admin@magnifico.es
   password: password
 
 installer:
@@ -19,8 +18,8 @@ installer:
   - size: 30
  pool: default
  files:
- - path: /root/env.sh
-   origin: installer_env.sh
+ - path: /root/install-config.yaml
+   origin: install-config.yaml
  - path: /root/cleanup.sh
    origin: installer_cleanup.sh
  - path: /root/openshift_pull.json

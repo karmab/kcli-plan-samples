@@ -1,0 +1,27 @@
+apiVersion: v1beta2
+baseDomain: {{ domain }}
+machines:
+- name: master
+  platform: {}
+  replicas: 1
+- name: worker
+  platform: {}
+  replicas: 1
+metadata:
+  creationTimestamp: null
+  name: {{ cluster }}
+networking:
+  clusterNetworks:
+  - cidr: 10.128.0.0/14
+    hostSubnetLength: 9
+  machineCIDR: 192.168.126.0/24
+  serviceCIDR: 172.30.0.0/16
+  type: OpenShiftSDN
+platform:
+  libvirt:
+    URI: {{ uri }}
+    network:
+      if: tt0
+pullSecret: 'PULLSECRET'
+sshKey: |
+    PUBKEY
