@@ -26,6 +26,8 @@ wget https://dl.google.com/go/go{{ go_version }}.linux-amd64.tar.gz
 tar -C /usr/local -xzf go{{ go_version }}.linux-amd64.tar.gz
 export GOPATH=/root/go
 echo export GOPATH=/root/go >> /root/.bashrc
+export PATH=${GOPATH}/src/github.com/kubernetes-sigs/federation-v2/bin:${PATH}:/usr/local/go/bin:${GOPATH}/bin
+echo export PATH=\${GOPATH}/src/github.com/kubernetes-sigs/federation-v2/bin:\${PATH}:/usr/local/go/bin:\${GOPATH}/bin >> /root/.bashrc
 mkdir -p ${GOPATH}/{bin,pkg,src}
 mkdir -p ${GOPATH}/src/github.com/kubernetes-sigs
 cd ${GOPATH}/src/github.com/kubernetes-sigs
@@ -35,15 +37,15 @@ cd federation-v2
 git checkout tags/$FED
 {% endif %}
 ./scripts/download-binaries.sh
-export PATH=${GOPATH}/src/github.com/kubernetes-sigs/federation-v2/bin:${PATH}:/usr/local/go/bin:${GOPATH}/bin
-echo export PATH=\${GOPATH}/src/github.com/kubernetes-sigs/federation-v2/bin:\${PATH}:/usr/local/go/bin:\${GOPATH}/bin >> /root/.bashrc
-make kubefed2
-INSTALL_YAML="hack/install.yaml"
+INSTALL_YAML="hack/install-latest.yaml"
 IMAGE_NAME="quay.io/kubernetes-multicluster/federation-v2:{{ federation_version }}"
 INSTALL_YAML="${INSTALL_YAML}" IMAGE_NAME="${IMAGE_NAME}" scripts/generate-install-yaml.sh
 oc create -f ${INSTALL_YAML} -n federation-system
 oc apply --validate=false -f vendor/k8s.io/cluster-registry/cluster-registry-crd.yaml
-for filename in ./config/federatedirectives/*.yaml; do kubefed2 federate enable -f "${filename}" --federation-namespace=federation-system; done
+git stash
+git checkout master
+make kubefed2
+for filename in ./config/federatedirectives/*.yaml; do kubefed2 enable -f "${filename}" --federation-namespace=federation-system; done
 #curl -LOs https://github.com/kubernetes-sigs/federation-v2/releases/download/$FED/kubefed2.tar.gz
 #tar xzf kubefed2.tar.gz -C /usr/local/bin
 #rm -f kubefed2.tar.gz

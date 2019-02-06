@@ -1,7 +1,7 @@
 parameters:
   baseplan: origin.yml
   cluster: federer
-  federation_version: "canary"
+  federation_version: "v0.0.4"
   go_version: 1.11.1
   loadbalancer: false
   patch_master: false
