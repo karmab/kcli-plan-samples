@@ -36,5 +36,4 @@ cp bin/openshift-install /usr/bin
 chmod +x /usr/bin/openshift-install
 mkdir /root/assets
 cp /root/install-config.yaml /root/assets
-openshift-install create manifests --dir=/root/assets --log-level=debug
 # openshift-install create cluster --dir=/root/assets --log-level=debug

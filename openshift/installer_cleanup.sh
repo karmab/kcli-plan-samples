@@ -1,4 +1,5 @@
 URI="qemu+ssh://root@192.168.122.1/system"
+openshift-install destroy cluster --dir=/root/assets
 virsh -c ${URI} destroy testk-master-0
 virsh -c ${URI} undefine testk-master-0
 virsh -c ${URI} destroy testk-bootstrap
