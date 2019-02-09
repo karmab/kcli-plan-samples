@@ -137,6 +137,11 @@
   description: deploy a vm with two nics, making sure no cloudinit conf is applied on second one
   numvms: 1
 
+- name: sharedfolders
+  file: samples/sharedfolders/kcli_plan.yml
+  description: deploy a vm sharing two directories named x and y. Note you need an hypervisor and guest with 9p support
+  numvms: 1
+
 - name: copr
   file: builder/copr.yml
   description: Build and publish kcli rpm ( Only useful for me)
