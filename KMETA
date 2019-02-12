@@ -217,7 +217,7 @@
 
 - name: kubevirt_kubernetes
   file: kubernetes/kubevirt.yml
-  description: Latest kubernetes and kubevirt with single master and multiple nodes, along with cdi and web ui
+  description: Latest kubernetes and kubevirt with single master and multiple nodes, along with cdi and web ui. A PR number can also be provided for kubevirt_vrsion so that images are built against it
   numvms: 2
   stars: 5
 

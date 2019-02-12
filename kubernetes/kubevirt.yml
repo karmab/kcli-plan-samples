@@ -3,8 +3,6 @@ parameters:
  kubevirt_version: latest
  cdi: true
  cdi_version: latest
- ui: true
- ui_version: latest
  install_kcli: false
 
 kumaster:
@@ -22,7 +20,6 @@ kumaster:
  files:
   - path: /etc/yum.repos.d/kubernetes.repo
     origin: kubernetes.repo
-  - kubevirt_ui.yml
 {% if nfs %}
   - nfs.yml
   - nfs.sh
@@ -55,9 +52,6 @@ kumaster:
   - kubevirt.sh
 {% if cdi %}
   - cdi.sh
-{% endif %}
-{% if ui %}
-  - kubevirt_ui.sh
 {% endif %}
 {% if install_kcli %}
   - install_kcli.sh
