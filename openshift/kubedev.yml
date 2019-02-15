@@ -4,6 +4,7 @@ parameters:
   disk_size: 50
   github_user: karmab
   github_mail: karimboumedhel@gmail.com
+  branch: master
 
 kubedev:
  template: {{ template }}
