@@ -1,11 +1,12 @@
 parameters:
- nodes: 2
+ nodes: 1
  domain: karmalabs.com
  template: CentOS-7-x86_64-GenericCloud.qcow2
+ prefix: "ku"
  deploy_app: false
  skydive: false
  dashboard: true
- nfs: false
+ nfs: true
  sdn: flannel
  k8s_version: 1.11.6
  flannel_version: master
@@ -14,7 +15,7 @@ parameters:
  node_memory: 4096
  notifycmd: "kubectl get pod --all-namespaces"
 
-kumaster:
+{{prefix}}master:
  template: {{ template }}
  numcpus: 2
  memory: {{ master_memory }}
@@ -63,7 +64,7 @@ kumaster:
 
 {% if nodes > 0 %}
 {% for number in range(0, nodes) %}
-kunode0{{ number + 1 }}:
+{{prefix }}node0{{ number + 1 }}:
  template: {{ template }}
  numcpus: 2
  memory: {{ node_memory }}

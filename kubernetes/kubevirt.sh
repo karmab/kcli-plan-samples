@@ -6,12 +6,11 @@ yum -y install xorg-x11-xauth virt-viewer wget
 sed -i "s/SELINUX=enforcing/SELINUX=permissive/" /etc/selinux/config
 setenforce 0
 kubectl config set-context `kubectl config current-context` --namespace=kube-system
-if [ "$KUBEVIRT" == 'master' ] || [ "$KUBEVIRT" -eq "$KUBEVIRT" ] ; then
+if [ "$KUBEVIRT" == "master" ] || [ "$KUBEVIRT" -eq "$KUBEVIRT" ] ; then
   yum -y install git make
   cd /root
   git clone https://github.com/kubevirt/kubevirt
   cd kubevirt
-  export KUBEVIRT_PROVIDER=k8s-$K8S
   export KUBEVIRT_PROVIDER=external
   if [ "$KUBEVIRT" -eq "$KUBEVIRT" ] ; then
     git fetch origin refs/pull/$KUBEVIRT/head:pull_$KUBEVIRT
@@ -21,7 +20,8 @@ if [ "$KUBEVIRT" == 'master' ] || [ "$KUBEVIRT" -eq "$KUBEVIRT" ] ; then
   sed -i "s/\$docker_prefix/kubevirt/" hack/*sh
   sed -i "s/\${docker_prefix}/kubevirt/" hack/*sh
   make cluster-up
-  make docker manifests
+  make docker
+  make manifests
   sed -i "s/latest/devel/" _out/manifests/release/kubevirt.yaml
   kubectl create -f _out/manifests/release/kubevirt.yaml
 else
