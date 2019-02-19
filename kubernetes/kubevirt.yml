@@ -5,7 +5,7 @@ parameters:
  cdi_version: latest
  install_kcli: false
 
-kumaster:
+{{ prefix }}master:
  template: {{ template }}
  numcpus: 2
  memory: {{ master_memory }}
@@ -59,7 +59,7 @@ kumaster:
 
 {% if nodes > 0 %}
 {% for number in range(0, nodes) %}
-kunode0{{ number + 1 }}:
+{{ prefix }}node0{{ number + 1 }}:
  template: {{ template }}
  numcpus: 2
  memory: {{ node_memory }}

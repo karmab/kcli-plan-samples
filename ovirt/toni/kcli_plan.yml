@@ -1,7 +1,5 @@
 parameters:
- password: unix1234
  version: 4.2
- organization: Karmalabs
  nested: false
 
 ovirt:
