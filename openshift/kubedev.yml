@@ -14,5 +14,7 @@ kubedev:
   - default
  disks:
   - size: {{ disk_size }}
+ scripts:
+  - kubedev.sh
  files: 
   - kubedev.sh

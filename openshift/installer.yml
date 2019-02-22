@@ -16,7 +16,6 @@ installer:
   - default
  disks:
   - size: 30
- pool: default
  files:
  - path: /root/install-config.yaml
    origin: install-config.yaml
