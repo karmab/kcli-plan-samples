@@ -1,0 +1,9 @@
+parameters:
+ template: debian-9
+ flavor: f1-micro
+
+k3s:
+ template: {{ template }}
+ flavor: {{ flavor }}
+ cmds:
+ - curl -sfL https://get.k3s.io | sh -

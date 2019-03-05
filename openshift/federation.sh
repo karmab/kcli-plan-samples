@@ -42,10 +42,10 @@ IMAGE_NAME="quay.io/kubernetes-multicluster/federation-v2:{{ federation_version 
 INSTALL_YAML="${INSTALL_YAML}" IMAGE_NAME="${IMAGE_NAME}" scripts/generate-install-yaml.sh
 oc create -f ${INSTALL_YAML} -n federation-system
 oc apply --validate=false -f vendor/k8s.io/cluster-registry/cluster-registry-crd.yaml
-git stash
-git checkout master
+#git stash
+#git checkout master
 make kubefed2
-for filename in ./config/federatedirectives/*.yaml; do kubefed2 enable -f "${filename}" --federation-namespace=federation-system; done
+for filename in ./config/enabletypedirectives/*.yaml; do kubefed2 enable -f "${filename}" --federation-namespace=federation-system; done
 #curl -LOs https://github.com/kubernetes-sigs/federation-v2/releases/download/$FED/kubefed2.tar.gz
 #tar xzf kubefed2.tar.gz -C /usr/local/bin
 #rm -f kubefed2.tar.gz

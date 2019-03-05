@@ -2,6 +2,7 @@ parameters:
  nodes: 1
  domain: karmalabs.com
  template: CentOS-7-x86_64-GenericCloud.qcow2
+ pool: default
  prefix: "ku"
  deploy_app: false
  skydive: false
@@ -28,7 +29,7 @@ parameters:
   - default
  disks:
   - size: 50
- pool: default
+ pool: {{ pool }}
  files:
   - path: /etc/yum.repos.d/kubernetes.repo
     origin: kubernetes.repo
@@ -75,7 +76,7 @@ parameters:
   - default
  disks:
   - size: 50
- pool: default
+ pool: {{ pool }}
  files:
   - path: /etc/yum.repos.d/kubernetes.repo
     origin: kubernetes.repo

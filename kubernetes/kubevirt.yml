@@ -16,7 +16,6 @@ parameters:
   - default
  disks:
   - size: 50
- pool: default
  files:
   - path: /etc/yum.repos.d/kubernetes.repo
     origin: kubernetes.repo
@@ -70,7 +69,6 @@ parameters:
   - default
  disks:
   - size: 50
- pool: default
  files:
   - path: /etc/yum.repos.d/kubernetes.repo
     origin: kubernetes.repo
