@@ -1,3 +1,6 @@
+[mgrs]
+ceph01
+
 [mons]
 ceph01
 ceph02
@@ -7,3 +10,17 @@ ceph03
 ceph01
 ceph02
 ceph03
+
+{% if radosgw %}
+[rgws]
+ceph01
+ceph02
+ceph03
+{% endif %}
+
+{% if cephfs %}
+[mdss]
+ceph01
+ceph02
+ceph03
+{% endif %}

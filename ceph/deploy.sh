@@ -1,6 +1,6 @@
 yum -y install git wget
 {% if branch != "master" %}
-yum -y install  https://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/ansible-2.6.9-1.el7.ans.noarch.rpm
+yum -y install  https://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/ansible-2.6.9-1.el7.ans.noarch.rpm http://download-ib01.fedoraproject.org/pub/epel/testing/7/x86_64/Packages/p/python2-notario-0.0.14-1.el7.noarch.rpm
 {% else %}
 yum -y install epel-release
 yum -y install ansible

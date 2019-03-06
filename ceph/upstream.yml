@@ -1,16 +1,12 @@
 parameters:
  template: CentOS-7-x86_64-GenericCloud.qcow2
  memory: 8144
- disk_size: 20
+ disk_size: 40
  domain: localdomain
  pool: default
  branch: stable-3.2
- private_cidr: 10.0.0/24
-
-cephpriv:
- type: network
- cidr: {{ private_cidr }}
- dhcp: false
+ radosgw: false
+ cephfs: false
 
 {% for node in range(0, 3) %}
 ceph0{{ node + 1 }}:
@@ -18,14 +14,10 @@ ceph0{{ node + 1 }}:
  memory: {{ memory }}
  nets:
  - default
- - name: cephpriv
-   ip: 10.0.0.1{{ node }}
-   mask: 255.255.255.0
  numcpus: 2
  disks:
   - size: 10
   - size: {{ disk_size }}
-  - size: 10
  pool: {{ pool }}
  reservedns: true
  domain: {{ domain }}
