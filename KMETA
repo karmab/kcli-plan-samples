@@ -392,3 +392,8 @@
   file: openshift/federation.yml
   description: 2 federated vms with federated control plan. federation_version can also be set to canary 
   numvms: 2
+
+- name: ceph
+  file: ceph/upstream.yml
+  description: ceph cluster
+  numvms: 3

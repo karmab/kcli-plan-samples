@@ -23,9 +23,8 @@ ceph0{{ node + 1 }}:
  domain: {{ domain }}
  start: True
  sharedkey: True
- scripts:
- - pre.sh
 {% if node == 0 %}
+ scripts:
  - deploy.sh
  files:
  - all.yml

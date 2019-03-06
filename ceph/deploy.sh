@@ -18,4 +18,4 @@ cp /root/all.yml group_vars
 sh /root/ovirt_fix_inventory.sh
 rm -rf /root/ovirt_fix_inventory.sh
 {% endif %}
-#ansible-playbook -i /root/inventory site.yml
+ansible-playbook -i /root/inventory site.yml

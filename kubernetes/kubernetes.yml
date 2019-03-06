@@ -9,7 +9,7 @@ parameters:
  dashboard: true
  nfs: true
  sdn: flannel
- k8s_version: 1.11.6
+ k8s_version: 1.13.4
  flannel_version: master
  multus: true
  master_memory: 6144

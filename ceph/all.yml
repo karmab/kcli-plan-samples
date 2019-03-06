@@ -6,7 +6,6 @@ cluster_network: "192.168.122.0/24"
 monitor_interface: eth0
 devices:
   - '/dev/vdb'
-  - '/dev/vdc'
 osd_scenario: collocated
 fetch_directory: /root/ceph-ansible-keys
 radosgw_interface: eth0
