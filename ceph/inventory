@@ -1,0 +1,9 @@
+[mons]
+ceph01
+ceph02
+ceph03
+
+[osds]
+ceph01
+ceph02
+ceph03
