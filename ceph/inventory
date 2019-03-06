@@ -1,26 +1,26 @@
 [mgrs]
-ceph01
+{{ prefix }}ceph01
 
 [mons]
-ceph01
-ceph02
-ceph03
+{{ prefix }}ceph01
+{{ prefix }}ceph02
+{{ prefix }}ceph03
 
 [osds]
-ceph01
-ceph02
-ceph03
+{{ prefix }}ceph01
+{{ prefix }}ceph02
+{{ prefix }}ceph03
 
 {% if radosgw %}
 [rgws]
-ceph01
-ceph02
-ceph03
+{{ prefix }}ceph01
+{{ prefix }}ceph02
+{{ prefix }}ceph03
 {% endif %}
 
 {% if cephfs %}
 [mdss]
-ceph01
-ceph02
-ceph03
+{{ prefix }}ceph01
+{{ prefix }}ceph02
+{{ prefix }}ceph03
 {% endif %}

@@ -9,3 +9,4 @@ devices:
 osd_scenario: collocated
 fetch_directory: /root/ceph-ansible-keys
 radosgw_interface: eth0
+osd_objectstore: {{ objectstore }}

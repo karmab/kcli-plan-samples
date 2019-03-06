@@ -7,9 +7,11 @@ parameters:
  branch: stable-3.2
  radosgw: false
  cephfs: false
+ objectstore: filestore
+ prefix: ""
 
 {% for node in range(0, 3) %}
-ceph0{{ node + 1 }}:
+{{ prefix }}ceph0{{ node + 1 }}:
  template: {{ template }}
  memory: {{ memory }}
  nets:
@@ -30,8 +32,8 @@ ceph0{{ node + 1 }}:
  - all.yml
  - inventory
 {% if type == 'ovirt' %}
-  - path: /root/ovirt_fix_inventory.sh
-    origin: ovirt_fix_inventory.sh
+ - path: /root/ovirt_fix_inventory.sh
+   origin: ovirt_fix_inventory.sh
 {% endif %}
 {% endif %}
 {% endfor %}
