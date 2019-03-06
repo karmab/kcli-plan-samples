@@ -14,4 +14,8 @@ cd ceph-ansible
 git checkout {{ branch }}
 cp site.yml.sample site.yml
 cp /root/all.yml group_vars
+{% if type == 'ovirt' %}
+sh /root/ovirt_fix_inventory.sh
+rm -rf /root/ovirt_fix_inventory.sh
+{% endif %}
 #ansible-playbook -i /root/inventory site.yml
