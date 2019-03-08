@@ -43,10 +43,10 @@ sed -i "s/HASH/$HASH/" /root/join.yml
 sleep 160
 {% if nodes > 0 %}
 {% for number in range(0,nodes) %}
-ssh-keyscan -H kunode0{{ number +1 }} >> ~/.ssh/known_hosts
-scp /etc/kubernetes/admin.conf root@kunode0{{ number + 1 }}:/etc/kubernetes/
-scp /root/join.yml root@kunode0{{ number + 1 }}:/root/
-ssh root@kunode0{{ number +1 }} ${CMD} > /root/kunode0{{ number +1 }}.log
+ssh-keyscan -H {{ prefix }}node0{{ number +1 }} >> ~/.ssh/known_hosts
+scp /etc/kubernetes/admin.conf root@{{ prefix }}node0{{ number + 1 }}:/etc/kubernetes/
+scp /root/join.yml root@{{ prefix }}node0{{ number + 1 }}:/root/
+ssh root@{{ prefix }}node0{{ number +1 }} ${CMD} > /root/{{ prefix }}node0{{ number +1 }}.log
 {% endfor %}
 {% endif %}
 {% if skydive %}

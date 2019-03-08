@@ -8,11 +8,13 @@ parameters:
   domain: default
   reservedns: false
   disk_size: 30
+  rook_disk_size: 20
   patch_master: false
   istio: false
   istio_version: 1.0.4
   knative: false
   notifycmd: oc get pod --all-namespaces
+  rook: false
 
 origin:
  template: {{ template }}
@@ -28,10 +30,16 @@ origin:
 {% endif %}
  disks:
   - size: {{ disk_size }}
+{% if rook %}
+  - size: {{ rook_disk_size }}
+{% endif %}
  pool: default
  scripts: 
   - requirements.sh
   - origin.sh
+{% if rook %}
+  - rook.sh
+{% endif %}
 {% if istio or patch_master or knative %}
   - istio_knative.sh
  files:

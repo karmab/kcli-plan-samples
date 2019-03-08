@@ -1,5 +1,5 @@
 K8S="{{ k8s_version }}"
-yum -y install wget
+yum -y install wget git
 wget -P /root/ https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
 mv /root/jq-linux64 /usr/bin/jq
 chmod u+x /usr/bin/jq

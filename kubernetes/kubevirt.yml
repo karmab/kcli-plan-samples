@@ -33,6 +33,12 @@ parameters:
   - cni-plugins.yml
   - l2-bridge.yml
 {% endif %}
+{% if rook %}
+  - rook_pool.yml
+  - rook_sc.yml
+  - rook_secret.yml
+  - rook.sh
+{% endif %}
  scripts: 
 {% if 'xenial' in template or 'yaketty' in template or 'zesty' in template or 'artful' in template or 'bionic' in template or 'cosmic' in template %}
   - pre_ubuntu.sh

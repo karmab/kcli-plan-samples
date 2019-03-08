@@ -37,6 +37,9 @@ parameters:
 {% endif %}
  pool: {{ pool }}
  files:
+{% if type == 'ovirt' %}
+  - ovirt_fix.sh
+{% endif %}
   - join.yml
   - config.yml
   - path: /etc/yum.repos.d/kubernetes.repo
@@ -61,9 +64,6 @@ parameters:
   - pre_ubuntu.sh
 {% else %}
   - pre.sh
-{% endif %}
-{% if type == 'ovirt' %}
-  - ovirt_fix.sh
 {% endif %}
   - kubernetes.sh
 {% if dashboard %}
