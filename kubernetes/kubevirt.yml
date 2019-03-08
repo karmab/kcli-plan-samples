@@ -17,7 +17,8 @@ parameters:
  disks:
   - size: 50
  files:
-  - config.yaml
+  - config.yml
+  - join.yml
   - path: /etc/yum.repos.d/kubernetes.repo
     origin: kubernetes.repo
 {% if nfs %}

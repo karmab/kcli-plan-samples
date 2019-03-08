@@ -32,7 +32,8 @@ parameters:
   - size: 50
  pool: {{ pool }}
  files:
-  - config.yaml
+  - join.yml
+  - config.yml
   - path: /etc/yum.repos.d/kubernetes.repo
     origin: kubernetes.repo
 {% if nfs %}

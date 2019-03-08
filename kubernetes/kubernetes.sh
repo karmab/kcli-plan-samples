@@ -3,8 +3,8 @@ CIDR="192.168.0.0/16"
 {% else %} 
 CIDR="10.244.0.0/16"
 {% endif %} 
-# kubeadm init --pod-network-cidr=${CIDR}
-kubeadm init --config /root/config.yaml
+#kubeadm init --pod-network-cidr=${CIDR}
+kubeadm init --config /root/config.yml
 cp /etc/kubernetes/admin.conf /root/
 chown root:root /root/admin.conf
 export KUBECONFIG=/root/admin.conf
@@ -30,13 +30,22 @@ kubectl apply -f https://raw.githubusercontent.com/romana/romana/master/containe
 mkdir -p /root/.kube
 cp -i /etc/kubernetes/admin.conf /root/.kube/config
 chown root:root /root/.kube/config
-export CMD=`kubeadm token create --print-join-command`
-echo ${CMD} > /root/join.sh
+#export CMD=`kubeadm token create --print-join-command`
+#echo ${CMD} > /root/join.sh
+CMD="kubeadm join --config /root/join.yml"
+ENDPOINT="`hostname -i`:6443"
+TOKEN=`kubeadm token generate`
+HASH=`openssl x509 -in /etc/kubernetes/pki/ca.crt -noout -pubkey | openssl rsa -pubin -outform DER 2>/dev/null | sha256sum | cut -d' ' -f1`
+sed -i "s/ENDPOINT/$ENDPOINT/" /root/join.yml
+sed -i "s/TOKEN/$TOKEN/" /root/join.yml
+sed -i "s/HASH/$HASH/" /root/join.yml
+
 sleep 160
 {% if nodes > 0 %}
 {% for number in range(0,nodes) %}
 ssh-keyscan -H kunode0{{ number +1 }} >> ~/.ssh/known_hosts
 scp /etc/kubernetes/admin.conf root@kunode0{{ number + 1 }}:/etc/kubernetes/
+scp /root/join.yml root@kunode0{{ number + 1 }}:/root/
 ssh root@kunode0{{ number +1 }} ${CMD} > /root/kunode0{{ number +1 }}.log
 {% endfor %}
 {% endif %}
