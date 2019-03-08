@@ -61,7 +61,7 @@ parameters:
   - install_kcli.sh
 {% endif %}
 {% if rook %}
-  - rook.sh
+  - install_rook.sh
 {% endif %}
 
 {% if nodes > 0 %}
