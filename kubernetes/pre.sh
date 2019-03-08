@@ -13,4 +13,5 @@ fi
 yum install -y docker kubelet-$K8S kubectl-$K8S kubeadm-$K8S
 sed -i "s/--selinux-enabled //" /etc/sysconfig/docker
 systemctl enable docker && systemctl start docker
+#echo KUBELET_EXTRA_ARGS=--feature-gates={{ feature_gates }} > /etc/sysconfig/kubelet
 systemctl enable kubelet && systemctl start kubelet

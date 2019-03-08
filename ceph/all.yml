@@ -1,9 +1,9 @@
 ceph_origin: repository
 ceph_repository: community
-ceph_stable_release: mimic
-public_network: "192.168.122.0/24"
-cluster_network: "192.168.122.0/24"
-monitor_interface: eth0
+ceph_stable_release: {{ release }}
+public_network: "{{ public_network }}"
+cluster_network: "{{ public_network }}"
+monitor_interface: {{ monitor_interface }}
 devices:
   - '/dev/vdb'
 osd_scenario: collocated

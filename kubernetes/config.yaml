@@ -1,0 +1,10 @@
+apiVersion: kubeadm.k8s.io/v1alpha3
+kind: InitConfiguration
+nodeRegistration:
+  kubeletExtraArgs:
+    feature-gates: {{ feature_gates }}
+---
+apiVersion: kubeadm.k8s.io/v1alpha3
+kind: ClusterConfiguration
+networking:
+  podSubnet: "10.244.0.0/16"

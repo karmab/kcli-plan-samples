@@ -15,6 +15,7 @@ parameters:
  master_memory: 6144
  node_memory: 4096
  notifycmd: "kubectl get pod --all-namespaces"
+ feature_gates: CSIBlockVolume=true
 
 {{prefix}}master:
  template: {{ template }}
@@ -31,6 +32,7 @@ parameters:
   - size: 50
  pool: {{ pool }}
  files:
+  - config.yaml
   - path: /etc/yum.repos.d/kubernetes.repo
     origin: kubernetes.repo
 {% if nfs %}

@@ -5,10 +5,13 @@ parameters:
  domain: localdomain
  pool: default
  branch: stable-3.2
+ release: mimic
  radosgw: false
  cephfs: false
  objectstore: filestore
  prefix: ""
+ monitor_interface: eth0
+ public_network: 192.168.122.0/24
 
 {% for node in range(0, 3) %}
 {{ prefix }}ceph0{{ node + 1 }}:
