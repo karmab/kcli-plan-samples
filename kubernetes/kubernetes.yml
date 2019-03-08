@@ -16,6 +16,8 @@ parameters:
  node_memory: 4096
  notifycmd: "kubectl get pod --all-namespaces"
  feature_gates: CSIBlockVolume=true
+ rook: false
+ rook_disk_size: 20
 
 {{prefix}}master:
  template: {{ template }}
@@ -30,6 +32,9 @@ parameters:
   - default
  disks:
   - size: 50
+{% if rook %}
+  - size: {{ rook_disk_size }}
+{% endif %}
  pool: {{ pool }}
  files:
   - join.yml
@@ -44,6 +49,12 @@ parameters:
   - multus.yml
   - cni-plugins.yml
   - l2-bridge.yml
+{% endif %}
+{% if rook %}
+  - rook_pool.yml
+  - rook_sc.yml
+  - rook_secret.yml
+  - rook.sh
 {% endif %}
  scripts: 
 {% if 'xenial' in template or 'yaketty' in template or 'zesty' in template or 'artful' in template or 'bionic' in template or 'cosmic' in template %}
@@ -65,6 +76,12 @@ parameters:
 {% if skydive %}
   - skydive.sh
 {% endif %}
+{% if nfs %}
+  - nfs.sh
+{% endif %}
+{% if rook %}
+  - rook.sh
+{% endif %}
 
 {% if nodes > 0 %}
 {% for number in range(0, nodes) %}
@@ -79,6 +96,9 @@ parameters:
   - default
  disks:
   - size: 50
+{% if rook %}
+  - size: {{ rook_disk_size }}
+{% endif %}
  pool: {{ pool }}
  files:
   - path: /etc/yum.repos.d/kubernetes.repo

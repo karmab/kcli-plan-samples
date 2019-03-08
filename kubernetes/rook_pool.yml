@@ -1,0 +1,9 @@
+apiVersion: ceph.rook.io/v1
+kind: CephBlockPool
+metadata:
+  name: rbd
+  namespace: rook-ceph
+spec:
+  failureDomain: osd
+  replicated:
+    size: 3
