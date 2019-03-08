@@ -62,6 +62,9 @@ parameters:
 {% else %}
   - pre.sh
 {% endif %}
+{% if type == 'ovirt' %}
+  - ovirt_fix.sh
+{% endif %}
   - kubernetes.sh
 {% if dashboard %}
   - dashboard.sh

@@ -16,6 +16,9 @@ parameters:
   - default
  disks:
   - size: 50
+{% if rook %}
+  - size: {{ rook_disk_size }}
+{% endif %}
  files:
   - config.yml
   - join.yml
@@ -57,6 +60,9 @@ parameters:
 {% if install_kcli %}
   - install_kcli.sh
 {% endif %}
+{% if rook %}
+  - rook.sh
+{% endif %}
 
 {% if nodes > 0 %}
 {% for number in range(0, nodes) %}
@@ -71,6 +77,9 @@ parameters:
   - default
  disks:
   - size: 50
+{% if rook %}
+  - size: {{ rook_disk_size }}
+{% endif %}
  files:
   - path: /etc/yum.repos.d/kubernetes.repo
     origin: kubernetes.repo
