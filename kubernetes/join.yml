@@ -5,7 +5,7 @@ nodeRegistration:
     feature-gates: {{ feature_gates }}
 discovery:
   bootstrapToken:
-    apiServerEndpoint: ENDPOINT
+    apiServerEndpoint: IP:6443
     token: TOKEN
     caCertHashes:
-    - HASH
+    - sha256:HASH

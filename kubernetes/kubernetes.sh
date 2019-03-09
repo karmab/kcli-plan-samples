@@ -33,10 +33,10 @@ chown root:root /root/.kube/config
 #export CMD=`kubeadm token create --print-join-command`
 #echo ${CMD} > /root/join.sh
 CMD="kubeadm join --config /root/join.yml"
-ENDPOINT="`hostname -i`:6443"
-TOKEN=`kubeadm token generate`
+IP=`ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'`
+TOKEN=`kubeadm token create --ttl 0`
 HASH=`openssl x509 -in /etc/kubernetes/pki/ca.crt -noout -pubkey | openssl rsa -pubin -outform DER 2>/dev/null | sha256sum | cut -d' ' -f1`
-sed -i "s/ENDPOINT/$ENDPOINT/" /root/join.yml
+sed -i "s/IP/$IP/" /root/join.yml
 sed -i "s/TOKEN/$TOKEN/" /root/join.yml
 sed -i "s/HASH/$HASH/" /root/join.yml
 
