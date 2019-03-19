@@ -1,8 +1,5 @@
-echo 192.168.126.11 {{ cluster }}-api.{{ domain }} >> /etc/hosts
-yum -y install libvirt-client libvirt-devel gcc-c++ git unzip wget jq
-curl -OL https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-tar -zxf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-mv $HOME/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/oc /usr/local/bin
+echo 192.168.126.11 {{ cluster }}-api.{{ domain }} api.{{ cluster }}.{{ domain }} >> /etc/hosts
+yum -y install libvirt-client libvirt-devel gcc-c++ git unzip wget jq compat-openssl10
 ssh-keyscan -H 192.168.122.1 >> ~/.ssh/known_hosts
 build=`curl -s https://releases-rhcos.svc.ci.openshift.org/storage/releases/maipo/builds.json | jq -r '.builds[0]'`
 image=`curl -s https://releases-rhcos.svc.ci.openshift.org/storage/releases/maipo/$build/meta.json | jq -r '.images["qemu"].path'`
@@ -24,6 +21,10 @@ cd ${GOPATH}/src/github.com/openshift
 curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 git clone https://github.com/openshift/installer.git
 cd installer
+sed -i -e 's/memory = "2048"/memory = "{{ bootstrap_memory }}"/g' data/data/libvirt/bootstrap/main.tf
+sed -i -e 's/default     = "6144"/default     = {{ master_memory }}/g' data/data/libvirt/variables-libvirt.tf
+sed -i -e "s/DomainMemory: .*/DomainMemory: {{ node_memory }}/g" pkg/asset/machines/libvirt/machines.go
+sed -i -e "s/apiTimeout := 30 \* time.Minute/apiTimeout := 60 \* time.Minute/g" -e "s/eventTimeout := 30 \* time.Minute/eventTimeout := 60 \* time.Minute/g" -e "s/timeout := 30 \* time.Minute/timeout := 60 \* time.Minute/g" -e "s/consoleRouteTimeout := 10 \* time.Minute/consoleRouteTimeout := 20 \* time.Minute/g" cmd/openshift-install/create.go
 dep ensure
 hack/get-terraform.sh
 TAGS=libvirt hack/build.sh

@@ -1,4 +1,4 @@
-apiVersion: v1beta2
+apiVersion: v1beta3
 baseDomain: {{ domain }}
 machines:
 - name: master
