@@ -11,6 +11,7 @@ if [ "$K8S" == "latest" ] ; then
   K8S=`curl -s https://api.github.com/repos/kubernetes/kubernetes/releases/latest| jq -r .tag_name | sed 's/v//'`
 fi
 yum install -y docker kubelet-$K8S kubectl-$K8S kubeadm-$K8S
+echo kubernetesVersion: $K8S >> /root/config.yml
 sed -i "s/--selinux-enabled //" /etc/sysconfig/docker
 systemctl enable docker && systemctl start docker
 #sed -i "s/$/ --feature-gates={{ feature_gates }}/" /var/lib/kubelet/kubeadm-flags.env
