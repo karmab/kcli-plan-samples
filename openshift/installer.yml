@@ -1,6 +1,6 @@
 parameters:
   template: Fedora-Cloud-Base-28-1.1.x86_64.qcow2
-  memory: 10240
+  memory: 13312
   go_version: 1.11.1
   uri: qemu+tcp://192.168.122.1/system
   cluster: testk

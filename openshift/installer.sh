@@ -14,7 +14,7 @@ echo export GOPATH=/root/go >> ~/.bashrc
 echo export PATH=\$PATH:/usr/local/go/bin:\$GOPATH/bin:\$GOPATH/src/github/openshift/installer/bin >> ~/.bashrc
 echo export KUBECONFIG=\$GOPATH/src/github.com/openshift/installer/kubeconfig >> ~/.bashrc
 echo alias go_installer=\"cd \$GOPATH/src/github.com/openshift/installer\">> ~/.bashrc
-echo alias install=\"cd \$GOPATH/src/github.com/openshift/installer && bin/openshift-install create cluster --log-level=debug\">> ~/.bashrc
+echo alias install=\"cd \$GOPATH/src/github.com/openshift/installer \&\& bin/openshift-install create cluster --dir=/root/assets --log-level=debug\">> ~/.bashrc
 mkdir -p ${GOPATH}/{bin,pkg,src}
 mkdir -p ${GOPATH}/src/github.com/openshift
 cd ${GOPATH}/src/github.com/openshift
@@ -23,10 +23,10 @@ git clone https://github.com/openshift/installer.git
 cd installer
 sed -i -e 's/memory = "2048"/memory = "{{ bootstrap_memory }}"/g' data/data/libvirt/bootstrap/main.tf
 sed -i -e 's/default     = "6144"/default     = {{ master_memory }}/g' data/data/libvirt/variables-libvirt.tf
-sed -i -e "s/DomainMemory: .*/DomainMemory: {{ node_memory }}/g" pkg/asset/machines/libvirt/machines.go
+sed -i -e "s/DomainMemory: .*/DomainMemory: {{ node_memory }},/g" pkg/asset/machines/libvirt/machines.go
 sed -i -e "s/apiTimeout := 30 \* time.Minute/apiTimeout := 60 \* time.Minute/g" -e "s/eventTimeout := 30 \* time.Minute/eventTimeout := 60 \* time.Minute/g" -e "s/timeout := 30 \* time.Minute/timeout := 60 \* time.Minute/g" -e "s/consoleRouteTimeout := 10 \* time.Minute/consoleRouteTimeout := 20 \* time.Minute/g" cmd/openshift-install/create.go
 dep ensure
-hack/get-terraform.sh
+#hack/get-terraform.sh
 TAGS=libvirt hack/build.sh
 GOBIN=~/.terraform.d/plugins go get -u github.com/dmacvicar/terraform-provider-libvirt
 PUBKEY=`cat ~/.ssh/authorized_keys`
@@ -38,3 +38,4 @@ chmod +x /usr/bin/openshift-install
 mkdir /root/assets
 cp /root/install-config.yaml /root/assets
 # openshift-install create cluster --dir=/root/assets --log-level=debug
+# scp core@192.168.126.11:/bin/oc /bin

@@ -15,6 +15,7 @@ parameters:
   knative: false
   notifycmd: oc get pod --all-namespaces
   rook: false
+  strimzi: false
 
 origin:
  template: {{ template }}
@@ -39,6 +40,9 @@ origin:
   - origin.sh
 {% if rook %}
   - rook.sh
+{% endif %}
+{% if strimzi %}
+  - strimzi.sh
 {% endif %}
 {% if istio or patch_master or knative %}
   - istio_knative.sh
