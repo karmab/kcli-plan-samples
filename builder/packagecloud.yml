@@ -1,6 +1,4 @@
 parameters:
-    user: karmab
-    package: kcli
     numcpus: 2
     memory: 6144
     template: artful-server-cloudimg-amd64.img
