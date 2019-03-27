@@ -6,7 +6,6 @@ parameters:
    disk_size: 60
    cdi: true
    ui: true
-   ui_version: latest
    template: CentOS-7-x86_64-GenericCloud.qcow2
 
 kubevirt:
