@@ -13,6 +13,6 @@ packagecloud:
   - path: /root/.packagecloud
     origin: ~/packagecloud
   - path: /root/package.spec
-    origin: ~/{{ package }}.spec
+    origin: ~/kcli.spec
  cmds:
   - sh /root/packagecloud.sh
