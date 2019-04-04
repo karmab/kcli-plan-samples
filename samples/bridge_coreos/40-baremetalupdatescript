@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
-ip=$(ip -o addr |grep eth1 | grep -v inet6 | awk '{print $4}')
-ip addr del $ip dev eth1
-#brctl addif baremetal eth1
-ip link set eth1 master baremetal
-ifup baremetal
-dhclient baremetal
-#ip link set baremetal type bridge vlan_filtering 1
+IF=ens4
+BRIDGE=baremetal
+DEFAULT_ROUTE=$(ip r | grep default | grep $IF)
+for ip in $(ip -o addr |grep $IF | grep -v inet6 | awk '{print $4}') ; do 
+  ip addr del $ip dev $IF
+  ip addr add $ip dev $BRIDGE
+done
+if [ ! -z $DEFAULT_ROUTE ] ; then
+ ip route add $DEFAULT_ROUTE
+fi
+ip link set $IF master $BRIDGE
+ip link set baremetal type bridge vlan_filtering 1
