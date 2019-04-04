@@ -1,0 +1,5 @@
+DEVICE=baremetal
+TYPE=Bridge
+ONBOOT=yes
+NM_CONTROLLED=yes
+BOOTPROTO=dhcp

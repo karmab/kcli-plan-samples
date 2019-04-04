@@ -1,0 +1,6 @@
+DEVICE=eth2
+NAME=eth2
+BRIDGE=baremetal
+ONBOOT=yes
+BOOTPROTO=none
+NM_CONTROLLED=yes

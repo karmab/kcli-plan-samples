@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+ip=$(ip -o addr |grep eth1 | grep -v inet6 | awk '{print $4}')
+ip addr del $ip dev eth1
+#brctl addif baremetal eth1
+ip link set eth1 master baremetal
+ifup baremetal
+dhclient baremetal
+#ip link set baremetal type bridge vlan_filtering 1
