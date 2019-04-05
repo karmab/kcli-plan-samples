@@ -11,7 +11,7 @@
                }
 -%}
 sleep 30
-yum -y install wget docker git
+yum -y install wget docker git patch
 wget -P /root/ https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
 mv /root/jq-linux64 /usr/bin/jq
 chmod u+x /usr/bin/jq

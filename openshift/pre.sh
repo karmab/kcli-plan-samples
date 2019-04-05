@@ -1,4 +1,4 @@
-yum -y install wget git net-tools bind-utils iptables-services bridge-utils bash-completion atomic-openshift-utils atomic-openshift-excluder atomic-openshift-docker-excluder nc
+yum -y install wget git net-tools bind-utils iptables-services bridge-utils bash-completion atomic-openshift-utils atomic-openshift-excluder atomic-openshift-docker-excluder nc patch
 atomic-openshift-excluder unexclude
 atomic-openshift-docker-excluder unexclude
 {% if not crio %}

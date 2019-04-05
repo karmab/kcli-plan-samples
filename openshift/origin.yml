@@ -9,7 +9,6 @@ parameters:
   reservedns: false
   disk_size: 30
   rook_disk_size: 20
-  patch_master: false
   istio: false
   istio_version: 1.0.4
   knative: false
@@ -35,6 +34,8 @@ origin:
   - size: {{ rook_disk_size }}
 {% endif %}
  pool: default
+ files:
+  - origin.patch
  scripts: 
   - requirements.sh
   - origin.sh
@@ -44,10 +45,9 @@ origin:
 {% if strimzi %}
   - strimzi.sh
 {% endif %}
-{% if istio or patch_master or knative %}
-  - istio_knative.sh
- files:
-  - patch_master.sh
-  - path: /root/master-config.patch
-    origin: istio.patch
+{% if istio or knative %}
+  - istio.sh
+{% if knative %}
+  - knative.sh
+{% endif %}
 {% endif %}

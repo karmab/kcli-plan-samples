@@ -9,17 +9,20 @@ export DNS={{ name }}.{{ domain }}
 {% else %}
 export DNS=`ip a l  eth0 | grep 'inet ' | cut -d' ' -f6 | awk -F'/' '{ print $1}'`.xip.io
 {% endif %}
-oc cluster up --public-hostname ${DNS} --routing-suffix ${DNS} --enable=router,registry,web-console,persistent-volumes,rhel-imagestreams
+cd /root
+oc cluster up --public-hostname ${DNS} --routing-suffix ${DNS} --enable=router,registry,web-console,persistent-volumes,rhel-imagestreams --write-config
+patch /root/openshift.local.clusterup/kube-apiserver/master-config.yaml < /root/origin.patch
+patch /root/openshift.local.clusterup/openshift-apiserver/master-config.yaml < /root/origin.patch
+patch /root/openshift.local.clusterup/openshift-controller-manager/master-config.yaml < /root/origin.patch
+{% if not istio %}
+reboot
+{% endif %}
+
+oc cluster up --server-loglevel=5
 {% if asb %}
 oc cluster add service-catalog
 oc cluster add automation-service-broker
 {% endif %}
 oc login -u system:admin
 oc adm policy add-cluster-role-to-user cluster-admin {{ admin_user }}
-{% if istio or patch_master %}
-sh /root/patch_master.sh
-{% endif %}
 docker update --restart=always origin
-{% if patch_master %}
-reboot
-{% endif %}

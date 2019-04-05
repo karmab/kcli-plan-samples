@@ -4,7 +4,6 @@ parameters:
   federation_version: v0.0.5
   go_version: 1.11.1
   loadbalancer: false
-  patch_master: false
   notifycmd: kubectl -n federation-system describe federatedclusters
 
 {% if loadbalancer %}
@@ -43,13 +42,8 @@ nfs:
  scripts: 
   - nfs_federation.sh
   - federation.sh
-{% if patch_master %}
-  - patch_master.sh
-{% endif %}
  files:
   - nfs.yml
-  - path: /root/master-config.patch
-    origin: istio.patch
 
 {{ cluster }}2:
  basevm: origin
@@ -57,10 +51,5 @@ nfs:
  notify: false
  scripts: 
   - nfs_federation.sh
-{% if patch_master %}
-  - patch_master.sh
-{% endif %}
  files:
   - nfs.yml
-  - path: /root/master-config.patch
-    origin: istio.patch
