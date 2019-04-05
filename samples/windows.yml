@@ -1,0 +1,23 @@
+windows:
+  memory: 8192
+  cloudinit: false
+  cpuflags:
+  - acpi
+  - apic
+  - hyperv:
+     relaxed:
+      enabled: true
+     spinlocks:
+      enabled: true
+      spinlocks: 8191
+     vapic:
+      enabled: true
+  numcpus: 2
+  nets: 
+   - name: default
+     type: e1000
+     mac: 52:54:00:00:01:b4
+  disks:
+   - size: 40
+     interface: sata
+     template: SummitVM.qcow2

@@ -1,12 +1,11 @@
 parameters:
  template: rhcos-410.8.20190402.0-qemu.qcow2
 
-testkarim:
+testbridgecos:
  template: {{ template }}
  disks:
  - 20
  nets:
- - default
  - default
  files:
  - path: /etc/sysconfig/network-scripts/ifcfg-baremetal

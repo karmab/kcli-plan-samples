@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+IF=ens3
+BRIDGE=baremetal
+ip r  >> /tmp/results.log
+DEFAULT_ROUTE=$( ip r | grep default | grep $IF )
+echo $DEFAULT_ROUTE >> /tmp/results.log
+for ip in $(ip -o addr |grep $IF | grep -v inet6 | awk '{print $4}') ; do 
+  ip addr del $ip dev $IF
+  ip addr add $ip dev $BRIDGE
+done
+if [ ! "$DEFAULT_ROUTE" ] ; then
+    NEW_ROUTE=$( echo $DEFAULT_ROUTE | sed "s/$IF/$BRIDGE" )
+    echo NEW_ROUTE: $NEW_ROUTE 2>>/tmp/results.log 
+    ip route add $NEW_ROUTE
+fi
+ip link set $IF master $BRIDGE
+ip link set baremetal type bridge vlan_filtering 1
