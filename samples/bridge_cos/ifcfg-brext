@@ -1,4 +1,4 @@
-DEVICE=baremetal
+DEVICE=brext
 TYPE=Bridge
 ONBOOT=yes
 NM_CONTROLLED=yes

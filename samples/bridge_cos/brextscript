@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+IF=ens4
+nmcli con down $IF
+#IF=$(ip r | grep default | grep -v proto | sed 's/.*dev \(.*\)/\1/')
+#if [ ! -f /etc/sysconfig/network-scripts/ifcfg-$IF ] ; then
+#echo brext acting on $IF
+#cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-$IF
+#DEVICE=$IF
+#BRIDGE=brext
+#ONBOOT=yes
+#NM_CONTROLLED=yes
+#BOOTPROTO=none
+#EOF
+#else
+#nmcli con down $IF
+#fi

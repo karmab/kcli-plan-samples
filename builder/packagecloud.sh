@@ -1,3 +1,4 @@
+export HOME=/root
 export VERSION=`grep Version: /root/package.spec  | cut -d":" -f2 | xargs`
 apt-get update 
 apt-get -y install python3-stdeb ruby ruby-dev wget python-all
