@@ -1,0 +1,10 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+172.16.200.2 master-0.kni.lab.redhat.com
+172.16.200.3 master-1.kni.lab.redhat.com
+172.16.200.4 master-2.kni.lab.redhat.com
+172.16.200.5 worker-0.kni.lab.redhat.com
+172.16.200.6 worker-1.kni.lab.redhat.com
+172.16.200.7 worker-2.kni.lab.redhat.com
+172.16.200.13 api.summit.kni.lab.redhat.com
+172.16.200.14 ns1.summit.kni.lab.redhat.com

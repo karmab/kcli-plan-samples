@@ -1,0 +1,24 @@
+parameters:
+ network: baremetal
+
+dnsserver:
+ template: CentOS-7-x86_64-GenericCloud.qcow2
+ memory: 1024
+ numcpus: 1
+ disks:
+  - size: 10
+ nets:
+  - name: {{ network }}
+    ip: 172.16.200.20
+    mask: 255.255.254.0
+    gateway: 172.16.201.254
+    dns: 10.11.5.19
+ files:
+  - path: /etc/hosts
+    origin: hosts
+ cmds:
+  - yum -y install dnsmasq
+  - systemctl enable dnsmasq
+  - echo address=/app.summit.kni.lab.redhat.com/172.16.200.15 >> /etc/dnsmasq.conf
+  - systemctl enable dnsmasq
+  - systemctl start dnsmasq
