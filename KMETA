@@ -337,7 +337,7 @@
 
 - name: ovirt
   file: ovirt/upstream.yml
-  description: Upstream ovirt 4.2 all in one with nfs
+  description: Upstream ovirt all in one with nfs
   numvms: 1
   stars: 5
 

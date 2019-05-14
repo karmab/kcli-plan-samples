@@ -65,3 +65,6 @@ OVESETUP_CONFIG/websocketProxyConfig=bool:True
 OVESETUP_OVN/ovirtProviderOvn=bool:True
 OVESETUP_OVN/ovirtProviderOvnUser=str:admin@internal
 OVESETUP_OVN/ovirtProviderOvnPassword=str:{{ password }}
+QUESTION/1/OVESETUP_PROVISIONING_POSTGRES_LOCATION=str:local
+QUESTION/1/OVESETUP_PROVISIONING__CL_POSTGRES_ENABLED=str:automatic
+QUESTION/1/ovirt-cinderlib-enable=str:yes
