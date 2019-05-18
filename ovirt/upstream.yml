@@ -3,6 +3,7 @@ parameters:
  version: 4.3
  organization: Karmalabs
  nested: false
+ ignition: true
 
 ovirt:
  template: CentOS-7-x86_64-GenericCloud.qcow2
@@ -21,8 +22,15 @@ ovirt:
   - nfs.sh
   - install.sh
   - provision.sh
+{% if ignition %}
+  - ignition.sh
+{% endif %}
  files:
   - path: /root/answers.txt
     origin: answers.txt
   - path: /root/.ovirtshellrc
     origin: ovirtshellrc
+{% if ignition %}
+  - path: /root/90_ignition
+    origin: 90_ignition
+{% endif %}

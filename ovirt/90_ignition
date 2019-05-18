@@ -1,0 +1,40 @@
+#!/usr/bin/python
+
+import os
+import sys
+import hooking
+import traceback
+
+'''
+ignition vdsm hook
+================
+add ignition data
+syntax:
+    ignitiondata=...
+'''
+
+if "ignitiondata" not in os.environ:
+    sys.exit(0)
+else:
+    ignitiondata = os.environ['ignitiondata']
+
+try:
+    domxml = hooking.read_domxml()
+    name = domxml.getElementsByTagName('name')[0].firstChild.nodeValue
+    domain = domxml.getElementsByTagName('domain')[0]
+    domain.setAttribute('xmlns:qemu', 'http://libvirt.org/schemas/domain/qemu/1.0')
+    commandline = domxml.createElement('qemu:commandline')
+    domain.appendChild(commandline)
+    e = domxml.createElement('qemu:arg')
+    e.setAttribute('value', '-fw_cfg')
+    commandline.appendChild(e)
+    e = domxml.createElement('qemu:arg')
+    with open("/tmp/%s.ign" % name, 'w') as ignitionfile:
+        ignitionfile.write(ignitiondata)
+    e.setAttribute('value', 'name=opt/com.coreos/config,file=/tmp/%s.ign' % name)
+    commandline.appendChild(e)
+    hooking.write_domxml(domxml)
+
+except:
+    sys.stderr.write('ignition: [unexpected error]: %s\n' % traceback.format_exc())
+    sys.exit(2)
