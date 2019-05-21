@@ -1,0 +1,55 @@
+parameters:
+ prefix: karim-
+ numcpus: 2
+ memory: 1024
+ disk_size: 10
+ template: CentOS-7-x86_64-GenericCloud.qcow2
+ masters: 1
+ workers: 0
+ haproxy_ip: 
+ haproxy_mac: 
+ masters_ips: []
+ masters_macs: []
+ workers_ips: []
+ workers_macs: []
+ network: default
+
+{% for num in range(0, masters) %}
+{{ prefix }}-master-{{ num }}:
+ template: {{ template }}
+ numcpus: {{ numcpus }}
+ memory: {{ memory }}
+ nets:
+  - name: {{ network }}
+ disks:
+  - size: {{ disk_size }}
+{% endfor %}
+
+{% for num in range(0, workers) %}
+{{ prefix }}-worker-{{ num }}:
+ template: {{ template }}
+ numcpus: {{ numcpus }}
+ memory: {{ memory }}
+ nets:
+  - name: {{ network }}
+ disks:
+  - size: {{ disk_size }}
+{% endfor %}
+
+{{ prefix }}-bootstrap:
+ template: {{ template }}
+ numcpus: {{ numcpus }}
+ memory: {{ memory }}
+ nets:
+  - name: {{ network }}
+ disks:
+  - size: {{ disk_size }}
+
+{{ prefix }}-haproxy:
+ template: {{ template }}
+ numcpus: {{ numcpus }}
+ memory: {{ memory }}
+ nets:
+  - name: {{ network }}
+ disks:
+  - size: {{ disk_size }}

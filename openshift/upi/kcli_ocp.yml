@@ -1,25 +1,53 @@
 parameters:
- prefix: karim-
+ prefix: karim
  numcpus: 4
  memory: 1024
  disk_size: 30
- masters: 1
- template: rhcos-410.8.20190513.0-qemu.qcow2
+ template: rhcos-410.8.20190402.0-qemu.qcow2
  haproxy_template: CentOS-7-x86_64-GenericCloud.qcow2
- allips: []
- allmacs: []
+ masters: 1
+ workers: 0
+ haproxy_ip: 
+ haproxy_mac: 
+ bootstrap_ip: 
+ bootstrap_mac: 
+ masters_ips: []
+ masters_macs: []
+ workers_ips: []
+ workers_macs: []
  network: default
 
-{% for node in range(0, masters) %}
-{{ prefix }}-master-{{ node }}:
+{% for num in range(0, masters) %}
+{{ prefix }}-master-{{ num }}:
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ memory }}
+{% if haproxy_ip != '' %}
+ dns: {{ haproxy_ip }}
+{% endif %}
  nets:
   - name: {{ network }}
-{% if allips and allmacs %}
-    ip: {{ allips[node] }}
-    mac: {{ allmacs[node] }}
+{% if masters_macs %}
+    mac: {{ masters_macs[num] }}
+{% else %}
+ reservedns: true
+{% endif %}
+ disks:
+  - size: {{ disk_size }}
+{% endfor %}
+
+{% for num in range(0, workers) %}
+{{ prefix }}-worker-{{ num }}:
+ template: {{ template }}
+ numcpus: {{ numcpus }}
+ memory: {{ memory }}
+{% if haproxy_ip != '' %}
+ dns: {{ haproxy_ip }}
+{% endif %}
+ nets:
+  - name: {{ network }}
+{% if workers_macs %}
+    mac: {{ workers_macs[num] }}
 {% else %}
  reservedns: true
 {% endif %}
@@ -31,11 +59,13 @@ parameters:
  template: {{ template }}
  numcpus: 2
  memory: 1024
+{% if haproxy_ip != '' %}
+ dns: {{ haproxy_ip }}
+{% endif %}
  nets:
   - name: {{ network }}
-{% if allips and allmacs %}
-    ip: {{ allips[-1] }}
-    mac: {{ allmacs[-1] }}
+{% if bootstrap_mac != '' %}
+    mac: {{ bootstrap_mac }}
 {% else %}
  reservedns: true
 {% endif %}
@@ -48,5 +78,10 @@ parameters:
  memory: 1024
  nets:
   - name: {{ network }}
+{% if haproxy_mac != '' %}
+    mac: {{ haproxy_mac }}
+{% else %}
+ reservedns: true
+{% endif %}
  disks:
   - size: 10

@@ -1,0 +1,15 @@
+prefix: karim
+masters: 1
+workers: 0
+haproxy_ip: 192.168.122.177
+haproxy_mac: 52:54:00:59:e0:b7
+bootstrap_ip: 192.168.122.207
+bootstrap_mac: 52:54:00:5e:34:ee
+masters_ips:
+- 192.168.122.43
+- 192.168.122.57
+masters_macs:
+- 52:54:00:fe:0b:c2
+- 52:54:00:22:9e:60
+workers_ips:
+workers_macs:
