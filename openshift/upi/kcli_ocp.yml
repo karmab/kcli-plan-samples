@@ -3,7 +3,7 @@ parameters:
  numcpus: 4
  memory: 1024
  disk_size: 30
- template: rhcos-410.8.20190402.0-qemu.qcow2
+ template: rhcos-410.8.20190520.1-qemu.qcow2
  haproxy_template: CentOS-7-x86_64-GenericCloud.qcow2
  cluster: testk
  domain: karmalabs.com
@@ -21,6 +21,7 @@ parameters:
 
 {% for num in range(0, masters) %}
 {{ prefix }}-master-{{ num }}:
+ domain: {{ cluster }}.{{ domain }} 
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ memory }}
@@ -40,6 +41,7 @@ parameters:
 
 {% for num in range(0, workers) %}
 {{ prefix }}-worker-{{ num }}:
+ domain: {{ cluster }}.{{ domain }} 
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ memory }}
@@ -95,3 +97,4 @@ parameters:
  scripts:
   - haproxy.sh
   - dnsmasq.sh
+  - ignitionfiles.sh

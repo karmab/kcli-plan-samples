@@ -1,7 +1,7 @@
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 {% for num in range(0, masters) %}
-{{ masters_ips[num] }} {{ prefix }}-master-{{ num }} {{ prefix }}-master-{{ num }}.{{ cluster }}.{{ domain }}
+{{ masters_ips[num] }} {{ prefix }}-master-{{ num }} {{ prefix }}-master-{{ num }}.{{ cluster }}.{{ domain }} etcd-{{ num }}.{{ cluster }}.{{ domain }}
 {% endfor %}
 {% if workers > 0 %}
 {% for num in range(0, workers) %}
