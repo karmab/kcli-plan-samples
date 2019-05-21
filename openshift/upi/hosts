@@ -1,12 +1,13 @@
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
-{% for num in range(0, workers) %}
-{{ masters_ips[num] }} {{ prefix }}-master-{{ num }} {{ prefix }}-master-{{ num }}.{{ $domain }}
+{% for num in range(0, masters) %}
+{{ masters_ips[num] }} {{ prefix }}-master-{{ num }} {{ prefix }}-master-{{ num }}.{{ cluster }}.{{ domain }}
 {% endfor %}
 {% if workers > 0 %}
 {% for num in range(0, workers) %}
-{{ workers_ips[num] }} {{ prefix }}-worker-{{ num }} {{ prefix }}-worker-{{ num }}.{{ $domain }}
+{{ workers_ips[num] }} {{ prefix }}-worker-{{ num }} {{ prefix }}-worker-{{ num }}.{{ cluster }}.{{ domain }}
+{% endfor %}
 {% endif %}
-{{ haproxy_ip }} api.{{ domain }}
-{{ haproxy_ip }} api-int.{{ domain }}
-{{ haproxy_ip }} ns1.{{ domain }}
+{{ haproxy_ip }} api.{{ cluster }}.{{ domain }}
+{{ haproxy_ip }} api-int.{{ cluster }}.{{ domain }}
+{{ haproxy_ip }} ns1.{{ cluster }}.{{ domain }}

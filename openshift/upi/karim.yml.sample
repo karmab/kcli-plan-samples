@@ -1,4 +1,6 @@
 prefix: karim
+cluster: testk
+domain: karmalabs.com
 masters: 1
 workers: 0
 haproxy_ip: 192.168.122.177

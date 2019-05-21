@@ -1,0 +1,15 @@
+apiVersion: v1
+baseDomain: DOMAIN
+compute:
+- name: worker
+  replicas: WORKERS
+controlPlane:
+  name: master
+  replicas: MASTERS
+metadata:
+  name: CLUSTER
+platform:
+  none: {}
+pullSecret: 'PULLSECRET'
+sshKey: |
+    PUBKEY

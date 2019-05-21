@@ -1,9 +1,21 @@
 #!/bin/bash
 prefix=karim
 masters=1
+cluster=testk
 domain=karmalabs.com
-
 workers=0
+
+pubkey=`cat ~/.ssh/id_rsa.pub`
+pullsecret=`cat openshift_pull.json`
+mkdir $cluster || exit 1
+sed "s%DOMAIN%$domain%" install-config.yaml > $cluster/install-config.yaml
+sed -i "s%WORKERS%$workers%" $cluster/install-config.yaml
+sed -i "s%MASTERS%$masters%" $cluster/install-config.yaml
+sed -i "s%CLUSTER%$cluster%" $cluster/install-config.yaml
+sed -i "s%PULLSECRET%$pullsecret%" $cluster/install-config.yaml
+sed -i "s%PUBKEY%$pubkey%" $cluster/install-config.yaml
+openshift-install --dir $cluster create ignition-configs
+
 kcli plan -f kcli_ocp_temp.yml -P prefix=$prefix -P masters=$masters -P workers=$workers temp_$prefix
 
 all="$prefix-haproxy $prefix-bootstrap"
@@ -24,7 +36,7 @@ current=0
 while [ $current != $total ] ; do
     info=$(kcli info -f ip,nets -v $all | sed 's/.*mac: \(.*\) net:.*/\1/')
     current=$(echo $info | wc -w)
-    echo "Waiting to gather ips and macs from nodes"
+    echo "Waiting 5s to gather ips and macs from nodes..."
     sleep 5
 done
 
@@ -64,30 +76,31 @@ for i in `seq 0 $workers` ; do
 done
 
 echo """prefix: $prefix
+cluster: $cluster
 domain: $domain
 masters: $masters
 workers: $workers
 haproxy_ip: $haproxy_ip
 haproxy_mac: $haproxy_mac
 bootstrap_ip: $bootstrap_ip
-bootstrap_mac: $bootstrap_mac""" > $prefix.yml
+bootstrap_mac: $bootstrap_mac""" > $cluster/$prefix.yml
 
-echo "masters_ips:" >> $prefix.yml
+echo "masters_ips:" >> $cluster/$prefix.yml
 for entry in `echo $masters_ips` ; do 
-  echo "- $entry" >> $prefix.yml
+  echo "- $entry" >> $cluster/$prefix.yml
 done
-echo "masters_macs:" >> $prefix.yml
+echo "masters_macs:" >> $cluster/$prefix.yml
 for entry in `echo $masters_macs` ; do 
-  echo "- $entry" >> $prefix.yml
+  echo "- $entry" >> $cluster/$prefix.yml
 done
-echo "workers_ips:" >> $prefix.yml
+echo "workers_ips:" >> $cluster/$prefix.yml
 for entry in `echo $workers_ips` ; do 
-  echo "- $entry" >> $prefix.yml
+  echo "- $entry" >> $cluster/$prefix.yml
 done
-echo "workers_macs:" >> $prefix.yml
+echo "workers_macs:" >> $cluster/$prefix.yml
 for entry in `echo $workers_macs` ; do 
-  echo "- $entry" >> $prefix.yml
+  echo "- $entry" >> $cluster/$prefix.yml
 done
 
 kcli plan --yes -d  temp_$prefix
-kcli plan -f kcli_ocp.yml --paramfile $prefix.yml $prefix
+kcli plan -f kcli_ocp.yml --paramfile $cluster/$prefix.yml $prefix

@@ -1,5 +1,5 @@
 parameters:
- prefix: karim-
+ prefix: karim
  numcpus: 2
  memory: 1024
  disk_size: 10
