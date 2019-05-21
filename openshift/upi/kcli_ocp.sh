@@ -1,9 +1,9 @@
 #!/bin/bash
-prefix=karim
 masters=1
+workers=0
 cluster=testk
 domain=karmalabs.com
-workers=0
+prefix=karim
 
 pubkey=`cat ~/.ssh/id_rsa.pub`
 pullsecret=`cat openshift_pull.json`
