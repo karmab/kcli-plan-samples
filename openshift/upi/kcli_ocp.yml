@@ -1,7 +1,10 @@
 parameters:
  prefix: karim
  numcpus: 4
- memory: 1024
+ master_memory: 8192
+ worker_memory: 8192
+ bootstrap_memory: 4096
+ haproxy_memory: 2048
  disk_size: 30
  template: rhcos-410.8.20190520.1-qemu.qcow2
  haproxy_template: CentOS-7-x86_64-GenericCloud.qcow2
@@ -24,7 +27,7 @@ parameters:
  domain: {{ cluster }}.{{ domain }} 
  template: {{ template }}
  numcpus: {{ numcpus }}
- memory: {{ memory }}
+ memory: {{ master_memory }}
 {% if haproxy_ip != '' %}
  dns: {{ haproxy_ip }}
 {% endif %}
@@ -44,7 +47,7 @@ parameters:
  domain: {{ cluster }}.{{ domain }} 
  template: {{ template }}
  numcpus: {{ numcpus }}
- memory: {{ memory }}
+ memory: {{ worker_memory }}
 {% if haproxy_ip != '' %}
  dns: {{ haproxy_ip }}
 {% endif %}
@@ -62,7 +65,7 @@ parameters:
 {{ prefix }}-bootstrap:
  template: {{ template }}
  numcpus: 2
- memory: 1024
+ memory: {{ bootstrap_memory }}
 {% if haproxy_ip != '' %}
  dns: {{ haproxy_ip }}
 {% endif %}
@@ -79,7 +82,7 @@ parameters:
 {{ prefix }}-haproxy:
  template: {{ haproxy_template }}
  numcpus: 2
- memory: 1024
+ memory: {{ haproxy_memory }}
  nets:
   - name: {{ network }}
 {% if haproxy_mac != '' %}
