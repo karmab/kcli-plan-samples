@@ -1,6 +1,7 @@
 #!/bin/bash
 prefix=karim
 masters=1
+domain=karmalabs.com
 
 workers=0
 kcli plan -f kcli_ocp_temp.yml -P prefix=$prefix -P masters=$masters -P workers=$workers temp_$prefix
@@ -63,6 +64,7 @@ for i in `seq 0 $workers` ; do
 done
 
 echo """prefix: $prefix
+domain: $domain
 masters: $masters
 workers: $workers
 haproxy_ip: $haproxy_ip

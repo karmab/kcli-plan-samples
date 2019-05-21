@@ -5,6 +5,7 @@ parameters:
  disk_size: 30
  template: rhcos-410.8.20190402.0-qemu.qcow2
  haproxy_template: CentOS-7-x86_64-GenericCloud.qcow2
+ domain: karmalabs.com
  masters: 1
  workers: 0
  haproxy_ip: 
@@ -85,3 +86,13 @@ parameters:
 {% endif %}
  disks:
   - size: 10
+ files:
+  - path: /etc/hosts
+    origin: hosts
+    mode: 644
+  - path: haproxy.cfg
+    origin: haproxy.cfg
+    mode: 644
+ scripts:
+  - haproxy.sh
+  - dnsmasq.sh
