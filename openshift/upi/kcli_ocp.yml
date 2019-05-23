@@ -36,6 +36,9 @@ parameters:
 {% endif %}
  nets:
   - name: {{ network }}
+{% if masters_ips %}
+    ip: {{ masters_ips[num] }}
+{% endif %}
 {% if masters_macs %}
     mac: {{ masters_macs[num] }}
 {% else %}
@@ -64,6 +67,9 @@ parameters:
 {% endif %}
  nets:
   - name: {{ network }}
+{% if workers_ips %}
+    ip: {{ workers_ips[num] }}
+{% endif %}
 {% if workers_macs %}
     mac: {{ workers_macs[num] }}
 {% else %}
@@ -92,6 +98,9 @@ parameters:
 {% endif %}
  nets:
   - name: {{ network }}
+{% if bootstrap_ip != '' %}
+    ip: {{ bootstrap_ip }}
+{% endif %}
 {% if bootstrap_mac != '' %}
     mac: {{ bootstrap_mac }}
 {% else %}
