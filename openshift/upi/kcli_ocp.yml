@@ -1,11 +1,15 @@
 parameters:
  prefix: karim
  numcpus: 4
+ network: default
+ use_br: false
+ extra_disk: false
  master_memory: 8192
  worker_memory: 8192
  bootstrap_memory: 4096
  haproxy_memory: 2048
  disk_size: 30
+ extra_disk_size: 30
  template: rhcos-410.8.20190520.1-qemu.qcow2
  haproxy_template: CentOS-7-x86_64-GenericCloud.qcow2
  cluster: testk
@@ -20,7 +24,6 @@ parameters:
  masters_macs: []
  workers_ips: []
  workers_macs: []
- network: default
 
 {% for num in range(0, masters) %}
 {{ prefix }}-master-{{ num }}:
@@ -40,6 +43,14 @@ parameters:
 {% endif %}
  disks:
   - size: {{ disk_size }}
+{% if use_br %}
+ files:
+  - path: /etc/NetworkManager/dispatcher.d/98-brextscript
+    origin: 98-brextscript
+    mode: 755
+  - path: /etc/sysconfig/network-scripts/ifcfg-brext
+    origin: ifcfg-brext
+{% endif %}
 {% endfor %}
 
 {% for num in range(0, workers) %}
@@ -60,6 +71,16 @@ parameters:
 {% endif %}
  disks:
   - size: {{ disk_size }}
+{% if extra_disk %}
+  - size: {{ extra_disk_size }}
+{% endif %}
+{% if use_br %}
+ files:
+  - path: /etc/NetworkManager/dispatcher.d/98-brextscript
+    origin: 98-brextscript
+  - path: /etc/sysconfig/network-scripts/ifcfg-brext
+    origin: ifcfg-brext
+{% endif %}
 {% endfor %}
 
 {{ prefix }}-bootstrap:
