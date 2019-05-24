@@ -134,3 +134,7 @@ kcli plan --yes -d  temp_$prefix
 sed -i s@https://api-int.$cluster.$domain:22623/config@http://$haproxy_ip:8080@ $cluster/master.ign $cluster/worker.ign
 kcli plan -f ocp.yml --paramfile $cluster/$prefix.yml $cluster
 export KUBECONFIG=$PWD/$cluster/auth/kubeconfig
+sudo sed -i s/api.$cluster.$domain/d /etc/hosts
+sudo sh -c "echo $haproxy_ip api-int.$cluster.$domain>> /etc/hosts"
+# openshift-install --dir=$cluster wait-for install-complete
+# oc patch configs.imageregistry.operator.openshift.io cluster --type merge --patch '{"spec":{"storage":{"emptyDir":{}}}}'
