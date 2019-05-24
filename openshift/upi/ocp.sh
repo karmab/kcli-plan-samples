@@ -30,7 +30,7 @@ sed -i "s%PULLSECRET%$pullsecret%" $cluster/install-config.yaml
 sed -i "s%PUBKEY%$pubkey%" $cluster/install-config.yaml
 openshift-install --dir $cluster create ignition-configs
 
-kcli plan -f kcli_ocp_temp.yml -P prefix=$prefix -P masters=$masters -P workers=$workers -P network=$network temp_$prefix
+kcli plan -f ocp_temp.yml -P prefix=$prefix -P masters=$masters -P workers=$workers -P network=$network temp_$prefix
 
 all="$prefix-haproxy $prefix-bootstrap"
 for i in `seq 0 $masters` ; do 
@@ -132,5 +132,5 @@ done
 
 kcli plan --yes -d  temp_$prefix
 sed -i s@https://api-int.$cluster.$domain:22623/config@http://$haproxy_ip:8080@ $cluster/master.ign $cluster/worker.ign
-kcli plan -f kcli_ocp.yml --paramfile $cluster/$prefix.yml $prefix
+kcli plan -f ocp.yml --paramfile $cluster/$prefix.yml $prefix
 export KUBECONFIG=$PWD/$cluster/auth/kubeconfig
