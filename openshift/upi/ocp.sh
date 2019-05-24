@@ -132,5 +132,5 @@ done
 
 kcli plan --yes -d  temp_$prefix
 sed -i s@https://api-int.$cluster.$domain:22623/config@http://$haproxy_ip:8080@ $cluster/master.ign $cluster/worker.ign
-kcli plan -f ocp.yml --paramfile $cluster/$prefix.yml $prefix
+kcli plan -f ocp.yml --paramfile $cluster/$prefix.yml $cluster
 export KUBECONFIG=$PWD/$cluster/auth/kubeconfig
