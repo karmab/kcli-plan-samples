@@ -10,6 +10,7 @@ master_memory="${master_memory:-8192}"
 worker_memory="${worker_memory:-8192}"
 bootstrap_memory="${bootstrap_memory:-4096}"
 haproxy_memory="${haproxy_memory:-2048}"
+haproxy_bootstrap="${haproxy_bootstrap:-false}"
 disk_size="${disk_size:-30}"
 extra_disk_size="${extra_disk_size:-10}"
 template="${template:-rhcos-410.8.20190520.1-qemu.qcow2}"
@@ -100,6 +101,7 @@ master_memory: $master_memory
 worker_memory: $worker_memory
 bootstrap_memory: $bootstrap_memory
 haproxy_memory: $haproxy_memory
+haproxy_bootstrap: $haproxy_bootstrap
 disk_size: $disk_size
 extra_disk_size: $extra_disk_size
 template: $template
@@ -132,9 +134,14 @@ done
 
 kcli plan --yes -d  temp_$prefix
 sed -i s@https://api-int.$cluster.$domain:22623/config@http://$haproxy_ip:8080@ $cluster/master.ign $cluster/worker.ign
+if [ "$haproxy_bootstrap" == "true" ] ; then
+ mv $cluster/bootstrap.ign $cluster/bootstrap.ign.ori
+ cp $cluster/master.ign $cluster/bootstrap.ign
+ sed -i s@$haproxy_ip:8080/master@$haproxy_ip:8081/bootstrap@ $cluster/bootstrap.ign
+fi
 kcli plan -f ocp.yml --paramfile $cluster/$prefix.yml $cluster
 export KUBECONFIG=$PWD/$cluster/auth/kubeconfig
-sudo sed -i s/api.$cluster.$domain/d /etc/hosts
+sudo sed -i '/api.$cluster.$domain/d' /etc/hosts
 sudo sh -c "echo $haproxy_ip api-int.$cluster.$domain>> /etc/hosts"
 # openshift-install --dir=$cluster wait-for install-complete
 # oc patch configs.imageregistry.operator.openshift.io cluster --type merge --patch '{"spec":{"storage":{"emptyDir":{}}}}'

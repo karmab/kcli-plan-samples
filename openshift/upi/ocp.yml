@@ -8,6 +8,7 @@ parameters:
  worker_memory: 8192
  bootstrap_memory: 4096
  haproxy_memory: 2048
+ haproxy_bootstrap: true
  disk_size: 30
  extra_disk_size: 30
  template: rhcos-410.8.20190520.1-qemu.qcow2
@@ -127,7 +128,15 @@ parameters:
     origin: hosts
     mode: 644
   - haproxy.cfg
+{% if haproxy_bootstrap %}
+  - path: /root/bootstrap.ign
+    origin: {{ cluster }}/bootstrap.ign.ori
+    mode: 644
+{% endif %}
  scripts:
   - haproxy.sh
   - dnsmasq.sh
+{% if haproxy_bootstrap %}
+  - ignitionbootstrap.sh
+{% endif %}
   - ignitionfiles.sh
