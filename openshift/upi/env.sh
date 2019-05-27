@@ -12,5 +12,5 @@ export disk_size=30
 export extra_disk_size=10
 export cluster=ovirtspr1
 export masters=1
-export workers=2
+export workers=3
 export haproxy_bootstrap=true

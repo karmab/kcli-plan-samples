@@ -19,7 +19,7 @@ The main features are:
   - a centos image ( *kcli download centos7* )
 - The target platform needs to have ignition support. 
   
-  For ovirt/rhv, this is accomplished through [an additional vdsm hook](https://gerrit.ovirt.org/#/c/100008) to install on each node, along with the custom property *ignitiondata*
+  For ovirt/rhv, this either requires ovirt >= 4.3.4 or to install [an additional vdsm hook](https://gerrit.ovirt.org/#/c/100008), along with the custom property *ignitiondata*
 
   Other potential platforms like openstack or gcp already have support for ignition.
 

@@ -9,6 +9,9 @@ network="${network:-default}"
 masters="${masters:-1}"
 workers="${workers:-0}"
 
+haproxy_ip=$(grep haproxy_ip $cluster/$prefix.yml | awk -F:  '{print $2}' | xargs)
+kcli ssh root@$prefix-haproxy "curl -kL https://$haproxy_ip:22623/config/worker -o /var/www/html/worker" 
+
 old_workers=$( grep workers: $cluster/$prefix.yml | awk '{print $2}')
 new_workers=$(( $workers - $old_workers ))
 if [ $new_workers -lt 1 ] ; then 
@@ -51,13 +54,19 @@ for i in `seq $new_workers $workers` ; do
  fi
 done
 
+sed -i "s/deploy_bootstrap: .*/deploy_bootstrap: false/" $cluster/$prefix.yml
 sed -i "s/workers: .*/workers: $workers/" $cluster/$prefix.yml
-sed -i "s@workers_macs:@$( echo $new_workers_macs | sed 's/ /\n/')/\n&@" $cluster/$prefix.yml
+index=$(( $workers - $new_workers ))
+for new_workers_ip in $new_workers_ips ; do 
+    sed -i "s@workers_macs:@$( echo - $new_workers_ip )/\n&@" $cluster/$prefix.yml
+    kcli ssh root@$prefix-haproxy "echo -e $new_workers_ip $prefix-worker-$index $prefix-worker-$index.$cluster.$domain >> /etc/hosts" 
+    index=$(( $index + 1 ))
+done
 
 for entry in `echo $new_workers_macs` ; do
   echo "- $entry" >> $cluster/$prefix.yml
 done
 
+kcli ssh root@$prefix-haproxy  "systemctl restart dnsmasq"
 kcli plan --yes -d  temp_$prefix
-
 kcli plan -f ocp.yml --paramfile $cluster/$prefix.yml $cluster

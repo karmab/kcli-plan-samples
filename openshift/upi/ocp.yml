@@ -6,6 +6,7 @@ parameters:
  extra_disk: false
  master_memory: 8192
  worker_memory: 8192
+ deploy_bootstrap: true
  bootstrap_memory: 4096
  haproxy_memory: 2048
  haproxy_bootstrap: true
@@ -85,11 +86,13 @@ parameters:
  files:
   - path: /etc/NetworkManager/dispatcher.d/98-brextscript
     origin: 98-brextscript
+    mode: 755
   - path: /etc/sysconfig/network-scripts/ifcfg-brext
     origin: ifcfg-brext
 {% endif %}
 {% endfor %}
 
+{% if deploy_bootstrap %}
 {{ prefix }}-bootstrap:
  template: {{ template }}
  numcpus: 2
@@ -109,6 +112,7 @@ parameters:
 {% endif %}
  disks:
   - size: {{ disk_size }}
+{% endif %}
 
 {{ prefix }}-haproxy:
  template: {{ haproxy_template }}

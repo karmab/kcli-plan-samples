@@ -99,6 +99,7 @@ use_br: $use_br
 extra_disk: $extra_disk
 master_memory: $master_memory
 worker_memory: $worker_memory
+deploy_bootstrap: true
 bootstrap_memory: $bootstrap_memory
 haproxy_memory: $haproxy_memory
 haproxy_bootstrap: $haproxy_bootstrap
@@ -142,6 +143,6 @@ fi
 kcli plan -f ocp.yml --paramfile $cluster/$prefix.yml $cluster
 export KUBECONFIG=$PWD/$cluster/auth/kubeconfig
 sudo sed -i '/api.$cluster.$domain/d' /etc/hosts
-sudo sh -c "echo $haproxy_ip api-int.$cluster.$domain>> /etc/hosts"
+sudo sh -c "echo $haproxy_ip api.$cluster.$domain>> /etc/hosts"
 # openshift-install --dir=$cluster wait-for install-complete
 # oc patch configs.imageregistry.operator.openshift.io cluster --type merge --patch '{"spec":{"storage":{"emptyDir":{}}}}'

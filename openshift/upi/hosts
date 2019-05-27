@@ -1,5 +1,8 @@
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+{{ haproxy_ip }} api.{{ cluster }}.{{ domain }}
+{{ haproxy_ip }} api-int.{{ cluster }}.{{ domain }}
+{{ haproxy_ip }} ns1.{{ cluster }}.{{ domain }}
 {% for num in range(0, masters) %}
 {{ masters_ips[num] }} {{ prefix }}-master-{{ num }} {{ prefix }}-master-{{ num }}.{{ cluster }}.{{ domain }} etcd-{{ num }}.{{ cluster }}.{{ domain }}
 {% endfor %}
@@ -8,6 +11,3 @@
 {{ workers_ips[num] }} {{ prefix }}-worker-{{ num }} {{ prefix }}-worker-{{ num }}.{{ cluster }}.{{ domain }}
 {% endfor %}
 {% endif %}
-{{ haproxy_ip }} api.{{ cluster }}.{{ domain }}
-{{ haproxy_ip }} api-int.{{ cluster }}.{{ domain }}
-{{ haproxy_ip }} ns1.{{ cluster }}.{{ domain }}
