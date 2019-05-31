@@ -1,3 +1,7 @@
 openshift_pull.json
-*sjr1*
 .openshift_install.log
+ovirt*
+libvirt*
+launch*
+sjr*
+spr*

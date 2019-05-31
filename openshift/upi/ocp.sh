@@ -1,7 +1,6 @@
 #!/bin/bash
 
 . env.sh || true
-prefix="${prefix:-karim}"
 numcpus="${numcpus:-4}"
 network="${network:-default}"
 use_br="${use_br:-false}"
@@ -10,18 +9,19 @@ master_memory="${master_memory:-8192}"
 worker_memory="${worker_memory:-8192}"
 bootstrap_memory="${bootstrap_memory:-4096}"
 haproxy_memory="${haproxy_memory:-2048}"
-haproxy_bootstrap="${haproxy_bootstrap:-false}"
 disk_size="${disk_size:-30}"
 extra_disk_size="${extra_disk_size:-10}"
-template="${template:-rhcos-410.8.20190520.1-qemu.qcow2}"
+template="${template:-rhcos-410.8.20190520.1-openstack.qcow2}"
 haproxy_template="${haproxy_template:-CentOS-7-x86_64-GenericCloud.qcow2}"
 cluster="${cluster:-testk}"
 domain="${domain:-karmalabs.com}"
 masters="${masters:-1}"
 workers="${workers:-0}"
+pubkey="${pubkey:-$HOME/.ssh/id_rsa.pub}"
+pullsecret="${pullsecret:-openshift_pull.json}"
 
-pubkey=`cat ~/.ssh/id_rsa.pub`
-pullsecret=`cat openshift_pull.json`
+pubkey=`cat $pubkey`
+pullsecret=`cat $pullsecret`
 mkdir $cluster || exit 1
 sed "s%DOMAIN%$domain%" install-config.yaml > $cluster/install-config.yaml
 sed -i "s%WORKERS%$workers%" $cluster/install-config.yaml
@@ -29,19 +29,23 @@ sed -i "s%MASTERS%$masters%" $cluster/install-config.yaml
 sed -i "s%CLUSTER%$cluster%" $cluster/install-config.yaml
 sed -i "s%PULLSECRET%$pullsecret%" $cluster/install-config.yaml
 sed -i "s%PUBKEY%$pubkey%" $cluster/install-config.yaml
+if [ "$workers" -lt 1 ] ; then
+openshift-install --dir $cluster create manifests
+cp notaint.yml $cluster/openshift/99-master-kubelet-no-taint.yaml
+fi
 openshift-install --dir $cluster create ignition-configs
 
-kcli plan -f ocp_temp.yml -P prefix=$prefix -P masters=$masters -P workers=$workers -P network=$network temp_$prefix
+kcli plan -f ocp_temp.yml -P cluster=$cluster -P masters=$masters -P workers=$workers -P network=$network temp_$cluster
 
-all="$prefix-haproxy $prefix-bootstrap"
+all="$cluster-haproxy $cluster-bootstrap"
 for i in `seq 0 $masters` ; do 
  if [ "$i" != $masters ] ; then
-   all="$all $prefix-master-$i"
+   all="$all $cluster-master-$i"
  fi
 done
   for i in `seq 0 $workers` ; do 
     if [ "$i" != $workers ] ; then
-      all="$all $prefix-worker-$i"
+      all="$all $cluster-worker-$i"
     fi
   done
 
@@ -92,7 +96,7 @@ for i in `seq 0 $workers` ; do
  fi
 done
 
-echo """prefix: $prefix
+echo """cluster: $cluster
 numcpus: $numcpus
 network: $network
 use_br: $use_br
@@ -102,47 +106,43 @@ worker_memory: $worker_memory
 deploy_bootstrap: true
 bootstrap_memory: $bootstrap_memory
 haproxy_memory: $haproxy_memory
-haproxy_bootstrap: $haproxy_bootstrap
 disk_size: $disk_size
 extra_disk_size: $extra_disk_size
 template: $template
 haproxy_template: $haproxy_template
-cluster: $cluster
 domain: $domain
 masters: $masters
 workers: $workers
 haproxy_ip: $haproxy_ip
 haproxy_mac: $haproxy_mac
 bootstrap_ip: $bootstrap_ip
-bootstrap_mac: $bootstrap_mac""" > $cluster/$prefix.yml
+bootstrap_mac: $bootstrap_mac""" > $cluster/kcli.yml
 
-echo "masters_ips:" >> $cluster/$prefix.yml
+echo "masters_ips:" >> $cluster/kcli.yml
 for entry in `echo $masters_ips` ; do 
-  echo "- $entry" >> $cluster/$prefix.yml
+  echo "- $entry" >> $cluster/kcli.yml
 done
-echo "masters_macs:" >> $cluster/$prefix.yml
+echo "masters_macs:" >> $cluster/kcli.yml
 for entry in `echo $masters_macs` ; do 
-  echo "- $entry" >> $cluster/$prefix.yml
+  echo "- $entry" >> $cluster/kcli.yml
 done
-echo "workers_ips:" >> $cluster/$prefix.yml
+echo "workers_ips:" >> $cluster/kcli.yml
 for entry in `echo $workers_ips` ; do 
-  echo "- $entry" >> $cluster/$prefix.yml
+  echo "- $entry" >> $cluster/kcli.yml
 done
-echo "workers_macs:" >> $cluster/$prefix.yml
+echo "workers_macs:" >> $cluster/kcli.yml
 for entry in `echo $workers_macs` ; do 
-  echo "- $entry" >> $cluster/$prefix.yml
+  echo "- $entry" >> $cluster/kcli.yml
 done
 
-kcli plan --yes -d  temp_$prefix
+kcli plan --yes -d  temp_$cluster
 sed -i s@https://api-int.$cluster.$domain:22623/config@http://$haproxy_ip:8080@ $cluster/master.ign $cluster/worker.ign
-if [ "$haproxy_bootstrap" == "true" ] ; then
- mv $cluster/bootstrap.ign $cluster/bootstrap.ign.ori
- cp $cluster/master.ign $cluster/bootstrap.ign
- sed -i s@$haproxy_ip:8080/master@$haproxy_ip:8081/bootstrap@ $cluster/bootstrap.ign
-fi
-kcli plan -f ocp.yml --paramfile $cluster/$prefix.yml $cluster
+kcli plan -f ocp.yml --paramfile $cluster/kcli.yml $cluster
 export KUBECONFIG=$PWD/$cluster/auth/kubeconfig
+echo -e "${BLUE}Adding entry for api.$cluster.$domain in your /etc/hosts...${NC}"
 sudo sed -i '/api.$cluster.$domain/d' /etc/hosts
 sudo sh -c "echo $haproxy_ip api.$cluster.$domain>> /etc/hosts"
-# openshift-install --dir=$cluster wait-for install-complete
-# oc patch configs.imageregistry.operator.openshift.io cluster --type merge --patch '{"spec":{"storage":{"emptyDir":{}}}}'
+#openshift-install --dir=$cluster wait-for bootstrap-complete
+#oc patch configs.imageregistry.operator.openshift.io cluster --type merge --patch '{"spec":{"storage":{"emptyDir":{}}}}'
+#openshift-install --dir=$cluster wait-for install-complete
+# oc patch --namespace=openshift-ingress-operator --patch='{"spec": {"replicas": 1}}' --type=merge ingresscontroller/default

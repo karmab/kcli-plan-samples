@@ -1,5 +1,4 @@
 parameters:
- prefix: karim
  numcpus: 4
  network: default
  use_br: false
@@ -9,10 +8,9 @@ parameters:
  deploy_bootstrap: true
  bootstrap_memory: 4096
  haproxy_memory: 2048
- haproxy_bootstrap: true
  disk_size: 30
  extra_disk_size: 30
- template: rhcos-410.8.20190520.1-qemu.qcow2
+ template: rhcos-410.8.20190520.1-openstack.qcow2
  haproxy_template: CentOS-7-x86_64-GenericCloud.qcow2
  cluster: testk
  domain: karmalabs.com
@@ -28,7 +26,7 @@ parameters:
  workers_macs: []
 
 {% for num in range(0, masters) %}
-{{ prefix }}-master-{{ num }}:
+{{ cluster }}-master-{{ num }}:
  domain: {{ cluster }}.{{ domain }} 
  template: {{ template }}
  numcpus: {{ numcpus }}
@@ -59,7 +57,7 @@ parameters:
 {% endfor %}
 
 {% for num in range(0, workers) %}
-{{ prefix }}-worker-{{ num }}:
+{{ cluster }}-worker-{{ num }}:
  domain: {{ cluster }}.{{ domain }} 
  template: {{ template }}
  numcpus: {{ numcpus }}
@@ -93,7 +91,7 @@ parameters:
 {% endfor %}
 
 {% if deploy_bootstrap %}
-{{ prefix }}-bootstrap:
+{{ cluster }}-bootstrap:
  template: {{ template }}
  numcpus: 2
  memory: {{ bootstrap_memory }}
@@ -114,7 +112,7 @@ parameters:
   - size: {{ disk_size }}
 {% endif %}
 
-{{ prefix }}-haproxy:
+{{ cluster }}-haproxy:
  template: {{ haproxy_template }}
  numcpus: 2
  memory: {{ haproxy_memory }}
@@ -132,15 +130,7 @@ parameters:
     origin: hosts
     mode: 644
   - haproxy.cfg
-{% if haproxy_bootstrap %}
-  - path: /root/bootstrap.ign
-    origin: {{ cluster }}/bootstrap.ign.ori
-    mode: 644
-{% endif %}
  scripts:
   - haproxy.sh
   - dnsmasq.sh
-{% if haproxy_bootstrap %}
-  - ignitionbootstrap.sh
-{% endif %}
   - ignitionfiles.sh

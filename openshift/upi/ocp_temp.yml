@@ -1,5 +1,5 @@
 parameters:
- prefix: karim
+ cluster: testk
  numcpus: 2
  memory: 1024
  disk_size: 10
@@ -9,7 +9,7 @@ parameters:
  network: default
 
 {% for num in range(0, masters) %}
-{{ prefix }}-master-{{ num }}:
+{{ cluster }}-master-{{ num }}:
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ memory }}
@@ -20,7 +20,7 @@ parameters:
 {% endfor %}
 
 {% for num in range(0, workers) %}
-{{ prefix }}-worker-{{ num }}:
+{{ cluster }}-worker-{{ num }}:
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ memory }}
@@ -30,7 +30,7 @@ parameters:
   - size: {{ disk_size }}
 {% endfor %}
 
-{{ prefix }}-bootstrap:
+{{ cluster }}-bootstrap:
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ memory }}
@@ -39,7 +39,7 @@ parameters:
  disks:
   - size: {{ disk_size }}
 
-{{ prefix }}-haproxy:
+{{ cluster }}-haproxy:
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ memory }}

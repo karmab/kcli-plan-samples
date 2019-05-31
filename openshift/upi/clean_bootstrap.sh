@@ -2,11 +2,11 @@
 
 . env.sh || true
 
-prefix="${prefix:-karim}"
+cluster="${cluster:-karim}"
 cluster="${cluster:-testk}"
 
 openshift-install --dir=${cluster} wait-for bootstrap-complete
 
-kcli ssh root@${prefix}-haproxy "sed -i /bootstrap/d /etc/haproxy/haproxy.cfg"
-kcli ssh root@${prefix}-haproxy "systemctl restart haproxy"
-kcli delete --yes ${prefix}-bootstrap
+kcli ssh root@${cluster}-haproxy "sed -i /bootstrap/d /etc/haproxy/haproxy.cfg"
+kcli ssh root@${cluster}-haproxy "systemctl restart haproxy"
+kcli delete --yes ${cluster}-bootstrap

@@ -1,4 +1,3 @@
-prefix: karim
 cluster: testk
 domain: karmalabs.com
 masters: 1

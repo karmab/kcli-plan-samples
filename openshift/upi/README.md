@@ -33,7 +33,6 @@ create an *env.sh* file to set:
 
 - cluster name
 - domain name
-- prefix for the vms
 - number of masters
 - number of workers
 - masters memory
