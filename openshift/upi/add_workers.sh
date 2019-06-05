@@ -9,7 +9,7 @@ cluster="${cluster:-testk}"
 network="${network:-default}"
 masters="${masters:-1}"
 workers="${workers:-0}"
-domain="${domain:karmalabs.com}"
+domain="${domain:-karmalabs.com}"
 helper_dedicated="${helper_dedicated:false}"
 
 old_workers=$( grep workers: $cluster/kcli.yml | awk '{print $2}')
@@ -83,3 +83,4 @@ done
 [ "$helper_dedicated" == "true" ] && kcli ssh root@$cluster-helper "systemctl restart dnsmasq"
 kcli plan --yes -d  temp_$cluster
 kcli plan -f ocp.yml --paramfile $cluster/kcli.yml $cluster
+#oc get csr -o name | xargs oc adm certificate approve
