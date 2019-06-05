@@ -1,0 +1,43 @@
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: keepalived
+  namespace: openshift-infra
+  creationTimestamp:
+  deletionGracePeriodSeconds: 65
+  labels:
+    app: kcli-keepalived
+spec:
+  volumes:
+  - name: conf-dir
+    hostPath:
+      path: "/etc/kubernetes"
+  containers:
+  - name: keepalived
+    securityContext:
+      privileged: true
+    image: quay.io/celebdor/keepalived:latest
+    command:
+    - /usr/sbin/keepalived
+    args:
+    - "-f"
+    - "/etc/keepalived/keepalived.conf"
+    - "--dont-fork"
+    - "--vrrp"
+    - "--log-detail"
+    - "--log-console"
+    resources:
+      requests:
+        cpu: 150m
+        memory: 512Mi
+    volumeMounts:
+    - name: conf-dir
+      mountPath: "/etc/keepalived"
+    terminationMessagePolicy: FallbackToLogsOnError
+    imagePullPolicy: IfNotPresent
+  hostNetwork: true
+  tolerations:
+  - operator: Exists
+  priorityClassName: system-node-critical
+status: {}

@@ -5,3 +5,4 @@ libvirt*
 launch*
 sjr*
 spr*
+env.sh

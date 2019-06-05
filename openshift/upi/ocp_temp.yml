@@ -7,6 +7,8 @@ parameters:
  masters: 1
  workers: 0
  network: default
+ deploy_bootstrap: true
+ deploy_helper: true
 
 {% for num in range(0, masters) %}
 {{ cluster }}-master-{{ num }}:
@@ -30,6 +32,7 @@ parameters:
   - size: {{ disk_size }}
 {% endfor %}
 
+{% if deploy_bootstrap %}
 {{ cluster }}-bootstrap:
  template: {{ template }}
  numcpus: {{ numcpus }}
@@ -38,8 +41,10 @@ parameters:
   - name: {{ network }}
  disks:
   - size: {{ disk_size }}
+{% endif %}
 
-{{ cluster }}-haproxy:
+{% if deploy_helper %}
+{{ cluster }}-helper:
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ memory }}
@@ -47,3 +52,4 @@ parameters:
   - name: {{ network }}
  disks:
   - size: {{ disk_size }}
+{% endif %}

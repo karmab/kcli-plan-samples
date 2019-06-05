@@ -7,17 +7,18 @@ parameters:
  worker_memory: 8192
  deploy_bootstrap: true
  bootstrap_memory: 4096
- haproxy_memory: 2048
+ helper_memory: 2048
  disk_size: 30
  extra_disk_size: 30
  template: rhcos-410.8.20190520.1-openstack.qcow2
- haproxy_template: CentOS-7-x86_64-GenericCloud.qcow2
+ helper_template: CentOS-7-x86_64-GenericCloud.qcow2
  cluster: testk
  domain: karmalabs.com
  masters: 1
  workers: 0
- haproxy_ip: 
- haproxy_mac: 
+ helper_dedicated: false
+ helper_ip: 
+ helper_mac: 
  bootstrap_ip: 
  bootstrap_mac: 
  masters_ips: []
@@ -25,14 +26,55 @@ parameters:
  workers_ips: []
  workers_macs: []
 
+{% if deploy_bootstrap %}
+{{ cluster }}-bootstrap:
+ template: {{ template }}
+ numcpus: 2
+ memory: {{ bootstrap_memory }}
+{% if helper_ip != ''%}
+ dns: {{ helper_ip }}
+{% endif %}
+ nets:
+  - name: {{ network }}
+{% if bootstrap_ip != '' %}
+    ip: {{ bootstrap_ip }}
+{% endif %}
+{% if bootstrap_mac != '' %}
+    mac: {{ bootstrap_mac }}
+{% else %}
+ reservedns: true
+{% endif %}
+ disks:
+  - size: {{ disk_size }}
+{% if not helper_dedicated %}
+ files:
+  - path: /etc/kubernetes/manifests/dnsmasq.yml
+    origin: staticpods/dnsmasq.yml
+  - path: /etc/kubernetes/dnsmasq.conf
+    origin: dnsmasq.conf
+  - path: /etc/kubernetes/manifests/haproxy.yml
+    origin: staticpods/haproxy.yml
+  - path: /etc/kubernetes/haproxy.cfg
+    origin: haproxy.cfg
+  - path: /etc/sysctl.d/nonlocalbind.conf
+    origin: nonlocalbind.conf
+  - path: /etc/kubernetes/manifests/keepalived.yml
+    origin: staticpods/keepalived.yml
+  - path: /etc/kubernetes/keepalived.conf
+    origin: keepalived.conf
+  - path: /etc/kubernetes/manifests/nginx.yml
+    origin: staticpods/nginx.yml
+{% endif %}
+{% endif %}
+
 {% for num in range(0, masters) %}
 {{ cluster }}-master-{{ num }}:
  domain: {{ cluster }}.{{ domain }} 
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ master_memory }}
-{% if haproxy_ip != '' %}
- dns: {{ haproxy_ip }}
+{% if helper_ip != '' %}
+ dns: {{ helper_ip }}
 {% endif %}
  nets:
   - name: {{ network }}
@@ -53,6 +95,22 @@ parameters:
     mode: 755
   - path: /etc/sysconfig/network-scripts/ifcfg-brext
     origin: ifcfg-brext
+{% if not helper_dedicated %}
+  - path: /etc/kubernetes/manifests/dnsmasq.yml
+    origin: staticpods/dnsmasq.yml
+  - path: /etc/kubernetes/dnsmasq.conf
+    origin: dnsmasq.conf
+  - path: /etc/kubernetes/manifests/haproxy.yml
+    origin: staticpods/haproxy.yml
+  - path: /etc/kubernetes/haproxy.cfg
+    origin: haproxy.cfg
+  - path: /etc/sysctl.d/nonlocalbind.conf
+    origin: nonlocalbind.conf
+  - path: /etc/kubernetes/manifests/keepalived.yml
+    origin: staticpods/keepalived.yml
+  - path: /etc/kubernetes/keepalived.conf
+    origin: keepalived.conf
+{% endif %}
 {% endif %}
 {% endfor %}
 
@@ -62,8 +120,8 @@ parameters:
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ worker_memory }}
-{% if haproxy_ip != '' %}
- dns: {{ haproxy_ip }}
+{% if helper_ip != '' %}
+ dns: {{ helper_ip }}
 {% endif %}
  nets:
   - name: {{ network }}
@@ -90,47 +148,25 @@ parameters:
 {% endif %}
 {% endfor %}
 
-{% if deploy_bootstrap %}
-{{ cluster }}-bootstrap:
- template: {{ template }}
+{% if helper_dedicated %}
+{{ cluster }}-helper:
+ template: {{ helper_template }}
  numcpus: 2
- memory: {{ bootstrap_memory }}
-{% if haproxy_ip != '' %}
- dns: {{ haproxy_ip }}
-{% endif %}
+ memory: {{ helper_memory }}
  nets:
   - name: {{ network }}
-{% if bootstrap_ip != '' %}
-    ip: {{ bootstrap_ip }}
-{% endif %}
-{% if bootstrap_mac != '' %}
-    mac: {{ bootstrap_mac }}
-{% else %}
- reservedns: true
-{% endif %}
- disks:
-  - size: {{ disk_size }}
-{% endif %}
-
-{{ cluster }}-haproxy:
- template: {{ haproxy_template }}
- numcpus: 2
- memory: {{ haproxy_memory }}
- nets:
-  - name: {{ network }}
-{% if haproxy_mac != '' %}
-    mac: {{ haproxy_mac }}
+{% if helper_mac != '' %}
+    mac: {{ helper_mac }}
 {% else %}
  reservedns: true
 {% endif %}
  disks:
   - size: 10
  files:
-  - path: /etc/hosts
-    origin: hosts
-    mode: 644
   - haproxy.cfg
+  - dnsmasq.conf
  scripts:
   - haproxy.sh
   - dnsmasq.sh
   - ignitionfiles.sh
+{% endif %}

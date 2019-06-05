@@ -8,17 +8,32 @@ extra_disk="${extra_disk:-false}"
 master_memory="${master_memory:-8192}"
 worker_memory="${worker_memory:-8192}"
 bootstrap_memory="${bootstrap_memory:-4096}"
-haproxy_memory="${haproxy_memory:-2048}"
+helper_memory="${helper_memory:-2048}"
 disk_size="${disk_size:-30}"
 extra_disk_size="${extra_disk_size:-10}"
 template="${template:-rhcos-410.8.20190520.1-openstack.qcow2}"
-haproxy_template="${haproxy_template:-CentOS-7-x86_64-GenericCloud.qcow2}"
+helper_template="${helper_template:-CentOS-7-x86_64-GenericCloud.qcow2}"
+helper_dedicated="${helper_dedicated:-false}"
 cluster="${cluster:-testk}"
 domain="${domain:-karmalabs.com}"
 masters="${masters:-1}"
 workers="${workers:-0}"
 pubkey="${pubkey:-$HOME/.ssh/id_rsa.pub}"
 pullsecret="${pullsecret:-openshift_pull.json}"
+RED='\033[0;31m'
+BLUE='\033[0;36m'
+NC='\033[0m'
+
+INSTALLER=$(which openshift-install 2>/dev/null)
+if  [ "$INSTALLER" == "" ] ; then
+ echo -e "${RED}Missing openshift-install binary. Get it at https://mirror.openshift.com/pub/openshift-v4/clients/ocp${NC}"
+ exit 1
+fi
+OC=$(which oc 2>/dev/null)
+if  [ "$OC" == "" ] ; then
+ echo -e "${RED}Missing oc binary. Get it at https://mirror.openshift.com/pub/openshift-v4/clients/ocp${NC}"
+ exit 1
+fi
 
 pubkey=`cat $pubkey`
 pullsecret=`cat $pullsecret`
@@ -37,7 +52,7 @@ openshift-install --dir $cluster create ignition-configs
 
 kcli plan -f ocp_temp.yml -P cluster=$cluster -P masters=$masters -P workers=$workers -P network=$network temp_$cluster
 
-all="$cluster-haproxy $cluster-bootstrap"
+all="$cluster-helper $cluster-bootstrap"
 for i in `seq 0 $masters` ; do 
  if [ "$i" != $masters ] ; then
    all="$all $cluster-master-$i"
@@ -51,8 +66,6 @@ done
 
 total=$(( $(echo $all | wc -w)  * 2 ))
 current=0
-BLUE='\033[0;36m'
-NC='\033[0m'
 
 while [ $current != $total ] ; do
     info=$(kcli info -f ip,nets -v $all | sed 's/.*mac: \(.*\) net:.*/\1/')
@@ -62,10 +75,10 @@ while [ $current != $total ] ; do
 done
 
 entry=$(echo $info | cut -f1 -d" ")
-haproxy_ip=$entry
+helper_ip=$entry
 info=$(echo $info | sed "s/$entry //")
 entry=$(echo $info | cut -f1 -d" ")
-haproxy_mac=$entry
+helper_mac=$entry
 info=$(echo $info | sed "s/$entry //")
 entry=$(echo $info | cut -f1 -d" ")
 bootstrap_ip=$entry
@@ -105,16 +118,17 @@ master_memory: $master_memory
 worker_memory: $worker_memory
 deploy_bootstrap: true
 bootstrap_memory: $bootstrap_memory
-haproxy_memory: $haproxy_memory
+helper_memory: $helper_memory
 disk_size: $disk_size
 extra_disk_size: $extra_disk_size
 template: $template
-haproxy_template: $haproxy_template
+helper_template: $helper_template
 domain: $domain
 masters: $masters
 workers: $workers
-haproxy_ip: $haproxy_ip
-haproxy_mac: $haproxy_mac
+helper_dedicated: $helper_dedicated
+helper_ip: $helper_ip
+helper_mac: $helper_mac
 bootstrap_ip: $bootstrap_ip
 bootstrap_mac: $bootstrap_mac""" > $cluster/kcli.yml
 
@@ -136,13 +150,15 @@ for entry in `echo $workers_macs` ; do
 done
 
 kcli plan --yes -d  temp_$cluster
-sed -i s@https://api-int.$cluster.$domain:22623/config@http://$haproxy_ip:8080@ $cluster/master.ign $cluster/worker.ign
+sed -i s@https://api-int.$cluster.$domain:22623/config@http://$helper_ip:8080@ $cluster/master.ign $cluster/worker.ign
 kcli plan -f ocp.yml --paramfile $cluster/kcli.yml $cluster
 export KUBECONFIG=$PWD/$cluster/auth/kubeconfig
 echo -e "${BLUE}Adding entry for api.$cluster.$domain in your /etc/hosts...${NC}"
 sudo sed -i '/api.$cluster.$domain/d' /etc/hosts
-sudo sh -c "echo $haproxy_ip api.$cluster.$domain>> /etc/hosts"
-#openshift-install --dir=$cluster wait-for bootstrap-complete
-#oc patch configs.imageregistry.operator.openshift.io cluster --type merge --patch '{"spec":{"storage":{"emptyDir":{}}}}'
-#openshift-install --dir=$cluster wait-for install-complete
-# oc patch --namespace=openshift-ingress-operator --patch='{"spec": {"replicas": 1}}' --type=merge ingresscontroller/default
+sudo sh -c "echo $helper_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain >> /etc/hosts"
+#sshuttle -r your_hypervisor $helper_ip/32 -v
+openshift-install --dir=$cluster wait-for bootstrap-complete
+kcli delete --yes $cluster-bootstrap
+oc patch configs.imageregistry.operator.openshift.io cluster --type merge --patch '{"spec":{"storage":{"emptyDir":{}}}}'
+oc patch --namespace=openshift-ingress-operator --patch='{"spec": {"replicas": 1}}' --type=merge ingresscontroller/default
+openshift-install --dir=$cluster wait-for install-complete
