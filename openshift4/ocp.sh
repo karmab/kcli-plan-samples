@@ -16,8 +16,8 @@ disk_size="${disk_size:-30}"
 extra_disk_size="${extra_disk_size:-10}"
 masters="${masters:-1}"
 workers="${workers:-0}"
-pubkey="${pubkey:-$HOME/.ssh/id_rsa.pub}"
-pullsecret="${pullsecret:-openshift_pull.json}"
+pub_key="${pubkey:-$HOME/.ssh/id_rsa.pub}"
+pull_secret="${pullsecret:-openshift_pull.json}"
 RED='\033[0;31m'
 BLUE='\033[0;36m'
 NC='\033[0m'
@@ -33,15 +33,15 @@ if  [ "$OC" == "" ] ; then
  exit 1
 fi
 
-pubkey=`cat $pubkey`
-pullsecret=`cat $pullsecret`
+pub_key=`cat $pub_key`
+pull_secret=`cat $pull_secret`
 mkdir $cluster || exit 1
 sed "s%DOMAIN%$domain%" install-config.yaml > $cluster/install-config.yaml
 sed -i "s%WORKERS%$workers%" $cluster/install-config.yaml
 sed -i "s%MASTERS%$masters%" $cluster/install-config.yaml
 sed -i "s%CLUSTER%$cluster%" $cluster/install-config.yaml
-sed -i "s%PULLSECRET%$pullsecret%" $cluster/install-config.yaml
-sed -i "s%PUBKEY%$pubkey%" $cluster/install-config.yaml
+sed -i "s%PULLSECRET%$pull_secret%" $cluster/install-config.yaml
+sed -i "s%PUBKEY%$pub_key%" $cluster/install-config.yaml
 
 openshift-install --dir $cluster create manifests
 cp customisation/* $cluster/openshift
@@ -152,10 +152,7 @@ echo -e "${BLUE}Adding entry for api.$cluster.$domain in your /etc/hosts...${NC}
 sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
 sudo sh -c "echo $helper_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain >> /etc/hosts"
 #sshuttle -r your_hypervisor $helper_ip/32 -v
-openshift-install --dir=$cluster wait-for bootstrap-complete
-if [ "$?" != "0" ] ; then
- exit 1
-fi
+openshift-install --dir=$cluster wait-for bootstrap-complete || exit 1
 kcli delete --yes $cluster-bootstrap
 if [ "$workers" == "0" ] ; then
  export KUBECONFIG=$PWD/$cluster/auth/kubeconfig

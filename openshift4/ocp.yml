@@ -49,12 +49,6 @@ parameters:
     origin: staticpods/dnsmasq.yml
   - path: /etc/kubernetes/dnsmasq.conf
     origin: dnsmasq.conf
-  - path: /etc/kubernetes/manifests/haproxy.yml
-    origin: staticpods/haproxy.yml
-  - path: /etc/kubernetes/haproxy.cfg
-    origin: haproxy.cfg
-  - path: /etc/sysctl.d/nonlocalbind.conf
-    origin: nonlocalbind.conf
   - path: /etc/kubernetes/manifests/keepalived.yml
     origin: staticpods/keepalived.yml
   - path: /etc/kubernetes/keepalived.conf
@@ -95,12 +89,14 @@ parameters:
     origin: staticpods/dnsmasq.yml
   - path: /etc/kubernetes/dnsmasq.conf
     origin: dnsmasq.conf
+{% if workers > 0 %}
   - path: /etc/kubernetes/manifests/haproxy.yml
     origin: staticpods/haproxy.yml
   - path: /etc/kubernetes/haproxy.cfg
     origin: haproxy.cfg
   - path: /etc/sysctl.d/nonlocalbind.conf
     origin: nonlocalbind.conf
+{% endif %}
   - path: /etc/kubernetes/manifests/keepalived.yml
     origin: staticpods/keepalived.yml
   - path: /etc/kubernetes/keepalived.conf
