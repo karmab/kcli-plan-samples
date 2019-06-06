@@ -1,51 +1,68 @@
-This repo is a POC of deploying ocp4 using an hybrid approach between upi and ipi, and by heavily leveraging kcli.
+This repo provides a way for deploying ocp4 using an hybrid approach between upi and ipi, and by heavily leveraging kcli.
 
-The initial target for this work is ovirt/rhev and libvirt although the approach aims to be independent of the platform.
+The initial target ovirt/rhev and libvirt although the approach aims to be independent of the platform.
 
 The main features are:
 
-- able to deploy ocp using minimal infrastructure requirements.
-- no need for control over dns and pxe that would facilitate use of UPI out of the box, those elements are hosted as static pods on the master nodes.
+- deploy ocp using minimal infrastructure requirements.
+- no need for control over dns and pxe. Those elements are hosted as static pods on the master nodes.
 - Multiple clusters can live on the same network.
 - Same procedure for libvirt, ovirt, openstack or kubevirt
-- No need to compile the installer to deploy on libvirt or to tweak libvirtd
+- No need to compile the installer to deploy on libvirt
+- No need to tweak libvirtd
+- The vms can be connected to a real bridge on libvirt
 
 ## requirements
 
 - openshift-install binary needs to be installed from https://mirror.openshift.com/pub/openshift-v4/clients/ocp
+- pull secret
+- ssh public key
 - kcli >= 14.10 (container or pip version if deploying on something else than libvirt)
-- direct access to the deployed vms (use something like this otherwise `sshuttle -r your_hypervisor 192.168.122.0/24 -v`)
+- direct access to the deployed vms. Use something like this otherwise `sshuttle -r your_hypervisor 192.168.122.0/24 -v`)
 - Target platform needs:
   - rhcos image ( *kcli download rhcosootpa* )
   - centos image ( *kcli download centos7* )
-- If you deploy on libvirt, you need to make sure qemu version supports fw_cfg (that means installing qemu-kvm-ev on centos for instance)
+- For libvirt, make sure qemu version supports fw_cfg (that means installing qemu-kvm-ev on centos for instance)
 - Target platform needs ignition support. 
-  
-  For ovirt/rhv, this either requires ovirt >= 4.3.4 or to install [an additional vdsm hook](https://gerrit.ovirt.org/#/c/100008), along with the custom property *ignitiondata*
+  - For ovirt/rhv, this either requires ovirt >= 4.3.4 or to install [an additional vdsm hook](https://gerrit.ovirt.org/#/c/100008), along with the custom property *ignitiondata*
 
 ## How to Use
 
 ### Define your variables
 
-create an *env.sh* file to set:
+create an *env.sh* file similar to  [*env.sh.sample*(env.sh.sample)] to set:
 
-- cluster name
-- domain name
-- number of masters
-- number of workers
-- masters memory
-- workers memory
-- bootstrap memory
-- default disk size
-- extra disk size for secondary disk (to use with rook, for instance)
-- whether to create a bridge on top of the nics of the nodes (useful if planning to deploy kubevirt on top)
-- rhcos template to use (note that it should be an openstack one for ovirt/openstack and qemu for libvirt/kubevirt or on ovirt with ignition hook)
-
-look at [*env.sh.sample*(env.sh.sample)] as reference
+- *cluster* name
+- *domain* name
+- *pubkey* location. defaults to `$HOME/.ssh/id_rsa.pub`
+- *pullsecret* location. defaults to `./openshift_pull.json`
+- *template* rhcos template to use (should be an openstack one for ovirt/openstack and qemu for libvirt/kubevirt or on ovirt with ignition hook)
+- *helper_template* which template to use when deploying temporary vms (defaults to `CentOS-7-x86_64-GenericCloud.qcow2`)
+- *masters* number of masters
+- *workers* number of workers
+- *network*
+- *master_memory*
+- *worker_memory*
+- *bootstrap_memory*
+- *numcpus*
+- *disk size* default disk size for final nodes
+- *extra_disk* whether to create a secondary disk (to use with rook, for instance)
+- *extra\_disk_size* size for secondary disk
+- *use_br* whether to create a bridge on top of the nics of the nodes (useful if planning to deploy kubevirt on top)
 
 ### Deploy
 
-`./ocp.sh`
+- `./ocp.sh` You will be asked for your sudo password in order to create a /etc/hosts entry
+
+- once it finishes, run the following in order to use oc commands `export KUBECONFIG=$cluster/auth/kubeconfig`
+
+- for dns access to your app, you can create a conf file in /etc/NetworkManager/dnsmasq.d with the following content `server=/apps.$cluster.$domain/$api_ip` where api_ip can be found in the last line of your /etc/hosts
+
+### Adding more workers after initial installation
+
+- edit your env.sh to change *workers*
+- launch the script `add_workers.sh`
+
 
 ## architecture
 
@@ -53,20 +70,20 @@ We deploy :
 
 - an arbitrary number of masters.
 - an arbitrary number of workers.
-- a bootstrap node.
+- a (temporary) bootstrap node.
 
 We first generate all the ignition files needed for the install.
 
-As rhcos lacks an agent that would report ip, we do a temporary deployment using a centos7 template, for all the masters, workers, bootstrap and a helper node ( this one to get a vip)
-
-The goal of this first iteration is to gather ips and macs for all those nodes.
+Then, we do a temporary deployment using a centos7 template, for all the masters, workers, bootstrap and a helper node ( this one just to get a vip). The goal of this step is to gather ips and macs for all those nodes.
 
 With this information, a kcli parameter file is created and stored in the same directory than the openshift artifacts for the given cluster.
 
 We then delete the temporary deployment and launch the final one, where we make sure each node has the proper mac address ( and as such gets the same ip).
 
-Haproxy, Keepalived and Dnsmasq configuration are created on the fly on the haproxy node
+Haproxy, Keepalived and Dnsmasq configuration are created on the fly on the bootstrap and master nodes as static pods. Initially, the api vip runs on the bootstrap node.
 
-Nginx is created as static pod on the bootstrap node to serve as a http only web server for some additional ignition files needed on the nodes and which can't get injected ( they are generated on the bootstrap node).
+Nginx is created as static pod on the bootstrap node to serve as a http only web server for some additional ignition files needed on the nodes and which can't get injected (they are generated on the bootstrap node).
+
+Once bootstrap step is finished, the corresponding vm gets deleted, causing keepalived to migrate the api vip to one of the masters.
 
 Also note that for bootstrap, masters and workers nodes, we merge the ignition data generated by the openshift installer with the ones generated by kcli, in particular we force dns server on those nodes to point to our keepalived vip.

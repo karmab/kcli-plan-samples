@@ -1,6 +1,10 @@
 #!/bin/bash
 
 . env.sh || true
+template="${template:-rhcos-410.8.20190520.1-qemu.qcow2}"
+helper_template="${helper_template:-CentOS-7-x86_64-GenericCloud.qcow2}"
+cluster="${cluster:-testk}"
+domain="${domain:-karmalabs.com}"
 numcpus="${numcpus:-4}"
 network="${network:-default}"
 use_br="${use_br:-false}"
@@ -10,10 +14,6 @@ worker_memory="${worker_memory:-8192}"
 bootstrap_memory="${bootstrap_memory:-4096}"
 disk_size="${disk_size:-30}"
 extra_disk_size="${extra_disk_size:-10}"
-template="${template:-rhcos-410.8.20190520.1-qemu.qcow2}"
-helper_template="${helper_template:-CentOS-7-x86_64-GenericCloud.qcow2}"
-cluster="${cluster:-testk}"
-domain="${domain:-karmalabs.com}"
 masters="${masters:-1}"
 workers="${workers:-0}"
 pubkey="${pubkey:-$HOME/.ssh/id_rsa.pub}"
@@ -48,7 +48,7 @@ cp customisation/* $cluster/openshift
 sed -i "s/3/$masters/" $cluster/openshift/99-ingress-controller.yaml
 openshift-install --dir $cluster create ignition-configs
 
-kcli plan -f ocp_temp.yml -P cluster=$cluster -P masters=$masters -P workers=$workers -P network=$network temp_$cluster
+kcli plan -f ocp_temp.yml -P template=$helper_template -P cluster=$cluster -P masters=$masters -P workers=$workers -P network=$network temp_$cluster
 
 all="$cluster-helper $cluster-bootstrap"
 for i in `seq 0 $masters` ; do 
