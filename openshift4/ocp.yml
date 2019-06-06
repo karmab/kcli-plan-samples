@@ -10,7 +10,6 @@ parameters:
  disk_size: 30
  extra_disk_size: 30
  template: rhcos-410.8.20190520.1-openstack.qcow2
- helper_template: CentOS-7-x86_64-GenericCloud.qcow2
  cluster: testk
  domain: karmalabs.com
  masters: 1
@@ -29,19 +28,11 @@ parameters:
  template: {{ template }}
  numcpus: 2
  memory: {{ bootstrap_memory }}
-{% if helper_ip != ''%}
  dns: {{ helper_ip }}
-{% endif %}
  nets:
   - name: {{ network }}
-{% if bootstrap_ip != '' %}
     ip: {{ bootstrap_ip }}
-{% endif %}
-{% if bootstrap_mac != '' %}
     mac: {{ bootstrap_mac }}
-{% else %}
- reservedns: true
-{% endif %}
  disks:
   - size: {{ disk_size }}
  files:
@@ -63,19 +54,11 @@ parameters:
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ master_memory }}
-{% if helper_ip != '' %}
  dns: {{ helper_ip }}
-{% endif %}
  nets:
   - name: {{ network }}
-{% if masters_ips %}
     ip: {{ masters_ips[num] }}
-{% endif %}
-{% if masters_macs %}
     mac: {{ masters_macs[num] }}
-{% else %}
- reservedns: true
-{% endif %}
  disks:
   - size: {{ disk_size }}
 {% if use_br %}
@@ -110,19 +93,11 @@ parameters:
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ worker_memory }}
-{% if helper_ip != '' %}
  dns: {{ helper_ip }}
-{% endif %}
  nets:
   - name: {{ network }}
-{% if workers_ips %}
     ip: {{ workers_ips[num] }}
-{% endif %}
-{% if workers_macs %}
     mac: {{ workers_macs[num] }}
-{% else %}
- reservedns: true
-{% endif %}
  disks:
   - size: {{ disk_size }}
 {% if extra_disk %}
