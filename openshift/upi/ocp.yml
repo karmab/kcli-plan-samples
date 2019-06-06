@@ -7,7 +7,6 @@ parameters:
  worker_memory: 8192
  deploy_bootstrap: true
  bootstrap_memory: 4096
- helper_memory: 2048
  disk_size: 30
  extra_disk_size: 30
  template: rhcos-410.8.20190520.1-openstack.qcow2
@@ -16,7 +15,6 @@ parameters:
  domain: karmalabs.com
  masters: 1
  workers: 0
- helper_dedicated: false
  helper_ip: 
  helper_mac: 
  bootstrap_ip: 
@@ -46,7 +44,6 @@ parameters:
 {% endif %}
  disks:
   - size: {{ disk_size }}
-{% if not helper_dedicated %}
  files:
   - path: /etc/kubernetes/manifests/dnsmasq.yml
     origin: staticpods/dnsmasq.yml
@@ -64,7 +61,6 @@ parameters:
     origin: keepalived.conf
   - path: /etc/kubernetes/manifests/nginx.yml
     origin: staticpods/nginx.yml
-{% endif %}
 {% endif %}
 
 {% for num in range(0, masters) %}
@@ -95,7 +91,6 @@ parameters:
     mode: 755
   - path: /etc/sysconfig/network-scripts/ifcfg-brext
     origin: ifcfg-brext
-{% if not helper_dedicated %}
   - path: /etc/kubernetes/manifests/dnsmasq.yml
     origin: staticpods/dnsmasq.yml
   - path: /etc/kubernetes/dnsmasq.conf
@@ -110,7 +105,6 @@ parameters:
     origin: staticpods/keepalived.yml
   - path: /etc/kubernetes/keepalived.conf
     origin: keepalived.conf
-{% endif %}
 {% endif %}
 {% endfor %}
 
@@ -147,26 +141,3 @@ parameters:
     origin: ifcfg-brext
 {% endif %}
 {% endfor %}
-
-{% if helper_dedicated %}
-{{ cluster }}-helper:
- template: {{ helper_template }}
- numcpus: 2
- memory: {{ helper_memory }}
- nets:
-  - name: {{ network }}
-{% if helper_mac != '' %}
-    mac: {{ helper_mac }}
-{% else %}
- reservedns: true
-{% endif %}
- disks:
-  - size: 10
- files:
-  - haproxy.cfg
-  - dnsmasq.conf
- scripts:
-  - haproxy.sh
-  - dnsmasq.sh
-  - ignitionfiles.sh
-{% endif %}

@@ -10,7 +10,6 @@ network="${network:-default}"
 masters="${masters:-1}"
 workers="${workers:-0}"
 domain="${domain:-karmalabs.com}"
-helper_dedicated="${helper_dedicated:false}"
 
 old_workers=$( grep workers: $cluster/kcli.yml | awk '{print $2}')
 new_workers=$(( $workers - $old_workers ))
@@ -63,16 +62,13 @@ sed -i "s/workers: .*/workers: $workers/" $cluster/kcli.yml
 index=$(( $workers - $new_workers ))
 for new_workers_ip in $new_workers_ips ; do 
     sed -i "s@workers_macs:@$( echo - $new_workers_ip )\n&@" $cluster/kcli.yml
-    if [ "$helper_dedicated" == "true" ] ; then
-      kcli ssh root@$cluster-helper "echo -e host-record=$cluster-worker-$index.$cluster.$domain,$new_workers_ip,3600 >> /etc/dnsmasq.conf" 
-    else
-      for i in `seq 0 $masters` ; do
-        if [ "$i" != $masters ] ; then
-          kcli ssh root@$cluster-master-$i "echo -e host-record=$cluster-worker-$index.$cluster.$domain,$new_workers_ip,3600 >> /etc/kubernetes/dnsmasq.conf"
-          oc delete pod -n openshift-infra dnsmasq-$cluster-master-$i.$cluster.$domain
-        fi
-      done
-    fi
+    for i in `seq 0 $masters` ; do
+      if [ "$i" != $masters ] ; then
+        kcli ssh root@$cluster-master-$i "echo -e host-record=$cluster-worker-$index.$cluster.$domain,$new_workers_ip,3600 >> /etc/kubernetes/dnsmasq.conf"
+        oc delete pod -n openshift-infra dnsmasq-$cluster-master-$i.$cluster.$domain
+      fi
+    done
+
     index=$(( $index + 1 ))
 done
 
@@ -80,7 +76,6 @@ for entry in `echo $new_workers_macs` ; do
   echo "- $entry" >> $cluster/kcli.yml
 done
 
-[ "$helper_dedicated" == "true" ] && kcli ssh root@$cluster-helper "systemctl restart dnsmasq"
 kcli plan --yes -d  temp_$cluster
 kcli plan -f ocp.yml --paramfile $cluster/kcli.yml $cluster
 #oc get csr -o name | xargs oc adm certificate approve

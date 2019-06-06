@@ -8,12 +8,10 @@ extra_disk="${extra_disk:-false}"
 master_memory="${master_memory:-8192}"
 worker_memory="${worker_memory:-8192}"
 bootstrap_memory="${bootstrap_memory:-4096}"
-helper_memory="${helper_memory:-2048}"
 disk_size="${disk_size:-30}"
 extra_disk_size="${extra_disk_size:-10}"
-template="${template:-rhcos-410.8.20190520.1-openstack.qcow2}"
+template="${template:-rhcos-410.8.20190520.1-qemu.qcow2}"
 helper_template="${helper_template:-CentOS-7-x86_64-GenericCloud.qcow2}"
-helper_dedicated="${helper_dedicated:-false}"
 cluster="${cluster:-testk}"
 domain="${domain:-karmalabs.com}"
 masters="${masters:-1}"
@@ -44,10 +42,10 @@ sed -i "s%MASTERS%$masters%" $cluster/install-config.yaml
 sed -i "s%CLUSTER%$cluster%" $cluster/install-config.yaml
 sed -i "s%PULLSECRET%$pullsecret%" $cluster/install-config.yaml
 sed -i "s%PUBKEY%$pubkey%" $cluster/install-config.yaml
-if [ "$workers" -lt 1 ] ; then
+
 openshift-install --dir $cluster create manifests
-cp notaint.yml $cluster/openshift/99-master-kubelet-no-taint.yaml
-fi
+cp customisation/* $cluster/openshift
+sed -i "s/3/$masters/" $cluster/openshift/99-ingress-controller.yaml
 openshift-install --dir $cluster create ignition-configs
 
 kcli plan -f ocp_temp.yml -P cluster=$cluster -P masters=$masters -P workers=$workers -P network=$network temp_$cluster
@@ -118,7 +116,6 @@ master_memory: $master_memory
 worker_memory: $worker_memory
 deploy_bootstrap: true
 bootstrap_memory: $bootstrap_memory
-helper_memory: $helper_memory
 disk_size: $disk_size
 extra_disk_size: $extra_disk_size
 template: $template
@@ -126,7 +123,6 @@ helper_template: $helper_template
 domain: $domain
 masters: $masters
 workers: $workers
-helper_dedicated: $helper_dedicated
 helper_ip: $helper_ip
 helper_mac: $helper_mac
 bootstrap_ip: $bootstrap_ip
@@ -154,11 +150,14 @@ sed -i s@https://api-int.$cluster.$domain:22623/config@http://$helper_ip:8080@ $
 kcli plan -f ocp.yml --paramfile $cluster/kcli.yml $cluster
 export KUBECONFIG=$PWD/$cluster/auth/kubeconfig
 echo -e "${BLUE}Adding entry for api.$cluster.$domain in your /etc/hosts...${NC}"
-sudo sed -i '/api.$cluster.$domain/d' /etc/hosts
+sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
 sudo sh -c "echo $helper_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain >> /etc/hosts"
 #sshuttle -r your_hypervisor $helper_ip/32 -v
 openshift-install --dir=$cluster wait-for bootstrap-complete
 kcli delete --yes $cluster-bootstrap
-oc patch configs.imageregistry.operator.openshift.io cluster --type merge --patch '{"spec":{"storage":{"emptyDir":{}}}}'
-oc patch --namespace=openshift-ingress-operator --patch='{"spec": {"replicas": 1}}' --type=merge ingresscontroller/default
+#oc patch configs.imageregistry.operator.openshift.io cluster --type merge --patch '{"spec":{"storage":{"emptyDir":{}}}}'
+#oc patch --namespace=openshift-ingress-operator --patch='{"spec": {"replicas": 1}}' --type=merge ingresscontroller/default
+if [ "$workers" == "0" ] ; then
+oc adm taint nodes -l node-role.kubernetes.io/master node-role.kubernetes.io/master:NoSchedule-
+fi
 openshift-install --dir=$cluster wait-for install-complete
