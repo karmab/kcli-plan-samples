@@ -64,8 +64,7 @@ for new_workers_ip in $new_workers_ips ; do
     sed -i "s@workers_macs:@$( echo - $new_workers_ip )\n&@" $cluster/kcli.yml
     for i in `seq 0 $masters` ; do
       if [ "$i" != $masters ] ; then
-        kcli ssh root@$cluster-master-$i "echo -e host-record=$cluster-worker-$index.$cluster.$domain,$new_workers_ip,3600 >> /etc/kubernetes/dnsmasq.conf"
-        oc delete pod -n openshift-infra dnsmasq-$cluster-master-$i.$cluster.$domain
+        kcli ssh root@$cluster-master-$i "echo -e host-record=$cluster-worker-$index.$cluster.$domain,$new_workers_ip,3600 >> /etc/kubernetes/dnsmasq.conf ; pkill dnsmasq"
       fi
     done
 
