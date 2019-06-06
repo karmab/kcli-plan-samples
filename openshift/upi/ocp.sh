@@ -119,7 +119,6 @@ bootstrap_memory: $bootstrap_memory
 disk_size: $disk_size
 extra_disk_size: $extra_disk_size
 template: $template
-helper_template: $helper_template
 domain: $domain
 masters: $masters
 workers: $workers
@@ -154,10 +153,12 @@ sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
 sudo sh -c "echo $helper_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain >> /etc/hosts"
 #sshuttle -r your_hypervisor $helper_ip/32 -v
 openshift-install --dir=$cluster wait-for bootstrap-complete
+if [ "$?" != "0" ] ; then
+ exit 1
+fi
 kcli delete --yes $cluster-bootstrap
-#oc patch configs.imageregistry.operator.openshift.io cluster --type merge --patch '{"spec":{"storage":{"emptyDir":{}}}}'
-#oc patch --namespace=openshift-ingress-operator --patch='{"spec": {"replicas": 1}}' --type=merge ingresscontroller/default
 if [ "$workers" == "0" ] ; then
-oc adm taint nodes -l node-role.kubernetes.io/master node-role.kubernetes.io/master:NoSchedule-
+ export KUBECONFIG=$PWD/$cluster/auth/kubeconfig
+ oc adm taint nodes -l node-role.kubernetes.io/master node-role.kubernetes.io/master:NoSchedule-
 fi
 openshift-install --dir=$cluster wait-for install-complete
