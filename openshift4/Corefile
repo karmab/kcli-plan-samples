@@ -1,0 +1,11 @@
+.:53 {
+    forward . /etc/coredns/resolv.conf
+    log
+    errors
+}
+
+{{ cluster }}.{{ domain }}:53 {
+    file /etc/coredns/hosts.db
+    log
+    errors
+}

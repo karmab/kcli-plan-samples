@@ -1,0 +1,27 @@
+$ORIGIN {{ domain }}.
+$TTL 10800      ; 3 hours
+@       3600 IN SOA sns.dns.icann.org. noc.dns.icann.org. (
+                                2019010101 ; serial
+                                7200       ; refresh (2 hours)
+                                3600       ; retry (1 hour)
+                                1209600    ; expire (2 weeks)
+                                3600       ; minimum (1 hour)
+                                )
+
+_etcd-server-ssl._tcp.{{ cluster }}.{{ domain }}. 8640 IN    SRV 0 10 2380 etcd-0.{{ cluster }}.{{ domain }}.
+_etcd-server-ssl._tcp.{{ cluster }}.{{ domain }}. 8640 IN    SRV 0 10 2380 etcd-1.{{ cluster }}.{{ domain }}.
+_etcd-server-ssl._tcp.{{ cluster }}.{{ domain }}. 8640 IN    SRV 0 10 2380 etcd-2.{{ cluster }}.{{ domain }}.
+
+api.{{ cluster }}.{{ domain }}.                        A                {{ helper_ip }}
+api-int.{{ cluster }}.{{ domain }}.                    A                {{ helper_ip }}
+{% for num in range(0, masters) %}
+{{ cluster }}-master-{{ num }}.{{ domain }}.           A                {{ masters_ips[num ] }}
+etcd-{{ num }}.{{ cluster }}.{{ domain }}.             IN  CNAME        {{ cluster }}-master-0.{{ domain }}.
+_etcd-server-ssl._tcp.{{ cluster }}.{{ domain }}. 8640 IN    SRV 0 10 2380 etcd-{{ num }}.{{ cluster }}.{{ domain }}.
+{% endfor %}
+{% for num in range(0, workers) %}
+{{ cluster }}-workers-{{ num }}.{{ domain }}.           A                {{ workers_ips[num ] }}
+{% endfor %}
+
+$ORIGIN apps.{{ cluster }}.{{ domain }}.
+*                                                      A                {{ helper_ip }}

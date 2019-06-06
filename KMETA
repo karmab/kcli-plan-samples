@@ -239,62 +239,62 @@
   numvms: 1
 
 - name: origin
-  file: openshift/origin.yml
+  file: openshift3/origin.yml
   description: Upstream Openshift based on oc cluster up with istio, knative and asb
   numvms: 1
   comments: openshift_version can also be set to to an older one and asb enabled
   stars: 5
 
 - name: installer
-  file: openshift/installer.yml
+  file: openshift3/installer.yml
   description: Upstream Compilation of openshift new installer
   numvms: 1
   comments: you ll need to download rhcos-qemu.qcow2 from somewhere 
   stars: 4
 
 - name: ocp
-  file: openshift/downstream.yml
+  file: openshift3/downstream.yml
   description: Downstream Openshift 3.7 based on oc cluster up
   numvms: 1
   memory: 6144
 
 - name: multi
-  file: openshift/multi.yml
+  file: openshift3/multi.yml
   description: Downstream ocp with arbitrary number of nodes
   comments: router and registry located on infra if present. gluster uses first 3 infra if present, otherwise 1 master and 2 infra
   numvms: 4
   stars: 5
 
 - name: helm
-  file: openshift/helm.yml
+  file: openshift3/helm.yml
   description: Helm based on oc cluster up
   numvms: 1
   stars: 4
 
 - name: minishift
-  file: openshift/minishift.yml
+  file: openshift3/minishift.yml
   description: minshift based on kvm driver or generic
   numvms: 2
 
 - name: kubevirt
-  file: openshift/kubevirt.yml
+  file: openshift3/kubevirt.yml
   description: Upstream Kubevirt all in one
   numvms: 1
   stars: 5
 
 - name: fission
-  file: openshift/fission.yml
+  file: openshift3/fission.yml
   description: Fission all in one
   numvms: 1
 
 - name: openfaas
-  file: openshift/openfaas.yml
+  file: openshift3/openfaas.yml
   description: Openfaas all in one
   numvms: 1
   comments: OPENFAAS_URL OPENFAAS_UI are variables set to the function processor and ui respectively. two functions hellopy and hellojs can be called at $OPENFAAS_URL/function/hellopy and $OPENFAAS_URL/function/hellojs
 
 - name: openwhisk
-  file: openshift/openwhisk.yml
+  file: openshift3/openwhisk.yml
   description: Latest Openwhisk based on oc cluster up
 
 - name: upstream
@@ -389,7 +389,7 @@
   numvms: 1
 
 - name: federation
-  file: openshift/federation.yml
+  file: openshift3/federation.yml
   description: 2 federated vms with federated control plan. federation_version can also be set to canary 
   numvms: 2
 
