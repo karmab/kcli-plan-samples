@@ -61,13 +61,14 @@ parameters:
     mac: {{ masters_macs[num] }}
  disks:
   - size: {{ disk_size }}
-{% if use_br %}
  files:
+{% if use_br %}
   - path: /etc/NetworkManager/dispatcher.d/98-brextscript
     origin: 98-brextscript
     mode: 755
   - path: /etc/sysconfig/network-scripts/ifcfg-brext
     origin: ifcfg-brext
+{% endif %}
   - path: /etc/kubernetes/manifests/dnsmasq.yml
     origin: staticpods/dnsmasq.yml
   - path: /etc/kubernetes/dnsmasq.conf
@@ -84,7 +85,6 @@ parameters:
     origin: staticpods/keepalived.yml
   - path: /etc/kubernetes/keepalived.conf
     origin: keepalived.conf
-{% endif %}
 {% endfor %}
 
 {% for num in range(0, workers) %}
