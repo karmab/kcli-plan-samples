@@ -34,7 +34,7 @@ if  [ "$OC" == "" ] ; then
 fi
 
 pub_key=`cat $pub_key`
-pull_secret=`cat $pull_secret`
+pull_secret=`cat $pull_secret | tr -d '\n'`
 mkdir $cluster || exit 1
 sed "s%DOMAIN%$domain%" install-config.yaml > $cluster/install-config.yaml
 sed -i "s%WORKERS%$workers%" $cluster/install-config.yaml
