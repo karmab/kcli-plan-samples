@@ -27,9 +27,6 @@ parameters:
  disks:
   - size: {{ disk_size }}
  files:
-  - path: /etc/selinux/config
-    content:  |
-       SELINUX=permissive 
   - path: /etc/kubernetes/manifests/coredns.yml
     origin: staticpods/coredns.yml
   - path: /etc/kubernetes/Corefile

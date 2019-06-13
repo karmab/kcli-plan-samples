@@ -70,6 +70,9 @@ if [[ "$platform" == *"virt"* ]]; then
     echo -e "${BLUE}Adding entry for api.$cluster.$domain in your /etc/hosts...${NC}"
     sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
     sudo sh -c "echo $api_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain >> /etc/hosts"
+  else
+    echo -e "${BLUE}Using $api_ip for api vip ...${NC}"
+    grep -q "$api_ip api.$cluster.$domain" /etc/hosts || sudo sh -c "echo $api_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain >> /etc/hosts"
   fi
   if [ "$platform" == "kubevirt" ] ; then
     # bootstrap ignition is too big for kubevirt to handle so we serve it from a dedicated temporary node
@@ -80,12 +83,12 @@ if [[ "$platform" == *"virt"* ]]; then
       echo -e "${BLUE}Waiting 5s for bootstrap helper node to be running...${NC}"
       sleep 5
     done
-    sleep 20
+    sleep 15
     kcli ssh root@$cluster-bootstrap-helper "yum -y install httpd ; systemctl start httpd"
     kcli scp $clusterdir/bootstrap.ign root@$cluster-bootstrap-helper:/var/www/html/bootstrap
-    sed s@https://api-int.$cluster.$domain:22623/config/master@http://$bootstrap_api_ip/bootstrap@ $clusterdir/master.ign > $clusterdir/bootstrap.ign
+    sed "s@https://api-int.$cluster.$domain:22623/config/master@http://$bootstrap_api_ip/bootstrap@" $clusterdir/master.ign > $clusterdir/bootstrap.ign
   fi
-  sed -i s@https://api-int.$cluster.$domain:22623/config@http://$api_ip:8080@ $clusterdir/master.ign $clusterdir/worker.ign
+  sed -i "s@https://api-int.$cluster.$domain:22623/config@http://$api_ip:8080@" $clusterdir/master.ign $clusterdir/worker.ign
 fi
 
 if [[ "$platform" != *"virt"* ]]; then

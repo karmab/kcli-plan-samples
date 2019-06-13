@@ -11,8 +11,7 @@ metadata:
 spec:
   volumes:
   - name: data-dir
-    hostPath:
-      path: "/etc/kubernetes/manifests/nginx"
+    empty-dir: {}
   initContainers:
   - name: nginx-get-master-mco
     securityContext:
