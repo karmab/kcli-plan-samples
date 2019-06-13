@@ -14,32 +14,32 @@ parameters:
  domain: karmalabs.com
  masters: 1
  workers: 0
- helper_ip: 
- helper_mac: 
- bootstrap_ip: 
- bootstrap_mac: 
- masters_ips: []
- masters_macs: []
- workers_ips: []
- workers_macs: []
+ api_ip: 
 
 {% if deploy_bootstrap %}
 {{ cluster }}-bootstrap:
  template: {{ template }}
  numcpus: 2
  memory: {{ bootstrap_memory }}
- dns: {{ helper_ip }}
+ dns: 127.0.0.1
  nets:
   - name: {{ network }}
-    ip: {{ bootstrap_ip }}
-    mac: {{ bootstrap_mac }}
  disks:
   - size: {{ disk_size }}
  files:
-  - path: /etc/kubernetes/manifests/dnsmasq.yml
-    origin: staticpods/dnsmasq.yml
-  - path: /etc/kubernetes/dnsmasq.conf
-    origin: dnsmasq.conf
+  - path: /etc/selinux/config
+    content:  |
+       SELINUX=permissive 
+  - path: /etc/kubernetes/manifests/coredns.yml
+    origin: staticpods/coredns.yml
+  - path: /etc/kubernetes/Corefile
+    origin: Corefile
+  - path: /etc/kubernetes/manifests/mdns.yml
+    origin: staticpods/mdns.yml
+  - path: /etc/kubernetes/config.hcl.templ
+    origin: config.hcl.templ
+  - path: /etc/kubernetes/apps.db
+    origin: apps.db
   - path: /etc/kubernetes/manifests/keepalived.yml
     origin: staticpods/keepalived.yml
   - path: /etc/kubernetes/keepalived.conf
@@ -54,11 +54,9 @@ parameters:
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ master_memory }}
- dns: {{ helper_ip }}
+ dns: 127.0.0.1
  nets:
   - name: {{ network }}
-    ip: {{ masters_ips[num] }}
-    mac: {{ masters_macs[num] }}
  disks:
   - size: {{ disk_size }}
  files:
@@ -69,10 +67,16 @@ parameters:
   - path: /etc/sysconfig/network-scripts/ifcfg-brext
     origin: ifcfg-brext
 {% endif %}
-  - path: /etc/kubernetes/manifests/dnsmasq.yml
-    origin: staticpods/dnsmasq.yml
-  - path: /etc/kubernetes/dnsmasq.conf
-    origin: dnsmasq.conf
+  - path: /etc/kubernetes/manifests/coredns.yml
+    origin: staticpods/coredns.yml
+  - path: /etc/kubernetes/Corefile
+    origin: Corefile
+  - path: /etc/kubernetes/manifests/mdns.yml
+    origin: staticpods/mdns.yml
+  - path: /etc/kubernetes/config.hcl.templ
+    origin: config.hcl.templ
+  - path: /etc/kubernetes/apps.db
+    origin: apps.db
 {% if workers > 0 %}
   - path: /etc/kubernetes/manifests/haproxy.yml
     origin: staticpods/haproxy.yml
@@ -93,11 +97,9 @@ parameters:
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ worker_memory }}
- dns: {{ helper_ip }}
+ dns: 127.0.0.1
  nets:
   - name: {{ network }}
-    ip: {{ workers_ips[num] }}
-    mac: {{ workers_macs[num] }}
  disks:
   - size: {{ disk_size }}
 {% if extra_disk %}
@@ -110,5 +112,15 @@ parameters:
     mode: 755
   - path: /etc/sysconfig/network-scripts/ifcfg-brext
     origin: ifcfg-brext
+  - path: /etc/kubernetes/manifests/coredns.yml
+    origin: staticpods/coredns.yml
+  - path: /etc/kubernetes/Corefile
+    origin: Corefile
+  - path: /etc/kubernetes/manifests/mdns.yml
+    origin: staticpods/mdns.yml
+  - path: /etc/kubernetes/config.hcl.templ
+    origin: config.hcl.templ
+  - path: /etc/kubernetes/apps.db
+    origin: apps.db
 {% endif %}
 {% endfor %}

@@ -1,8 +1,9 @@
 #!/bin/bash
 
 . env.sh || true
-template="${template:-rhcos-410.8.20190520.1-qemu.qcow2}"
 helper_template="${helper_template:-CentOS-7-x86_64-GenericCloud.qcow2}"
+template="${template:-rhcos-410.8.20190520.1-qemu.qcow2}"
+api_ip="${api_ip:-}"
 cluster="${cluster:-testk}"
 domain="${domain:-karmalabs.com}"
 numcpus="${numcpus:-4}"
@@ -16,12 +17,17 @@ disk_size="${disk_size:-30}"
 extra_disk_size="${extra_disk_size:-10}"
 masters="${masters:-1}"
 workers="${workers:-0}"
+tag="${tag:-cnvlab}"
 pub_key="${pubkey:-$HOME/.ssh/id_rsa.pub}"
 pull_secret="${pullsecret:-openshift_pull.json}"
 RED='\033[0;31m'
 BLUE='\033[0;36m'
 NC='\033[0m'
 
+
+
+clusterdir=clusters/$cluster
+export KUBECONFIG=$PWD/$clusterdir/auth/kubeconfig
 INSTALLER=$(which openshift-install 2>/dev/null)
 if  [ "$INSTALLER" == "" ] ; then
  echo -e "${RED}Missing openshift-install binary. Get it at https://mirror.openshift.com/pub/openshift-v4/clients/ocp${NC}"
@@ -34,78 +40,67 @@ if  [ "$OC" == "" ] ; then
 fi
 
 pub_key=`cat $pub_key`
-pull_secret=`cat $pull_secret | tr -d '\n'`
-mkdir $cluster || exit 1
-sed "s%DOMAIN%$domain%" install-config.yaml > $cluster/install-config.yaml
-sed -i "s%WORKERS%$workers%" $cluster/install-config.yaml
-sed -i "s%MASTERS%$masters%" $cluster/install-config.yaml
-sed -i "s%CLUSTER%$cluster%" $cluster/install-config.yaml
-sed -i "s%PULLSECRET%$pull_secret%" $cluster/install-config.yaml
-sed -i "s%PUBKEY%$pub_key%" $cluster/install-config.yaml
+pull_secret=`cat $pull_secret`
+mkdir -p $clusterdir || exit 1
+sed "s%DOMAIN%$domain%" install-config.yaml > $clusterdir/install-config.yaml
+sed -i "s%WORKERS%$workers%" $clusterdir/install-config.yaml
+sed -i "s%MASTERS%$masters%" $clusterdir/install-config.yaml
+sed -i "s%CLUSTER%$cluster%" $clusterdir/install-config.yaml
+sed -i "s%PULLSECRET%$pull_secret%" $clusterdir/install-config.yaml
+sed -i "s%PUBKEY%$pub_key%" $clusterdir/install-config.yaml
 
-openshift-install --dir $cluster create manifests
-cp customisation/* $cluster/openshift
-sed -i "s/3/$masters/" $cluster/openshift/99-ingress-controller.yaml
-openshift-install --dir $cluster create ignition-configs
+openshift-install --dir=$clusterdir create manifests
+cp customisation/* $clusterdir/openshift
+sed -i "s/3/$masters/" $clusterdir/openshift/99-ingress-controller.yaml
+openshift-install --dir=$clusterdir create ignition-configs
 
-kcli plan -f ocp_temp.yml -P template=$helper_template -P cluster=$cluster -P masters=$masters -P workers=$workers -P network=$network temp_$cluster
+platform=$(kcli list --clients | grep X | awk -F'|' '{print $2}' | xargs | sed 's/kvm/libvirt/')
 
-all="$cluster-helper $cluster-bootstrap"
-for i in `seq 0 $masters` ; do 
- if [ "$i" != $masters ] ; then
-   all="$all $cluster-master-$i"
- fi
-done
-  for i in `seq 0 $workers` ; do 
-    if [ "$i" != $workers ] ; then
-      all="$all $cluster-worker-$i"
-    fi
+if [[ "$platform" == *"virt"* ]]; then
+  if [ -z "$api_ip" ] ; then
+    # we deploy a temp vm to grab an ip for the api, if not predefined
+    kcli vm -p $helper_template -P plan=$cluster -P nets=[$network] $cluster-helper
+    api_ip=""
+    while [ "$api_ip" == "" ] ; do
+      api_ip=$(kcli info -f ip -v $cluster-helper)
+      echo -e "${BLUE}Waiting 5s to retrieve api ip from helper node...${NC}"
+      sleep 5
+    done
+    kcli delete --yes $cluster-helper
+    echo -e "${BLUE}Adding entry for api.$cluster.$domain in your /etc/hosts...${NC}"
+    sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
+    sudo sh -c "echo $api_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain >> /etc/hosts"
+  fi
+  if [ "$platform" == "kubevirt" ] ; then
+    # bootstrap ignition is too big for kubevirt to handle so we serve it from a dedicated temporary node
+    kcli vm -p $helper_template -P plan=$cluster -P nets=[$network] $cluster-bootstrap-helper
+    bootstrap_api_ip=""
+    while [ "$bootstrap_api_ip" == "" ] ; do
+      bootstrap_api_ip=$(kcli info -f ip -v $cluster-bootstrap-helper)
+      echo -e "${BLUE}Waiting 5s for bootstrap helper node to be running...${NC}"
+      sleep 5
+    done
+    sleep 20
+    kcli ssh root@$cluster-bootstrap-helper "yum -y install httpd ; systemctl start httpd"
+    kcli scp $clusterdir/bootstrap.ign root@$cluster-bootstrap-helper:/var/www/html/bootstrap
+    sed s@https://api-int.$cluster.$domain:22623/config/master@http://$bootstrap_api_ip/bootstrap@ $clusterdir/master.ign > $clusterdir/bootstrap.ign
+  fi
+  sed -i s@https://api-int.$cluster.$domain:22623/config@http://$api_ip:8080@ $clusterdir/master.ign $clusterdir/worker.ign
+fi
+
+if [[ "$platform" != *"virt"* ]]; then
+  # bootstrap ignition is too big for cloud platforms to handle so we serve it from a dedicated temporary node
+  kcli vm -p $helper_template -P reservedns=true -P domain=$cluster.$domain -P tags=[$tag] -P plan=$cluster -P nets=[$network] $cluster-bootstrap-helper
+  status=""
+  while [ "$status" != "running" ] ; do
+      status=$(kcli info -f status -v $cluster-bootstrap-helper | tr '[:upper:]' '[:lower:]')
+      echo -e "${BLUE}Waiting 5s for bootstrap helper node to be running...${NC}"
+      sleep 5
   done
-
-total=$(( $(echo $all | wc -w)  * 2 ))
-current=0
-
-while [ $current != $total ] ; do
-    info=$(kcli info -f ip,nets -v $all | sed 's/.*mac: \(.*\) net:.*/\1/')
-    current=$(echo $info | wc -w)
-    echo -e "${BLUE}Waiting 5s to gather ips and macs from nodes...${NC}"
-    sleep 5
-done
-
-entry=$(echo $info | cut -f1 -d" ")
-helper_ip=$entry
-info=$(echo $info | sed "s/$entry //")
-entry=$(echo $info | cut -f1 -d" ")
-helper_mac=$entry
-info=$(echo $info | sed "s/$entry //")
-entry=$(echo $info | cut -f1 -d" ")
-bootstrap_ip=$entry
-info=$(echo $info | sed "s/$entry //")
-entry=$(echo $info | cut -f1 -d" ")
-bootstrap_mac=$entry
-info=$(echo $info | sed "s/$entry //")
-
-for i in `seq 0 $masters` ; do 
- if [ "$i" != $masters ] ; then
-   entry=$(echo $info | cut -f1 -d" ")
-   masters_ips="$masters_ips $entry"
-   info=$(echo $info | sed "s/$entry //")
-   entry=$(echo $info | cut -f1 -d" ")
-   masters_macs="$masters_macs $entry"
-   info=$(echo $info | sed "s/$entry //")
- fi
-done
-
-for i in `seq 0 $workers` ; do 
- if [ "$i" != $workers ] ; then
-   entry=$(echo $info | cut -f1 -d" ")
-   workers_ips="$workers_ips $entry"
-   info=$(echo $info | sed "s/$entry //")
-   entry=$(echo $info | cut -f1 -d" ")
-   workers_macs="$workers_macs $entry"
-   info=$(echo $info | sed "s/$entry //")
- fi
-done
+  kcli ssh root@$cluster-bootstrap-helper "yum -y install httpd ; systemctl start httpd ; systemctl stop firewalld"
+  kcli scp $cluster/bootstrap.ign root@$cluster-bootstrap-helper:/var/www/html/bootstrap
+  sed s@https://api-int.$cluster.$domain:22623/config/master@http://$cluster-bootstrap-helper.$cluster.$domain/bootstrap@ $clusterdir/master.ign > $clusterdir/bootstrap.ign
+fi
 
 echo """cluster: $cluster
 numcpus: $numcpus
@@ -122,40 +117,46 @@ template: $template
 domain: $domain
 masters: $masters
 workers: $workers
-helper_ip: $helper_ip
-helper_mac: $helper_mac
-bootstrap_ip: $bootstrap_ip
-bootstrap_mac: $bootstrap_mac""" > $cluster/kcli.yml
+api_ip: $api_ip""" > $clusterdir/kcli.yml
 
-echo "masters_ips:" >> $cluster/kcli.yml
-for entry in `echo $masters_ips` ; do 
-  echo "- $entry" >> $cluster/kcli.yml
-done
-echo "masters_macs:" >> $cluster/kcli.yml
-for entry in `echo $masters_macs` ; do 
-  echo "- $entry" >> $cluster/kcli.yml
-done
-echo "workers_ips:" >> $cluster/kcli.yml
-for entry in `echo $workers_ips` ; do 
-  echo "- $entry" >> $cluster/kcli.yml
-done
-echo "workers_macs:" >> $cluster/kcli.yml
-for entry in `echo $workers_macs` ; do 
-  echo "- $entry" >> $cluster/kcli.yml
-done
+if [[ "$platform" == *"virt"* ]]; then
+  kcli plan -f ocp.yml --paramfile $clusterdir/kcli.yml $cluster
+  openshift-install --dir=$clusterdir wait-for bootstrap-complete || exit 1
+  todelete="$cluster-bootstrap"
+  [ "$platform" == "kubevirt" ] && todelete="$todelete $cluster-bootstrap-helper"
+  [[ "$platform" != *"virt"* ]] && todelete="$todelete $cluster-bootstrap-helper"
+  kcli delete --yes $todelete
+else
+  kcli plan -f ocp_cloud.yml --paramfile $clusterdir/kcli.yml $cluster
+  openshift-install --dir=$clusterdir wait-for bootstrap-complete || exit 1
+  api_ip=$(kcli info $cluster-master-0 -f ip -v)
+  kcli delete --yes $cluster-bootstrap $cluster-helper
+  kcli dns -n $domain -i $api_ip api.$cluster
+  kcli dns -n $domain -i $api_ip api-int.$cluster
+  echo -e "${BLUE}Adding temporary entry for api.$cluster.$domain in your /etc/hosts...${NC}"
+  sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
+  sudo sh -c "echo $api_ip api.$cluster.$domain >> /etc/hosts"
+fi
 
-kcli plan --yes -d  temp_$cluster
-sed -i s@https://api-int.$cluster.$domain:22623/config@http://$helper_ip:8080@ $cluster/master.ign $cluster/worker.ign
-kcli plan -f ocp.yml --paramfile $cluster/kcli.yml $cluster
-export KUBECONFIG=$PWD/$cluster/auth/kubeconfig
-echo -e "${BLUE}Adding entry for api.$cluster.$domain in your /etc/hosts...${NC}"
-sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
-sudo sh -c "echo $helper_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain >> /etc/hosts"
-#sshuttle -r your_hypervisor $helper_ip/32 -v
-openshift-install --dir=$cluster wait-for bootstrap-complete || exit 1
-kcli delete --yes $cluster-bootstrap
-if [ "$workers" == "0" ] ; then
- export KUBECONFIG=$PWD/$cluster/auth/kubeconfig
+if [ "$workers" <= "1" ] ; then
  oc adm taint nodes -l node-role.kubernetes.io/master node-role.kubernetes.io/master:NoSchedule-
 fi
-openshift-install --dir=$cluster wait-for install-complete
+openshift-install --dir=$clusterdir wait-for install-complete
+
+if [[ "$platform" == *"virt"* ]]; then
+  #add ips to nodes
+  NODES=$(oc get node -o custom-columns=NAME:.metadata.name,IP:.status.addresses[0].address --no-headers)
+  echo "$(oc get node -o custom-columns=NAME:.metadata.name,IP:.status.addresses[0].address --no-headers)" | while read node ip ; do
+    node=${node%%.*}
+    kcli update --ip $ip $node
+  done
+else
+  echo -e "${BLUE}Deleting temporary entry for api.$cluster.$domain in your /etc/hosts...${NC}"
+  sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
+fi
+
+if [[ "$platform" == *"virt"* ]]; then
+  cp $clusterdir/worker.ign $clusterdir/worker.ign.ori
+  curl -kL https://$api_ip:22623/config/worker -o $clusterdir/worker.ign
+fi
+sed -i "s/deploy_bootstrap: .*/deploy_bootstrap: false/" $clusterdir/kcli.yml
