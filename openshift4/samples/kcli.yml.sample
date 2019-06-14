@@ -2,7 +2,7 @@ cluster: testk
 domain: karmalabs.com
 masters: 1
 workers: 0
-helper_ip: 192.168.122.177
+api_ip: 192.168.122.177
 helper_mac: 52:54:00:59:e0:b7
 bootstrap_ip: 192.168.122.207
 bootstrap_mac: 52:54:00:5e:34:ee

@@ -7,17 +7,17 @@ metadata:
   creationTimestamp:
   deletionGracePeriodSeconds: 65
   labels:
-    app: kcli-dnsmasq
+    app: kcli-coredns
 spec:
   volumes:
   - name: conf-dir
     hostPath:
       path: "/etc/kubernetes"
   containers:
-  - name: dnsmasq
+  - name: coredns
     securityContext:
       privileged: true
-    image: docker.io/coredns/coredns:latest
+    image: quay.io/openshift-metalkube/coredns-mdns:latest
     args:
     - "--conf"
     - "/etc/coredns/Corefile"

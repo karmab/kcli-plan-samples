@@ -11,10 +11,9 @@ metadata:
 spec:
   volumes:
   - name: data-dir
-    hostPath:
-      path: "/etc/kubernetes/nginx"
+    empty-dir: {}
   initContainers:
-  - name: copy-master-mco
+  - name: nginx-get-master-mco
     securityContext:
       privileged: true
     image: yauritux/busybox-curl
@@ -22,13 +21,13 @@ spec:
     - "curl"
     args:
     - "-kL"
-    - "https://{{ helper_ip}}:22623/config/master"
+    - "https://{{ api_ip}}:22623/config/master"
     - "-o"
     - "/usr/share/nginx/html/master"
     volumeMounts:
     - name: data-dir
       mountPath: "/usr/share/nginx/html"
-  - name: copy-worker-mco
+  - name: nginx-get-worker-mco
     securityContext:
       privileged: true
     image: yauritux/busybox-curl
@@ -36,7 +35,7 @@ spec:
     - "curl"
     args:
     - "-kL"
-    - "https://{{ helper_ip}}:22623/config/worker"
+    - "https://{{ api_ip}}:22623/config/worker"
     - "-o"
     - "/usr/share/nginx/html/worker"
     volumeMounts:

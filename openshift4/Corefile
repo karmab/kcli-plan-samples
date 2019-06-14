@@ -1,11 +1,11 @@
-.:53 {
-    forward . /etc/coredns/resolv.conf
-    log
-    errors
+{{ cluster }}.{{ domain }}:53 {
+    mdns {{ cluster }}.{{ domain }}  {{ masters }} {{ cluster }}
+    hosts {{ cluster }}.{{ domain }} {
+        {{ api_ip }} api-int.{{ cluster }}.{{ domain }} api.{{ cluster }}.{{ domain }}
+        fallthrough
+    }
 }
 
-{{ cluster }}.{{ domain }}:53 {
-    file /etc/coredns/hosts.db
-    log
-    errors
+apps.{{ cluster }}.{{ domain }}:53 {
+ file /etc/coredns/apps.db
 }
