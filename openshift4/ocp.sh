@@ -1,10 +1,16 @@
 #!/bin/bash
 
-. env.sh || true
+if [ "$#" == '1' ] ; then
+    envname="$1"
+    . env.sh.$envname || true
+else
+    envname="testk"
+    . env.sh || true
+fi
+cluster="${cluster:-$envname}"
 helper_template="${helper_template:-CentOS-7-x86_64-GenericCloud.qcow2}"
 template="${template:-rhcos-410.8.20190520.1-qemu.qcow2}"
 api_ip="${api_ip:-}"
-cluster="${cluster:-testk}"
 domain="${domain:-karmalabs.com}"
 numcpus="${numcpus:-4}"
 network="${network:-default}"
@@ -40,7 +46,7 @@ if  [ "$OC" == "" ] ; then
 fi
 
 pub_key=`cat $pub_key`
-pull_secret=`cat $pull_secret`
+pull_secret=`cat $pull_secret | tr -d '\n'`
 mkdir -p $clusterdir || exit 1
 sed "s%DOMAIN%$domain%" install-config.yaml > $clusterdir/install-config.yaml
 sed -i "s%WORKERS%$workers%" $clusterdir/install-config.yaml
@@ -54,7 +60,7 @@ cp customisation/* $clusterdir/openshift
 sed -i "s/3/$masters/" $clusterdir/openshift/99-ingress-controller.yaml
 openshift-install --dir=$clusterdir create ignition-configs
 
-platform=$(kcli list --clients | grep X | awk -F'|' '{print $2}' | xargs | sed 's/kvm/libvirt/')
+platform=$(kcli list --clients | grep X | awk -F'|' '{print $3}' | xargs | sed 's/kvm/libvirt/')
 
 if [[ "$platform" == *"virt"* ]]; then
   if [ -z "$api_ip" ] ; then
@@ -141,7 +147,7 @@ else
   sudo sh -c "echo $api_ip api.$cluster.$domain >> /etc/hosts"
 fi
 
-if [ "$workers" <= "1" ] ; then
+if [ "$workers" -lt "1" ] ; then
  oc adm taint nodes -l node-role.kubernetes.io/master node-role.kubernetes.io/master:NoSchedule-
 fi
 openshift-install --dir=$clusterdir wait-for install-complete

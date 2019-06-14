@@ -1,5 +1,5 @@
 {{ cluster }}.{{ domain }}:53 {
-    mdns {{ cluster }}.{{ domain }}  {{ masters }}
+    mdns {{ cluster }}.{{ domain }}  {{ masters }} {{ cluster }}
     hosts {{ cluster }}.{{ domain }} {
         {{ api_ip }} api-int.{{ cluster }}.{{ domain }} api.{{ cluster }}.{{ domain }}
         fallthrough
