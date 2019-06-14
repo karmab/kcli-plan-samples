@@ -31,7 +31,7 @@ The main features are:
 
 ### Define your variables
 
-create an *env.sh* file similar to [*env.sh.sample*](env.sh.sample) and set:
+create an *env.sh* file similar to [*env.sh.sample*](samples/env.sh) and set:
 
 - *cluster* name
 - *domain* name. For cloud platforms, it should point to a domain name you have access too
@@ -46,23 +46,25 @@ create an *env.sh* file similar to [*env.sh.sample*](env.sh.sample) and set:
 - *worker_memory*
 - *bootstrap_memory*
 - *numcpus*
-- *disk size* default disk size for final nodes
-- *extra_disk* whether to create a secondary disk (to use with rook, for instance)
-- *extra\_disk_size* size for secondary disk
-- *use_br* whether to create a bridge on top of the nics of the nodes (useful if planning to deploy kubevirt on top)
+- *disk size* default disk size for final nodes.
+- *extra_disk* whether to create a secondary disk (to use with rook, for instance).
+- *extra\_disk_size* size for secondary disk.
+- *use_br* whether to create a bridge on top of the nics of the nodes (useful if planning to deploy kubevirt on top).
+- *api_ip* the ip to use for api ip. If none is provided, a temporary vm will be launched to gather a free one.
 
 ### Deploy
 
-- `./ocp.sh` You will be asked for your sudo password in order to create a /etc/hosts entry for the api vip. For aws/gcp use `./ocp_cloud.sh` instead.
+- `./ocp.sh` You will be asked for your sudo password in order to create a /etc/hosts entry for the api vip.
 
-- once that finishes, set the following environment variable in order to use oc commands `export KUBECONFIG=$cluster/auth/kubeconfig`
+- once that finishes, set the following environment variable in order to use oc commands `export KUBECONFIG=clusters/$cluster/auth/kubeconfig`
 
-- for dns access to your app, you can create a conf file in /etc/NetworkManager/dnsmasq.d with the following line `server=/apps.$cluster.$domain/$api_vip` where api_vip can be found in the last line of your /etc/hosts
+- for dns access to your app, you can create a conf file in /etc/NetworkManager/dnsmasq.d with the following line `server=/apps.$cluster.$domain/$api_ip` where api_ip can be found in the last line of your /etc/hosts (and displayed during
 
 ### Adding more workers after initial installation
 
-- edit your env.sh to change *workers*
-- launch the script `add_workers.sh` (or `add_workers_cloud.sh` for aws/gcp)
+- edit the generated kcli parameter file in `clusters/$cluster/kcli.yml` to change *workers* parameter
+- launch the plan with `kcli plan -f ocp.yml --paramfile=clusters/$cluster/kcli.yml $cluster`
+- wait for certificate request to appear and approve it with `oc get csr -o name | xargs oc adm certificate approve`:x
 
 ## architecture
 
@@ -76,13 +78,13 @@ We deploy :
 
 We first generate all the ignition files needed for the install.
 
-Then, we do a temporary deployment using a centos7 template, for all the masters, workers, bootstrap and a helper node ( this one just to get a vip). The goal of this step is to gather ips and macs for all those nodes.
+Then, if no api ip has been specified, we do a temporary deployment of a single vm using a centos7 template to gather a free ip
 
-With this information, a kcli parameter file is created and stored in the same directory than the openshift artifacts for the given cluster.
+With all this information, a kcli parameter file is created and stored in the same directory than the openshift artifacts for the given cluster.
 
-We then delete the temporary deployment and launch the final one, where we make sure each node has the proper mac address ( and as such gets the same ip).
+We then launch the deployment
 
-Keepalived and Dnsmasq configuration are created on the fly on the bootstrap and master nodes as static pods. Initially, the api vip runs on the bootstrap node.
+Keepalived and Coredns with mdns are created on the fly on the bootstrap and master nodes as static pods. Initially, the api vip runs on the bootstrap node.
 
 Nginx is created as static pod on the bootstrap node to serve as a http only web server for some additional ignition files needed on the nodes and which can't get injected (they are generated on the bootstrap node).
 
