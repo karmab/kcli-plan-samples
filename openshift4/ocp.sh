@@ -154,12 +154,12 @@ if [ "$workers" -lt "1" ]; then
 fi
 openshift-install --dir=$clusterdir wait-for install-complete || exit 1
 
-if [[ "$platform" == *virt* ]]; then
+if [[ "$platform" != *virt* ]]; then
   echo -e "${BLUE}Deleting temporary entry for api.$cluster.$domain in your /etc/hosts...${NC}"
   sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
 fi
 
-if [[ "$platform" == *virt* ]]; then
-  cp $clusterdir/worker.ign $clusterdir/worker.ign.ori
-  curl -kL https://$api_ip:22623/config/worker -o $clusterdir/worker.ign
-fi
+#if [[ "$platform" == *virt* ]]; then
+#  cp $clusterdir/worker.ign $clusterdir/worker.ign.ori
+#  curl -kL https://$api_ip:22623/config/worker -o $clusterdir/worker.ign
+#fi
