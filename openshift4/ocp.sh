@@ -62,7 +62,7 @@ openshift-install --dir=$clusterdir create ignition-configs
 
 platform=$(kcli list --clients | grep X | awk -F'|' '{print $3}' | xargs | sed 's/kvm/libvirt/')
 
-if [[ "$platform" == *"virt"* ]]; then
+if [[ "$platform" == *virt* ]]; then
   if [ -z "$api_ip" ] ; then
     # we deploy a temp vm to grab an ip for the api, if not predefined
     kcli vm -p $helper_template -P plan=$cluster -P nets=[$network] $cluster-helper
@@ -73,6 +73,7 @@ if [[ "$platform" == *"virt"* ]]; then
       sleep 5
     done
     kcli delete --yes $cluster-helper
+    echo -e "${BLUE}Using $api_ip for api vip ...${NC}"
     echo -e "${BLUE}Adding entry for api.$cluster.$domain in your /etc/hosts...${NC}"
     sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
     sudo sh -c "echo $api_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain >> /etc/hosts"
@@ -82,7 +83,7 @@ if [[ "$platform" == *"virt"* ]]; then
   fi
   if [ "$platform" == "kubevirt" ] ; then
     # bootstrap ignition is too big for kubevirt to handle so we serve it from a dedicated temporary node
-    kcli vm -p $helper_template -P plan=$cluster -P nets=[$network] $cluster-bootstrap-helper
+    kcli vm -p $helper_template -P plan=$cluster -P nets=[$network] -P files=$cluster-bootstrap-helper
     bootstrap_api_ip=""
     while [ "$bootstrap_api_ip" == "" ] ; do
       bootstrap_api_ip=$(kcli info -f ip -v $cluster-bootstrap-helper)
@@ -97,7 +98,7 @@ if [[ "$platform" == *"virt"* ]]; then
   sed -i "s@https://api-int.$cluster.$domain:22623/config@http://$api_ip:8080@" $clusterdir/master.ign $clusterdir/worker.ign
 fi
 
-if [[ "$platform" != *"virt"* ]]; then
+if [[ "$platform" != *virt* ]]; then
   # bootstrap ignition is too big for cloud platforms to handle so we serve it from a dedicated temporary node
   kcli vm -p $helper_template -P reservedns=true -P domain=$cluster.$domain -P tags=[$tag] -P plan=$cluster -P nets=[$network] $cluster-bootstrap-helper
   status=""
@@ -128,7 +129,7 @@ masters: $masters
 workers: $workers
 api_ip: $api_ip""" > $clusterdir/kcli.yml
 
-if [[ "$platform" == *"virt"* ]]; then
+if [[ "$platform" == *virt* ]]; then
   kcli plan -f ocp.yml --paramfile $clusterdir/kcli.yml $cluster
   openshift-install --dir=$clusterdir wait-for bootstrap-complete || exit 1
   todelete="$cluster-bootstrap"
@@ -147,25 +148,18 @@ else
   sudo sh -c "echo $api_ip api.$cluster.$domain >> /etc/hosts"
 fi
 
-if [ "$workers" -lt "1" ] ; then
+sed -i "s/deploy_bootstrap: .*/deploy_bootstrap: false/" $clusterdir/kcli.yml
+if [ "$workers" -lt "1" ]; then
  oc adm taint nodes -l node-role.kubernetes.io/master node-role.kubernetes.io/master:NoSchedule-
 fi
-openshift-install --dir=$clusterdir wait-for install-complete
+openshift-install --dir=$clusterdir wait-for install-complete || exit 1
 
-if [[ "$platform" == *"virt"* ]]; then
-  #add ips to nodes
-  NODES=$(oc get node -o custom-columns=NAME:.metadata.name,IP:.status.addresses[0].address --no-headers)
-  echo "$(oc get node -o custom-columns=NAME:.metadata.name,IP:.status.addresses[0].address --no-headers)" | while read node ip ; do
-    node=${node%%.*}
-    kcli update --ip $ip $node
-  done
-else
+if [[ "$platform" == *virt* ]]; then
   echo -e "${BLUE}Deleting temporary entry for api.$cluster.$domain in your /etc/hosts...${NC}"
   sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
 fi
 
-if [[ "$platform" == *"virt"* ]]; then
+if [[ "$platform" == *virt* ]]; then
   cp $clusterdir/worker.ign $clusterdir/worker.ign.ori
   curl -kL https://$api_ip:22623/config/worker -o $clusterdir/worker.ign
 fi
-sed -i "s/deploy_bootstrap: .*/deploy_bootstrap: false/" $clusterdir/kcli.yml

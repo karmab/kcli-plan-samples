@@ -51,7 +51,7 @@ parameters:
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ master_memory }}
- dns: 127.0.0.1
+ dns: {{ api_ip }}
  nets:
   - name: {{ network }}
  disks:
@@ -94,7 +94,7 @@ parameters:
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ worker_memory }}
- dns: 127.0.0.1
+ dns: {{ api_ip }}
  nets:
   - name: {{ network }}
  disks:
@@ -102,13 +102,14 @@ parameters:
 {% if extra_disk %}
   - size: {{ extra_disk_size }}
 {% endif %}
-{% if use_br %}
  files:
+{% if use_br %}
   - path: /etc/NetworkManager/dispatcher.d/98-brextscript
     origin: 98-brextscript
     mode: 755
   - path: /etc/sysconfig/network-scripts/ifcfg-brext
     origin: ifcfg-brext
+{% endif %}
   - path: /etc/kubernetes/manifests/coredns.yml
     origin: staticpods/coredns.yml
   - path: /etc/kubernetes/Corefile
@@ -119,5 +120,4 @@ parameters:
     origin: config.hcl.templ
   - path: /etc/kubernetes/apps.db
     origin: apps.db
-{% endif %}
 {% endfor %}
