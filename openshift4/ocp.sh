@@ -47,7 +47,8 @@ fi
 
 pub_key=`cat $pub_key`
 pull_secret=`cat $pull_secret | tr -d '\n'`
-mkdir -p $clusterdir || exit 1
+[ -d $clusterdir ] && echo -e "${RED}Please Remove existing $clusterdir first${NC}..." && exit 1
+mkdir -p $clusterdir
 sed "s%DOMAIN%$domain%" install-config.yaml > $clusterdir/install-config.yaml
 sed -i "s%WORKERS%$workers%" $clusterdir/install-config.yaml
 sed -i "s%MASTERS%$masters%" $clusterdir/install-config.yaml
@@ -83,7 +84,7 @@ if [[ "$platform" == *virt* ]]; then
   fi
   if [ "$platform" == "kubevirt" ] ; then
     # bootstrap ignition is too big for kubevirt to handle so we serve it from a dedicated temporary node
-    kcli vm -p $helper_template -P plan=$cluster -P nets=[$network] -P files=$cluster-bootstrap-helper
+    kcli vm -p $helper_template -P plan=$cluster -P nets=[$network] $cluster-bootstrap-helper
     bootstrap_api_ip=""
     while [ "$bootstrap_api_ip" == "" ] ; do
       bootstrap_api_ip=$(kcli info -f ip -v $cluster-bootstrap-helper)
