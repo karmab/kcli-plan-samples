@@ -9,7 +9,7 @@ else
 fi
 cluster="${cluster:-$envname}"
 helper_template="${helper_template:-CentOS-7-x86_64-GenericCloud.qcow2}"
-template="${template:-rhcos-410.8.20190520.1-qemu.qcow2}"
+template="${template:-}"
 api_ip="${api_ip:-}"
 domain="${domain:-karmalabs.com}"
 numcpus="${numcpus:-4}"
@@ -43,6 +43,15 @@ OC=$(which oc 2>/dev/null)
 if  [ "$OC" == "" ] ; then
  echo -e "${RED}Missing oc binary. Get it at https://mirror.openshift.com/pub/openshift-v4/clients/ocp${NC}"
  exit 1
+fi
+
+[ "$template" == "" ] && template=$(kcli list --templates | grep rhcos | awk -F'|' '{print $2}' | sort | tail -1 | xargs)
+
+if [ "$template" == "" ] ; then
+ echo -e "${RED}Missing rhcos template.Get it with kcli download rhcosootpa ${NC}"
+ exit 1
+else
+ echo -e "${BLUE}Using template $template"
 fi
 
 pub_key=`cat $pub_key`
@@ -84,7 +93,7 @@ if [[ "$platform" == *virt* ]]; then
   fi
   if [ "$platform" == "kubevirt" ] ; then
     # bootstrap ignition is too big for kubevirt to handle so we serve it from a dedicated temporary node
-    kcli vm -p $helper_template -P plan=$cluster -P nets=[$network] $cluster-bootstrap-helper
+    kcli vm -p kubevirt/fedora-cloud-container-disk-demo -P plan=$cluster -P nets=[$network] $cluster-bootstrap-helper
     bootstrap_api_ip=""
     while [ "$bootstrap_api_ip" == "" ] ; do
       bootstrap_api_ip=$(kcli info -f ip -v $cluster-bootstrap-helper)
@@ -100,7 +109,7 @@ if [[ "$platform" == *virt* ]]; then
 fi
 
 if [[ "$platform" != *virt* ]]; then
-  # bootstrap ignition is too big for cloud platforms to handle so we serve it from a dedicated temporary node
+  # bootstrap ignition is too big for cloud platforms to handle so we serve it from a dedicated temporary vm
   kcli vm -p $helper_template -P reservedns=true -P domain=$cluster.$domain -P tags=[$tag] -P plan=$cluster -P nets=[$network] $cluster-bootstrap-helper
   status=""
   while [ "$status" != "running" ] ; do
