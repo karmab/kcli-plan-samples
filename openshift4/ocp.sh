@@ -31,7 +31,6 @@ BLUE='\033[0;36m'
 NC='\033[0m'
 
 
-
 clusterdir=clusters/$cluster
 export KUBECONFIG=$PWD/$clusterdir/auth/kubeconfig
 INSTALLER=$(which openshift-install 2>/dev/null)
@@ -167,9 +166,7 @@ openshift-install --dir=$clusterdir wait-for install-complete || exit 1
 if [[ "$platform" != *virt* ]]; then
   echo -e "${BLUE}Deleting temporary entry for api.$cluster.$domain in your /etc/hosts...${NC}"
   sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
+else
+  cp $clusterdir/worker.ign $clusterdir/worker.ign.ori
+  curl --silent -kL https://api.$cluster.$domain:22623/config/worker -o $clusterdir/worker.ign
 fi
-
-#if [[ "$platform" == *virt* ]]; then
-#  cp $clusterdir/worker.ign $clusterdir/worker.ign.ori
-#  curl -kL https://$api_ip:22623/config/worker -o $clusterdir/worker.ign
-#fi

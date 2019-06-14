@@ -18,7 +18,7 @@ The main features are:
 - openshift-install binary needs to be installed from https://mirror.openshift.com/pub/openshift-v4/clients/ocp
 - pull secret
 - ssh public key
-- kcli >= 14.10 (container or pip version if deploying on something else than libvirt)
+- kcli >= 14.11 (container or pip version if deploying on something else than libvirt)
 - direct access to the deployed vms. Use something like this otherwise `sshuttle -r your_hypervisor 192.168.122.0/24 -v`)
 - Target platform needs:
   - rhcos image ( *kcli download rhcosootpa* )
@@ -64,7 +64,7 @@ create an *env.sh* file similar to [*env.sh.sample*](samples/env.sh) and set:
 
 - edit the generated kcli parameter file in `clusters/$cluster/kcli.yml` to change *workers* parameter
 - launch the plan with `kcli plan -f ocp.yml --paramfile=clusters/$cluster/kcli.yml $cluster`
-- wait for certificate request to appear and approve it with `oc get csr -o name | xargs oc adm certificate approve`:x
+- wait for certificate requests to appear and approve them with `oc get csr -o name | xargs oc adm certificate approve`
 
 ## architecture
 
