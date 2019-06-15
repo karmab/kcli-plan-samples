@@ -5,6 +5,7 @@ RED='\033[0;31m'
 BLUE='\033[0;36m'
 NC='\033[0m'
 
+[ -f aliases.sh ] && source aliases.sh
 client=$(kcli list --clients | grep X | awk -F'|' '{print $2}')
 kcli="kcli -C $client"
 if [ "$#" == '1' ] ; then

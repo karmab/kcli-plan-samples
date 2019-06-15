@@ -19,6 +19,7 @@ The main features are:
 - pull secret
 - ssh public key
 - kcli >= 14.11 (container or pip version if deploying on something else than libvirt)
+ - for container version, you will need to put the alias you use to run kcli in `aliases.sh` so that the deployment script can source it.
 - direct access to the deployed vms. Use something like this otherwise `sshuttle -r your_hypervisor 192.168.122.0/24 -v`)
 - Target platform needs:
   - rhcos image ( *kcli download rhcosootpa* )
