@@ -72,8 +72,7 @@ If you want to tweak them, create an *parameters.yml.sample* parameter file simi
 
 ### Cleaning up an install
 
-- Delete all the vms with `kcli plan -d $cluster --yes`
-- Delete the generated directory `rm -rf clusters/$cluster`
+- if you named your cluster xx, Delete all the vms and the generated directory with `cluster=xx ; kcli plan -d $cluster --yes; rm -rf clusters/$cluster`
 
 ## architecture
 
