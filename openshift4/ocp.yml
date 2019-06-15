@@ -13,7 +13,7 @@ parameters:
  cluster: testk
  domain: karmalabs.com
  masters: 1
- workers: 0
+ workers: 1
  api_ip: 
 
 {% if deploy_bootstrap %}

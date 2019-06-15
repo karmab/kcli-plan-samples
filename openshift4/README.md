@@ -29,32 +29,36 @@ The main features are:
 
 ## How to Use
 
-### Define your variables
+### Setting your environment
 
-create an *env.sh* file similar to [*env.sh.sample*](samples/env.sh) and set:
+You can either use default values that can be checked in the parameters section of the file `ocp.yml` or by running `kcli plan -i ocp.yml`
 
-- *cluster* name
-- *domain* name. For cloud platforms, it should point to a domain name you have access too
-- *pub_key* location. defaults to `$HOME/.ssh/id_rsa.pub`
-- *pull_secret* location. defaults to `./openshift_pull.json`
-- *template* rhcos template to use (should be an openstack one for ovirt/openstack and qemu for libvirt/kubevirt or on ovirt with ignition hook)
+If you want to tweak them, create an *parameters.yml.sample* parameter file similar to [*parameters.yml.sample*](parameters.yml.sample) and edit:
+
+- *cluster* name. Defaults to `testk`
+- *domain* name. For cloud platforms, it should point to a domain name you have access too. `Defaults to karmalabs.com`
+- *pub_key* location. Defaults to `$HOME/.ssh/id_rsa.pub`
+- *pull_secret* location. Defaults to `./openshift_pull.json`
+- *template* rhcos template to use (should be an openstack one for ovirt/openstack and qemu for libvirt/kubevirt or on ovirt with ignition hook). You can let this parameter unset if you want the script to check for a rhcos template within the ones available on your client.
 - *helper_template* which template to use when deploying temporary vms (defaults to `CentOS-7-x86_64-GenericCloud.qcow2`)
-- *masters* number of masters
-- *workers* number of workers
-- *network*
-- *master_memory*
-- *worker_memory*
-- *bootstrap_memory*
-- *numcpus*
-- *disk size* default disk size for final nodes.
-- *extra_disk* whether to create a secondary disk (to use with rook, for instance).
-- *extra\_disk_size* size for secondary disk.
-- *use_br* whether to create a bridge on top of the nics of the nodes (useful if planning to deploy kubevirt on top).
-- *api_ip* the ip to use for api ip. If none is provided, a temporary vm will be launched to gather a free one.
+- *masters* number of masters. Defaults to `1`
+- *workers* number of workers. Defaults to `1`
+- *network*. Defaults to `default`
+- *master_memory*. Defaults to `8192Mi`
+- *worker_memory*. Defaults to `8192Mi`
+- *bootstrap_memory*. Defaults to `4096Mi`
+- *numcpus*. Defaults to `4`
+- *disk size* default disk size for final nodes. Defaults to `30Gb`
+- *extra_disk* whether to create a secondary disk (to use with rook, for instance). Defaults to `false`
+- *extra\_disk_size* size for secondary disk. Defaults to `30Gb`
+- *use_br* whether to create a bridge on top of the nics of the nodes (useful if planning to deploy kubevirt on top). Defaults to `false`
+- *api_ip* the ip to use for api ip. Defaults to `none`, in which case a temporary vm will be launched to gather a free one.
 
 ### Deploy
 
-- `./ocp.sh` You will be asked for your sudo password in order to create a /etc/hosts entry for the api vip.
+- `./ocp.sh` or `ocp.sh your_parameter_file` if you have created one.
+
+- You will be asked for your sudo password in order to create a /etc/hosts entry for the api vip.
 
 - once that finishes, set the following environment variable in order to use oc commands `export KUBECONFIG=clusters/$cluster/auth/kubeconfig`
 
@@ -62,9 +66,14 @@ create an *env.sh* file similar to [*env.sh.sample*](samples/env.sh) and set:
 
 ### Adding more workers after initial installation
 
-- edit the generated kcli parameter file in `clusters/$cluster/kcli.yml` to change *workers* parameter
-- launch the plan with `kcli plan -f ocp.yml --paramfile=clusters/$cluster/kcli.yml $cluster`
+- with default settings, relaunch the plan with `kcli plan -f ocp.yml -P workers=new_number_of_workers -P deploy_bootstrap=false $cluster`
+- if using parameterfile, first edit your parameter file and change *workers* parameter and then relaunch the plan with `kcli plan -f ocp.yml --paramfile=your_parameter_file -P deploy_bootstrap=false $cluster`
 - wait for certificate requests to appear and approve them with `oc get csr -o name | xargs oc adm certificate approve`
+
+### Cleaning up an install
+
+- Delete all the vms with `kcli plan -d $cluster --yes`
+- Delete the generated directory `rm -rf clusters/$cluster`
 
 ## architecture
 

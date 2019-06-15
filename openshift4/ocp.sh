@@ -1,35 +1,36 @@
 #!/bin/bash
 
+# set some printing colors
+RED='\033[0;31m'
+BLUE='\033[0;36m'
+NC='\033[0m'
+
 if [ "$#" == '1' ] ; then
-    envname="$1"
-    . env.sh.$envname || true
+  envname="$1"
+  paramfile="$1"
+  if [ ! -f $paramfile ] ; then
+    echo -e "${RED}Specified parameter file $paramfile doesn't exist.Leaving...${NC}"
+    exit 1
+  else
+    while read line ; do export $(echo "$line" | cut -d: -f1 | xargs)=$(echo "$line" | cut -d: -f2 | xargs) ; done < $paramfile
+  fi
+  kcliplan="kcli plan --paramfile=$paramfile"
 else
-    envname="testk"
-    . env.sh || true
+  envname="testk"
+  kcliplan="kcli plan"
 fi
+
 cluster="${cluster:-$envname}"
 helper_template="${helper_template:-CentOS-7-x86_64-GenericCloud.qcow2}"
 template="${template:-}"
 api_ip="${api_ip:-}"
 domain="${domain:-karmalabs.com}"
-numcpus="${numcpus:-4}"
 network="${network:-default}"
-use_br="${use_br:-false}"
-extra_disk="${extra_disk:-false}"
-master_memory="${master_memory:-8192}"
-worker_memory="${worker_memory:-8192}"
-bootstrap_memory="${bootstrap_memory:-4096}"
-disk_size="${disk_size:-30}"
-extra_disk_size="${extra_disk_size:-10}"
 masters="${masters:-1}"
 workers="${workers:-0}"
 tag="${tag:-cnvlab}"
 pub_key="${pubkey:-$HOME/.ssh/id_rsa.pub}"
 pull_secret="${pullsecret:-openshift_pull.json}"
-RED='\033[0;31m'
-BLUE='\033[0;36m'
-NC='\033[0m'
-
 
 clusterdir=clusters/$cluster
 export KUBECONFIG=$PWD/$clusterdir/auth/kubeconfig
@@ -86,6 +87,7 @@ if [[ "$platform" == *virt* ]]; then
     echo -e "${BLUE}Adding entry for api.$cluster.$domain in your /etc/hosts...${NC}"
     sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
     sudo sh -c "echo $api_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain >> /etc/hosts"
+    echo "api_ip: $api_ip" >> $paramfile
   else
     echo -e "${BLUE}Using $api_ip for api vip ...${NC}"
     grep -q "$api_ip api.$cluster.$domain" /etc/hosts || sudo sh -c "echo $api_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain >> /etc/hosts"
@@ -121,32 +123,15 @@ if [[ "$platform" != *virt* ]]; then
   sed s@https://api-int.$cluster.$domain:22623/config/master@http://$cluster-bootstrap-helper.$cluster.$domain/bootstrap@ $clusterdir/master.ign > $clusterdir/bootstrap.ign
 fi
 
-echo """cluster: $cluster
-numcpus: $numcpus
-network: $network
-use_br: $use_br
-extra_disk: $extra_disk
-master_memory: $master_memory
-worker_memory: $worker_memory
-deploy_bootstrap: true
-bootstrap_memory: $bootstrap_memory
-disk_size: $disk_size
-extra_disk_size: $extra_disk_size
-template: $template
-domain: $domain
-masters: $masters
-workers: $workers
-api_ip: $api_ip""" > $clusterdir/kcli.yml
-
 if [[ "$platform" == *virt* ]]; then
-  kcli plan -f ocp.yml --paramfile $clusterdir/kcli.yml $cluster
+  $kcliplan -f ocp.yml $cluster
   openshift-install --dir=$clusterdir wait-for bootstrap-complete || exit 1
   todelete="$cluster-bootstrap"
   [ "$platform" == "kubevirt" ] && todelete="$todelete $cluster-bootstrap-helper"
   [[ "$platform" != *"virt"* ]] && todelete="$todelete $cluster-bootstrap-helper"
   kcli delete --yes $todelete
 else
-  kcli plan -f ocp_cloud.yml --paramfile $clusterdir/kcli.yml $cluster
+  $kcliplan -f ocp_cloud.yml $cluster
   openshift-install --dir=$clusterdir wait-for bootstrap-complete || exit 1
   api_ip=$(kcli info $cluster-master-0 -f ip -v)
   kcli delete --yes $cluster-bootstrap $cluster-helper
@@ -157,7 +142,6 @@ else
   sudo sh -c "echo $api_ip api.$cluster.$domain >> /etc/hosts"
 fi
 
-sed -i "s/deploy_bootstrap: .*/deploy_bootstrap: false/" $clusterdir/kcli.yml
 if [ "$workers" -lt "1" ]; then
  oc adm taint nodes -l node-role.kubernetes.io/master node-role.kubernetes.io/master:NoSchedule-
 fi

@@ -1,7 +1,5 @@
 openshift_pull.json
 .openshift_install.log
 clusters*
-ovirt*
-libvirt*
+clients*
 launch*
-env.sh.*
