@@ -1,5 +1,8 @@
 parameters:
  version: rocky
+ numcpus: 4
+ memory: 10240
+ disk_size: 90
  user: testk
  password: testk
  project: testk
@@ -20,10 +23,10 @@ parameters:
 
 {{ version }}:
  template: CentOS-7-x86_64-GenericCloud.qcow2
- memory: 10240
- numcpus: 2
+ memory: {{ memory }}
+ numcpus: {{ numcpus }}
  disks: 
-  - size: 90
+  - size: {{ disk_size }}
  nets:
  - default
  pool: default
