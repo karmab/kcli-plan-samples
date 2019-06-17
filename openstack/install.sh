@@ -40,4 +40,5 @@ sed -i "s/CONFIG_TROVE_INSTALL=n/CONFIG_TROVE_INSTALL=y/" /root/answers.txt
 {% if magnum %}
 sed -i "s/CONFIG_MAGNUM_INSTALL=n/CONFIG_MAGNUM_INSTALL=y/" /root/answers.txt
 {% endif %}
+sed -i "s/CONFIG_NOVA_LIBVIRT_VIRT_TYPE=.*/CONFIG_NOVA_LIBVIRT_VIRT_TYPE={{ virt_type }}/" /root/answers.txt
 HOME=/root packstack --answer-file=/root/answers.txt

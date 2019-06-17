@@ -6,9 +6,10 @@
                   'ocata': '11',
                   'pike': '12',
                   'queen': '13',
+                  'rocky': '14',
                }
 -%}
-{%- set versionnumber = version[version]  -%}
+{%- set versionnumber = versions[version]  -%}
 
 {% if version in ['kilo','liberty','mitaka'] %}
 subscription-manager repos --enable=rhel-7-server-rh-common-rpms --enable=rhel-7-server-openstack-{{ versionnumber }}-rpms --enable=rhel-ha-for-rhel-7-server-rpms --enable=rhel-7-server-extras-rpms

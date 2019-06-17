@@ -5,6 +5,21 @@ parameters:
  project: testk
  admin_password: unix1234
  version: rocky
+ ovn: false
+ cirros_image: http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img
+ ironic: true
+ lbaas: true
+ manila: false
+ ceilometer: false
+ aodh: false
+ panko: false
+ swift: false
+ sahara: false
+ magnum: false
+ trove: false
+ port_security: false
+ virt_type: kvm
+
 
 {{ version }}:
  template: {{ template }}
@@ -17,12 +32,6 @@ parameters:
  nets:
  - default
  pool: default
- cpumodel: host-model
- cpuflags:
-  - name: arat
-    enable: false
-  - name: clflushopt
-    enable: false
  scripts: 
   - subscription.sh
   - install.sh
