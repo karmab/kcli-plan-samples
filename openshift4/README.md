@@ -42,6 +42,7 @@ If you want to tweak them, create an *parameters.yml.sample* parameter file simi
 - *pull_secret* location. Defaults to `./openshift_pull.json`
 - *template* rhcos template to use (should be an openstack one for ovirt/openstack and qemu for libvirt/kubevirt or on ovirt with ignition hook). You can let this parameter unset if you want the script to check for a rhcos template within the ones available on your client.
 - *helper_template* which template to use when deploying temporary vms (defaults to `CentOS-7-x86_64-GenericCloud.qcow2`)
+- *helper_sleep*. Defaults to `15`. Number of seconds to wait when deploying the bootstrap helper node on openstack/kubevirt before sshing into it
 - *masters* number of masters. Defaults to `1`
 - *workers* number of workers. Defaults to `1`
 - *network*. Defaults to `default`

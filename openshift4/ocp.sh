@@ -25,6 +25,7 @@ fi
 
 cluster="${cluster:-$envname}"
 helper_template="${helper_template:-CentOS-7-x86_64-GenericCloud.qcow2}"
+helper_sleep="${helper_sleep:-15}"
 template="${template:-}"
 api_ip="${api_ip:-}"
 public_api_ip="${public_api_ip:-}"
@@ -114,12 +115,10 @@ if [[ "$platform" == *virt* ]] || [[ "$platform" == *openstack* ]] ; then
     if [ "$platform" == "kubevirt" ] ; then
       helper_template="kubevirt/fedora-cloud-container-disk-demo"
       helper_parameters=""
-      helper_sleep="15"
       iptype="ip"
     else
       helper_template="CentOS-7-x86_64-GenericCloud.qcow2"
       helper_parameters="-P flavor=m1.medium"
-      helper_sleep="360"
       iptype="privateip"
     fi
     $kcli vm -p $helper_template -P plan=$cluster -P nets=[$network] $helper_parameters $cluster-bootstrap-helper
