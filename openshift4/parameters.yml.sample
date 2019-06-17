@@ -5,7 +5,6 @@ use_br: true
 extra_disk: true
 master_memory: 16384
 worker_memory: 8192
-deploy_bootstrap: false
 bootstrap_memory: 8192
 disk_size: 30
 extra_disk_size: 10

@@ -9,7 +9,7 @@ parameters:
  bootstrap_memory: 4096
  disk_size: 30
  extra_disk_size: 30
- template: rhcos-410.8.20190520.1-openstack.qcow2
+ template: rhcos-420.8.20190611.0-qemu.qcow2
  cluster: testk
  domain: karmalabs.com
  masters: 1

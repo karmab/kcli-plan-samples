@@ -34,10 +34,10 @@ The main features are:
 
 You can either use default values that can be checked in the parameters section of the file `ocp.yml` or by running `kcli plan -i ocp.yml`
 
-If you want to tweak them, create an *parameters.yml.sample* parameter file similar to [*parameters.yml.sample*](parameters.yml.sample) and edit:
+If you want to tweak them, create a parameter file similar to [*parameters.yml.sample*](parameters.yml.sample) and edit:
 
 - *cluster* name. Defaults to `testk`
-- *domain* name. For cloud platforms, it should point to a domain name you have access too. `Defaults to karmalabs.com`
+- *domain* name. For cloud platforms, it should point to a domain name you have access toº. `Defaults to karmalabs.com`
 - *pub_key* location. Defaults to `$HOME/.ssh/id_rsa.pub`
 - *pull_secret* location. Defaults to `./openshift_pull.json`
 - *template* rhcos template to use (should be an openstack one for ovirt/openstack and qemu for libvirt/kubevirt or on ovirt with ignition hook). You can let this parameter unset if you want the script to check for a rhcos template within the ones available on your client.
