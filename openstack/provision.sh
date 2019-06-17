@@ -27,7 +27,7 @@ glance image-create --name "cirros" --disk-format qcow2 --container-format bare 
 tail -1 /root/.ssh/authorized_keys > ~/{{ user }}.pub
 nova keypair-add --pub-key ~/{{ user }}.pub {{ user }}
 neutron net-create private -- --port_security_enabled={{ port_security }}
-neutron subnet-create --name 10.0.0.0/24 --allocation-pool start=10.0.0.2,end=10.0.0.254 --gateway 10.0.0.1 private 10.0.0.0/24
+neutron subnet-create --name 10.0.0.0/24 --allocation-pool start=10.0.0.2,end=10.0.0.254 --gateway 10.0.0.1 --dns-nameserver 8.8.8.8 private 10.0.0.0/24 
 neutron router-create router
 neutron router-gateway-set router extnet
 neutron router-interface-add router 10.0.0.0/24
