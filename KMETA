@@ -1,143 +1,143 @@
-- name: advanced
+- name: samples_advanced
   file: samples/advanced.yml
   description: advanced
   numvms: 2
 
-- name: coreos
+- name: samples_coreos
   file: samples/coreos.yml
   description: download stable coreos and run a vm from it
 
-- name: createpool
+- name: samples_createpool
   file: samples/createpool.yml
   description: create a pool and deploy a vm using it
   numvms: 1
 
-- name: crossdns
+- name: samples_crossdns
   file: samples/crossdns.yml
   description: vm on kvm but its dns entry in gcp dns
   numvms: 1
 
-- name: dns
+- name: samples_dns
   file: samples/dns.yml
   description: vm with multiple dns aliases
   numvms: 1
 
-- name: dnsplan
+- name: samples_dnsplan
   file: samples/dnsplan.yml
   description: create dns entries anywhere
   numvms: 0
 
-- name: dnsplancross
+- name: samples_dnsplancross
   file: samples/dnsplancross.yml
   description: create a dnsentry in specific client
   numvms: 0
 
-- name: download
+- name: samples_downloadimage
   file: samples/downloadimage.yml
   description: download centos image and run vm from it
   numvms: 1
 
-- name: downloadrhel
+- name: samples_downloadrhel
   file: samples/downloadrhelimage.yml
   description: download rhel image opening red hat portal
   numvms: 0
 
-- name: embeddedprofile
+- name: samples_embeddedprofile
   file: samples/embeddedprofile.yml
   description: deploy two vms, one with a profile defined within the plan
   numvms: 2
 
-- name: flavor
+- name: samples_flavor
   file: samples/flavor.yml
   description: create a vm with the indicated flavor
   numvms: 1
 
-- name: loadbalancer
+- name: samples_loadbalancer
   file: samples/loadbalancer.yml
   description: create two vms and a loadbalancer in front (will be an additional vm on kvm)
   numvms: 2
 
-- name: ovs
+- name: samples_ovs
   file: samples/ovs.yml
   description: create two vms with a secondary nic on testbrk ovs bridge
   numvms: 2
 
-- name: plan_of_plans
+- name: samples_plan_of_plans
   file: samples/plan_of_plans.yml
   description: deploy ovirt and manageiq vms from existing plans
   numvms: 2
 
-- name: plan_of_plans2
+- name: samples_plan_of_plans2
   file: samples/plan_of_plans2.yml
   description: deploy vms from two plans, with overriding parameters
   numvms: 2
 
-- name: plan_of_plans3
+- name: samples_plan_of_plans3
   file: samples/plan_of_plans3.yml
   description: deploy vms from two plans pointing to local plan files, with overriding parameters
   numvms: 2
 
-- name: renderedplan
+- name: samples_renderedplan
   file: samples/renderedplan.yml
   description: deploy a vm and change its root password with a parameter
   numvms: 1
 
-- name: renderedplan_advanced
+- name: samples_advanced_renderedplan
   file: samples/renderedplan_advanced.yml
   description: deploy a vm with a parametrizable network for first nic and optional secondary nic
   numvms: 1
 
-- name: simple
+- name: samples_simple
   file: samples/simpleplan.yml
   description: deploy 3 vms, one with dns reseration, the other two without even cloudinit
   numvms: 3
 
-- name: spread
+- name: samples_spread
   file: samples/spreadplan.yml
   description: deploy 2 vms, each on a specific client
   numvms: 3
 
-- name: staticip
+- name: samples_staticip
   file: samples/staticip/john.yml
   description: deploy a network, and vm a with a nic in this network and static networking
   numvms: 1
 
-- name: sharedkey
+- name: samples_sharedkey
   file: samples/sharedkey/kcli_plan.yml
   description: deploy 2 vms and share private and pub keys between them
   numvms: 2
 
-- name: ansible
+- name: samples_ansible
   file: samples/ansible/singlevm.yml
   description: deploy a vm and execute a playbook against it (with verbose mode and some variables)
   numvms: 1
 
-- name: ansiblecomplex
+- name: samples_ansiblecomplex
   file: samples/ansible/complex_plan.yml
   description: deploy a master and node vm and execute 3 playbooks against them
   numvms: 2
 
-- name: injectfiles
+- name: samples_injectfiles
   file: samples/injectfiles/alice.yml
   description: deploy a vm and inject sample files to it
   numvms: 1
 
-- name: injectfilesinline
+- name: samples_injectfilesinline
   file: samples/injectfiles/bob.yml
   description: deploy a vm and inject sample file embedding content
   numvms: 1
 
-- name: cputuning
+- name: samples_cputuning
   file: samples/cputuning/cpu.yml
   description: deploy a vm specifying cpumodel and enabling/disabling some cpu flags
   numvms: 1
 
-- name: doublenic
+- name: samples_doublenic
   file: samples/doublenic.yml
   description: deploy a vm with two nics, making sure no cloudinit conf is applied on second one
   numvms: 1
 
-- name: sharedfolders
+- name: samples_sharedfolders
   file: samples/sharedfolders/kcli_plan.yml
   description: deploy a vm sharing two directories named x and y. Note you need an hypervisor and guest with 9p support
   numvms: 1
@@ -146,13 +146,11 @@
   file: builder/copr.yml
   description: Build and publish kcli rpm ( Only useful for me)
   numvms: 1
-  stars: 5
 
 - name: packagecloud
   file: builder/packagecloud.yml
   description: Build and publish kcli deb ( Only useful for me)
   numvms: 1
-  stars: 5
 
 - name: foreman
   file: foreman/upstream.yml
@@ -208,7 +206,6 @@
   description: Latest kubernetes with single master and multiple nodes
   comments: set nodes to 0 for a single all in one with master
   numvms: 3
-  stars: 5
 
 - name: minikube
   file: kubernetes/minikube.yml
@@ -219,7 +216,6 @@
   file: kubernetes/kubevirt.yml
   description: Latest kubernetes and kubevirt with single master and multiple nodes, along with cdi and web ui. A PR number can also be provided for kubevirt_vrsion so that images are built against it
   numvms: 2
-  stars: 5
 
 - name: manageiq
   file: manageiq/upstream.yml
@@ -238,38 +234,34 @@
   description: Downstream manageiq cfme-rhos-5.7.1.3-1 with additional provider scripts
   numvms: 1
 
-- name: origin
+- name: openshift_origin
   file: openshift3/origin.yml
   description: Upstream Openshift based on oc cluster up with istio, knative and asb
   numvms: 1
   comments: openshift_version can also be set to to an older one and asb enabled
-  stars: 5
 
-- name: installer
+- name: openshift4_installer
   file: openshift3/installer.yml
   description: Upstream Compilation of openshift new installer
   numvms: 1
   comments: you ll need to download rhcos-qemu.qcow2 from somewhere 
-  stars: 4
 
-- name: ocp
+- name: ocp3
   file: openshift3/downstream.yml
   description: Downstream Openshift 3.7 based on oc cluster up
   numvms: 1
   memory: 6144
 
-- name: multi
+- name: openshift3_multi
   file: openshift3/multi.yml
   description: Downstream ocp with arbitrary number of nodes
   comments: router and registry located on infra if present. gluster uses first 3 infra if present, otherwise 1 master and 2 infra
   numvms: 4
-  stars: 5
 
 - name: helm
   file: openshift3/helm.yml
   description: Helm based on oc cluster up
   numvms: 1
-  stars: 4
 
 - name: minishift
   file: openshift3/minishift.yml
@@ -280,7 +272,6 @@
   file: openshift3/kubevirt.yml
   description: Upstream Kubevirt all in one
   numvms: 1
-  stars: 5
 
 - name: fission
   file: openshift3/fission.yml
@@ -297,20 +288,19 @@
   file: openshift3/openwhisk.yml
   description: Latest Openwhisk based on oc cluster up
 
-- name: upstream
+- name: openstack_upstream
   file: openstack/upstream.yml
   description: Upstream packstack
   numvms: 1
   comments: Version can be set to queens,pike,ocata,newton,liberty
-  stars: 5
 
-- name: downstream
+- name: openstack_downstream
   file: openstack/downstream.yml
   description: Downstream packstack
   numvms: 1
   comments: Version can be set to queen,pike,ocata,newton,liberty, kilo
 
-- name: advanced
+- name: openstack_advanced
   file: openstack/advanced.yml
   description: Downstream packstack with one controller and arbitrary compute nodes (2 by default)
   numvms: 3
@@ -320,17 +310,17 @@
   description: Downstream tripleo (1undercloud+1controllers+1compute)
   numvms: 3
 
-- name: advancedtripleo
+- name: tripleo_advanced
   file: openstack/tripleo/advanced.yml
   description: Downstream tripleo (1undercloud+3controllers+1compute)
   numvms: 5
 
-- name: advancedtripleoceph
+- name: tripleo_advancedceph
   file: openstack/tripleo/advancedceph.yml
   description: Downstream tripleo (1undercloud+3controllers+1compute+3ceph)
   numvms: 8
 
-- name: advancedtripleosp12
+- name: tripleo_advanced12
   file: openstack/tripleo/tripleo-advancedosp12-containers.yml
   description: Downstream tripleo using containers (1undercloud+3controllers+2compute+3ceph+2Telemetry)
   numvms: 11
@@ -339,7 +329,6 @@
   file: ovirt/upstream.yml
   description: Upstream ovirt all in one with nfs
   numvms: 1
-  stars: 5
 
 - name: ovirt3
   file: ovirt/upstream3.yml
@@ -356,13 +345,13 @@
   description: Downstream rhev 3 all in one with nfs
   numvms: 1
 
-- name: advanced
+- name: ovirt_advanced
   url: github.com/karmab/kcli-plans/ovirt
   file: ovirt/advanced.yml
   description: Downstream rhev with one engine with nfs and two nodes
   numvms: 3
 
-- name: advanced_ldap
+- name: ovirt_advanced_ldap
   file: ovirt/advanced_ldap.yml
   description: Downstream rhev with one engine with nfs and two nodes and an ldap container
   numvms: 3
@@ -381,19 +370,18 @@
   file: pxe/kcli_plan.yml
   description: pxeserver with optional kickstart and test machine. Override iso url if needed
   numvms: 1
-  stars: 5
 
-- name: tower
+- name: tower_downstream
   file: tower/downstream.yml
   description: Downstream tower 3.0.3
   numvms: 1
 
-- name: federation
+- name: openshift3_federation
   file: openshift3/federation.yml
   description: 2 federated vms with federated control plan. federation_version can also be set to canary 
   numvms: 2
 
-- name: ceph
+- name: ceph_upstream
   file: ceph/upstream.yml
-  description: ceph cluster
+  description: ceph cluster on 3 vms
   numvms: 3
