@@ -5,7 +5,7 @@ RED='\033[0;31m'
 BLUE='\033[0;36m'
 NC='\033[0m'
 
-[ -f aliases.sh ] && source aliases.sh
+[ -f env.sh ] && source env.sh
 client=$(kcli list --clients | grep X | awk -F'|' '{print $2}')
 kcli="kcli -C $client"
 if [ "$#" == '1' ] ; then
@@ -36,6 +36,7 @@ workers="${workers:-0}"
 tag="${tag:-cnvlab}"
 pub_key="${pubkey:-$HOME/.ssh/id_rsa.pub}"
 pull_secret="${pullsecret:-openshift_pull.json}"
+force="${force:-false}"
 
 clusterdir=clusters/$cluster
 export KUBECONFIG=$PWD/$clusterdir/auth/kubeconfig
@@ -50,8 +51,8 @@ if  [ "$OC" == "" ] ; then
  exit 1
 fi
 
-[ -d $clusterdir ] && echo -e "${RED}Please Remove existing $clusterdir first${NC}..." && exit 1
-mkdir -p $clusterdir
+[ "$force" == "false" ] && [ -d $clusterdir ] && echo -e "${RED}Please Remove existing $clusterdir first${NC}..." && exit 1
+mkdir -p $clusterdir || true
 
 [ "$template" == "" ] && template=$($kcli list --templates | grep rhcos | awk -F'|' '{print $2}' | sort | tail -1 | xargs)
 
