@@ -21,6 +21,7 @@ parameters:
  trove: false
  port_security: false
  virt_type: kvm
+ dns: 8.8.8.8
 
 {{ version }}:
  template: CentOS-7-x86_64-GenericCloud.qcow2
