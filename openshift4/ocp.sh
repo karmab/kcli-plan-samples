@@ -30,6 +30,7 @@ default_template=$(grep -m1 template: ocp.yml | awk -F: '{print $2}' | xargs)
 template="${template:-$default_template}"
 api_ip="${api_ip:-}"
 public_api_ip="${public_api_ip:-}"
+bootstrap_api_ip="${bootstrap_api_ip:-}"
 domain="${domain:-karmalabs.com}"
 network="${network:-default}"
 masters="${masters:-1}"
@@ -123,7 +124,6 @@ if [[ "$platform" == *virt* ]] || [[ "$platform" == *openstack* ]]; then
       iptype="privateip"
     fi
     $kcli vm -p $helper_template -P plan=$cluster -P nets=[$network] $helper_parameters $cluster-bootstrap-helper
-    bootstrap_api_ip=""
     while [ "$bootstrap_api_ip" == "" ] ; do
       bootstrap_api_ip=$($kcli info -f $iptype -v $cluster-bootstrap-helper)
       echo -e "${BLUE}Waiting 5s for bootstrap helper node to be running...${NC}"
@@ -178,7 +178,7 @@ fi
 if [ "$workers" -lt "1" ]; then
  oc adm taint nodes -l node-role.kubernetes.io/master node-role.kubernetes.io/master:NoSchedule-
 fi
-openshift-install --dir=$clusterdir wait-for install-complete || true
+openshift-install --dir=$clusterdir wait-for install-complete || openshift-install --dir=$clusterdir wait-for install-complete
 
 if [[ "$platform" != *virt* ]]; then
   echo -e "${BLUE}Deleting temporary entry for api.$cluster.$domain in your /etc/hosts...${NC}"
