@@ -20,11 +20,11 @@ sed -i "s/CONFIG_LBAAS_INSTALL=n/CONFIG_LBAAS_INSTALL=y/" /root/answers.txt
 {% endif %}
 {% if ovn %}
 sed -i "s/CONFIG_NEUTRON_OVN_BRIDGE_MAPPINGS=.*/CONFIG_NEUTRON_OVN_BRIDGE_MAPPINGS=extnet:br-ex/" /root/answers.txt
-sed -i "s/CONFIG_NEUTRON_OVN_BRIDGE_IFACES=/CONFIG_NEUTRON_OVN_BRIDGE_IFACES=br-ex:eth0/" /root/answers.txt
+sed -i "s/CONFIG_NEUTRON_OVN_BRIDGE_IFACES=/CONFIG_NEUTRON_OVN_BRIDGE_IFACES=br-ex:{{ interface }}/" /root/answers.txt
 sed -i "s/CONFIG_NEUTRON_OVN_EXTERNAL_PHYSNET=.*/CONFIG_NEUTRON_OVN_EXTERNAL_PHYSNET=extnet/" /root/answers.txt
 {% else %}
 sed -i "s/CONFIG_NEUTRON_OVS_BRIDGE_MAPPINGS=.*/CONFIG_NEUTRON_OVS_BRIDGE_MAPPINGS=extnet:br-ex/" /root/answers.txt
-sed -i "s/CONFIG_NEUTRON_OVS_BRIDGE_IFACES=/CONFIG_NEUTRON_OVS_BRIDGE_IFACES=br-ex:eth0/" /root/answers.txt
+sed -i "s/CONFIG_NEUTRON_OVS_BRIDGE_IFACES=/CONFIG_NEUTRON_OVS_BRIDGE_IFACES=br-ex:{{ interface }}/" /root/answers.txt
 {% endif %}
 sed -i "s/CONFIG_DEBUG_MODE=n/CONFIG_DEBUG_MODE=y/" /root/answers.txt
 #sed -i "s/CONFIG_NEUTRON_L3_EXT_BRIDGE=.*/CONFIG_NEUTRON_L3_EXT_BRIDGE=provider/" /root/answers.txt

@@ -22,6 +22,12 @@ parameters:
  port_security: false
  virt_type: kvm
  dns: 8.8.8.8
+ interface: eth0
+ external_subnet: 192.168.122.0/24
+ external_start: 192.168.122.200
+ external_end: 192.168.122.254
+ external_gateway: 192.168.122.1
+ external_floating: 192.168.122.202
 
 {{ version }}:
  template: CentOS-7-x86_64-GenericCloud.qcow2

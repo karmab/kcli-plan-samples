@@ -1,7 +1,10 @@
 This repo provides a way for deploying ocp4 using an hybrid approach between upi and ipi, and by heavily leveraging kcli.
 
-The initial target ovirt/rhev and libvirt although the approach aims to be independent of the platform.
-This was also tested on aws and gcp.
+It's of course not supported in anyway by Red Hat.
+
+The initial target is ovirt/rhev and libvirt although the approach aims to be independent of the platform.
+
+This was also tested on kubevirt and openstack, aws and gcp.
 
 The main features are:
 

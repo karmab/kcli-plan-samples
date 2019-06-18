@@ -170,6 +170,11 @@ else
   sudo sh -c "echo $api_ip api.$cluster.$domain >> /etc/hosts"
 fi
 
+if [[ "$platform" == *virt* ]]; then
+  cp $clusterdir/worker.ign $clusterdir/worker.ign.ori
+  curl --silent -kL https://api.$cluster.$domain:22623/config/worker -o $clusterdir/worker.ign
+fi
+
 if [ "$workers" -lt "1" ]; then
  oc adm taint nodes -l node-role.kubernetes.io/master node-role.kubernetes.io/master:NoSchedule-
 fi
@@ -178,7 +183,4 @@ openshift-install --dir=$clusterdir wait-for install-complete || true
 if [[ "$platform" != *virt* ]]; then
   echo -e "${BLUE}Deleting temporary entry for api.$cluster.$domain in your /etc/hosts...${NC}"
   sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
-else
-  cp $clusterdir/worker.ign $clusterdir/worker.ign.ori
-  curl --silent -kL https://api.$cluster.$domain:22623/config/worker -o $clusterdir/worker.ign
 fi
