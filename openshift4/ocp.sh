@@ -8,10 +8,10 @@ NC='\033[0m'
 [ -f env.sh ] && shopt -s expand_aliases && source env.sh
 client=$(kcli list --clients | grep X | awk -F'|' '{print $2}')
 kcli="kcli -C $client"
-if [ "$#" == '1' ] ; then
+if [ "$#" == '1' ]; then
   envname="$1"
   paramfile="$1"
-  if [ ! -f $paramfile ] ; then
+  if [ ! -f $paramfile ]; then
     echo -e "${RED}Specified parameter file $paramfile doesn't exist.Leaving...${NC}"
     exit 1
   else
@@ -26,7 +26,8 @@ fi
 cluster="${cluster:-$envname}"
 helper_template="${helper_template:-CentOS-7-x86_64-GenericCloud.qcow2}"
 helper_sleep="${helper_sleep:-15}"
-template="${template:-}"
+default_template=$(grep -m1 template: ocp.yml | awk -F: '{print $2}' | xargs)
+template="${template:-$default_template}"
 api_ip="${api_ip:-}"
 public_api_ip="${public_api_ip:-}"
 domain="${domain:-karmalabs.com}"
@@ -41,12 +42,12 @@ force="${force:-false}"
 clusterdir=clusters/$cluster
 export KUBECONFIG=$PWD/$clusterdir/auth/kubeconfig
 INSTALLER=$(which openshift-install 2>/dev/null)
-if  [ "$INSTALLER" == "" ] ; then
+if  [ "$INSTALLER" == "" ]; then
  echo -e "${RED}Missing openshift-install binary. Get it at https://mirror.openshift.com/pub/openshift-v4/clients/ocp${NC}"
  exit 1
 fi
 OC=$(which oc 2>/dev/null)
-if  [ "$OC" == "" ] ; then
+if  [ "$OC" == "" ]; then
  echo -e "${RED}Missing oc binary. Get it at https://mirror.openshift.com/pub/openshift-v4/clients/ocp${NC}"
  exit 1
 fi
@@ -54,13 +55,12 @@ fi
 [ "$force" == "false" ] && [ -d $clusterdir ] && echo -e "${RED}Please Remove existing $clusterdir first${NC}..." && exit 1
 mkdir -p $clusterdir || true
 
-[ "$template" == "" ] && template=$($kcli list --templates | grep rhcos | awk -F'|' '{print $2}' | sort | tail -1 | xargs)
-
-if [ "$template" == "" ] ; then
- echo -e "${RED}Missing rhcos template.Get it with kcli download rhcosootpa ${NC}"
+shorttemplate=$(echo $template | sed 's/-\(openstack\|qemu\).qcow2//')
+echo -e "${BLUE}Using template $template...${NC}"
+kcli list --templates | grep -q $shorttemplate 
+if [ "$?" != "0" ]; then
+ echo -e "${RED}Missing $template. Indicate correct template in your parameters file...${NC}"
  exit 1
-else
- echo -e "${BLUE}Using template $template"
 fi
 
 pub_key=`cat $pub_key`
@@ -79,15 +79,15 @@ openshift-install --dir=$clusterdir create ignition-configs
 
 platform=$(kcli list --clients | grep X | awk -F'|' '{print $3}' | xargs | sed 's/kvm/libvirt/')
 
-if [ "$platform" == "openstack" ] ; then
+if [ "$platform" == "openstack" ]; then
   if [ -z "$api_ip" ] || [ -z "$public_api_ip" ]; then
     echo -e "${RED}You need to define both api_ip and public_api_ip in your parameter file${NC}"
     exit 1
   fi
 fi
 
-if [[ "$platform" == *virt* ]] || [[ "$platform" == *openstack* ]] ; then
-  if [ -z "$api_ip" ] ; then
+if [[ "$platform" == *virt* ]] || [[ "$platform" == *openstack* ]]; then
+  if [ -z "$api_ip" ]; then
     # we deploy a temp vm to grab an ip for the api, if not predefined
     $kcli vm -p $helper_template -P plan=$cluster -P nets=[$network] $cluster-helper
     api_ip=""
@@ -113,7 +113,7 @@ if [[ "$platform" == *virt* ]] || [[ "$platform" == *openstack* ]] ; then
   fi
   if [ "$platform" == "kubevirt" ] || [ "$platform" == "openstack" ]; then
     # bootstrap ignition is too big for kubevirt/openstack so we serve it from a dedicated temporary node
-    if [ "$platform" == "kubevirt" ] ; then
+    if [ "$platform" == "kubevirt" ]; then
       helper_template="kubevirt/fedora-cloud-container-disk-demo"
       helper_parameters=""
       iptype="ip"
