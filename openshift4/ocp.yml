@@ -14,9 +14,10 @@ parameters:
  domain: karmalabs.com
  masters: 1
  workers: 1
+ scale: false
  api_ip: 
 
-{% if deploy_bootstrap %}
+{% if not scale %}
 {{ cluster }}-bootstrap:
  template: {{ template }}
  numcpus: 2
@@ -43,7 +44,6 @@ parameters:
     origin: keepalived.conf
   - path: /etc/kubernetes/manifests/nginx.yml
     origin: staticpods/nginx.yml
-{% endif %}
 
 {% for num in range(0, masters) %}
 {{ cluster }}-master-{{ num }}:
@@ -87,6 +87,8 @@ parameters:
   - path: /etc/kubernetes/keepalived.conf
     origin: keepalived.conf
 {% endfor %}
+
+{% endif %}
 
 {% for num in range(0, workers) %}
 {{ cluster }}-worker-{{ num }}:

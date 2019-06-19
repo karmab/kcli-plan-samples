@@ -43,7 +43,7 @@ If you want to tweak them, create a parameter file similar to [*parameters.yml.s
 - *domain* name. For cloud platforms, it should point to a domain name you have access toº. `Defaults to karmalabs.com`
 - *pub_key* location. Defaults to `$HOME/.ssh/id_rsa.pub`
 - *pull_secret* location. Defaults to `./openshift_pull.json`
-- *template* rhcos template to use (should be an openstack one for ovirt/openstack and qemu for libvirt/kubevirt or on ovirt with ignition hook). You can let this parameter unset if you want the script to check for a rhcos template within the ones available on your client.
+- *template* rhcos template to use (should be an openstack one for ovirt/openstack and qemu for libvirt/kubevirt or on ovirt with ignition hook).
 - *helper_template* which template to use when deploying temporary vms (defaults to `CentOS-7-x86_64-GenericCloud.qcow2`)
 - *helper_sleep*. Defaults to `15`. Number of seconds to wait when deploying the bootstrap helper node on openstack/kubevirt before sshing into it
 - *masters* number of masters. Defaults to `1`
@@ -67,27 +67,29 @@ If you want to tweak them, create a parameter file similar to [*parameters.yml.s
 
 - once that finishes, set the following environment variable in order to use oc commands `export KUBECONFIG=clusters/$cluster/auth/kubeconfig`
 
-- for dns access to your app, you can create a conf file in /etc/NetworkManager/dnsmasq.d with the following line `server=/apps.$cluster.$domain/$api_ip` where api_ip can be found in the last line of your /etc/hosts (and displayed during
+- for dns access to your app, you can create a conf file in /etc/NetworkManager/dnsmasq.d with the following line `server=/apps.$cluster.$domain/$api_ip` where api_ip is displayed during the install and added to your /etc/hosts
 
 ### Adding more workers after initial installation
 
-- with default settings, relaunch the plan with `kcli plan -f ocp.yml -P workers=new_number_of_workers -P deploy_bootstrap=false $cluster`
-- if using parameterfile, first edit your parameter file and change *workers* parameter and then relaunch the plan with `kcli plan -f ocp.yml --paramfile=your_parameter_file -P deploy_bootstrap=false $cluster`
+- with default settings, relaunch the plan with `kcli plan -f ocp.yml -P workers=new_number_of_workers -P scale=true $cluster`
+- with a parameterfile,  relaunch the plan with `kcli plan -f ocp.yml -P workers=new_number_of_workers -P scale=true --paramfile=your_parameter_file $cluster`
 - wait for certificate requests to appear and approve them with `oc get csr -o name | xargs oc adm certificate approve`
 
 ### Cleaning up an install
 
-- if you named your cluster xx, Delete all the vms and the generated directory with `cluster=xx ; kcli plan -d $cluster --yes; rm -rf clusters/$cluster`
+- if you named your cluster xx, the following will delete all the vms and the generated directory 
+  `cluster=xx ; kcli plan -d $cluster --yes; rm -rf clusters/$cluster`
 
 ## architecture
 
-### On ovirt/libvirt
+### On ovirt/libvirt/kubevirt
 
 We deploy :
 
 - an arbitrary number of masters.
 - an arbitrary number of workers.
 - a bootstrap node removed during the install.
+- on kubevirt, an additional bootstrap helper node removeed during the install. It serves ignition data to the bootstrap node, as the field used to store userdata can't handle the many caracters of the bootstrap ignition file.
 
 We first generate all the ignition files needed for the install.
 
