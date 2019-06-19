@@ -6,8 +6,8 @@ BLUE='\033[0;36m'
 NC='\033[0m'
 
 [ -f env.sh ] && shopt -s expand_aliases && source env.sh
-client=$(kcli list --clients | grep X | awk -F'|' '{print $2}')
-kcli="kcli -C $client"
+client=$(kcli2 list --clients | grep X | awk -F'|' '{print $2}')
+kcli="kcli2 -C $client"
 if [ "$#" == '1' ]; then
   envname="$1"
   paramfile="$1"
@@ -37,7 +37,7 @@ masters="${masters:-1}"
 workers="${workers:-0}"
 tag="${tag:-cnvlab}"
 pub_key="${pubkey:-$HOME/.ssh/id_rsa.pub}"
-pull_secret="${pullsecret:-openshift_pull.json}"
+pull_secret="${pull_secret:-openshift_pull.json}"
 force="${force:-false}"
 
 clusterdir=clusters/$cluster
@@ -58,7 +58,11 @@ mkdir -p $clusterdir || true
 
 shorttemplate=$(echo $template | sed 's/-\(openstack\|qemu\).qcow2//')
 echo -e "${BLUE}Using template $template...${NC}"
-kcli list --templates | grep -q $shorttemplate 
+kcli2 -C twix list
+echo $kcli
+$kcli list
+exit 0
+$kcli list --templates | grep -q $shorttemplate 
 if [ "$?" != "0" ]; then
  echo -e "${RED}Missing $template. Indicate correct template in your parameters file...${NC}"
  exit 1
@@ -78,7 +82,7 @@ cp customisation/* $clusterdir/openshift
 sed -i "s/3/$masters/" $clusterdir/openshift/99-ingress-controller.yaml
 openshift-install --dir=$clusterdir create ignition-configs
 
-platform=$(kcli list --clients | grep X | awk -F'|' '{print $3}' | xargs | sed 's/kvm/libvirt/')
+platform=$($kcli list --clients | grep X | awk -F'|' '{print $3}' | xargs | sed 's/kvm/libvirt/')
 
 if [ "$platform" == "openstack" ]; then
   if [ -z "$api_ip" ] || [ -z "$public_api_ip" ]; then
@@ -166,7 +170,7 @@ if [[ "$platform" == *virt* ]] || [[ "$platform" == *openstack* ]]; then
 else
   $kcliplan -f ocp_cloud.yml $cluster
   openshift-install --dir=$clusterdir wait-for bootstrap-complete || exit 1
-  api_ip=$(kcli info $cluster-master-0 -f ip -v)
+  api_ip=$($kcli info $cluster-master-0 -f ip -v)
   $kcli delete --yes $cluster-bootstrap $cluster-helper
   $kcli dns -n $domain -i $api_ip api.$cluster
   $kcli dns -n $domain -i $api_ip api-int.$cluster
