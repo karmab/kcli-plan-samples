@@ -109,8 +109,13 @@ if [[ "$platform" == *virt* ]] || [[ "$platform" == *openstack* ]]; then
     sudo sh -c "echo $host_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain >> /etc/hosts"
     echo "api_ip: $api_ip" >> $paramfile
   else
-    echo -e "${BLUE}Using $api_ip for api vip ...${NC}"
-    grep -q "$api_ip api.$cluster.$domain" /etc/hosts || sudo sh -c "echo $api_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain >> /etc/hosts"
+    if [[ "$platform" == *openstack* ]]; then
+        host_ip=$public_api_ip
+    else
+        host_ip=$api_ip
+    fi
+    echo -e "${BLUE}Using $host_ip for api vip ...${NC}"
+    grep -q "$host_ip api.$cluster.$domain" /etc/hosts || sudo sh -c "echo $host_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain >> /etc/hosts"
   fi
   if [ "$platform" == "kubevirt" ] || [ "$platform" == "openstack" ]; then
     # bootstrap ignition is too big for kubevirt/openstack so we serve it from a dedicated temporary node
