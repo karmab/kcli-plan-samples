@@ -3,3 +3,4 @@ openshift_pull.json
 clusters*
 clients*
 launch*
+env.sh
