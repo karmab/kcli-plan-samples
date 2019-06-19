@@ -25,7 +25,7 @@ The main features are:
  - for container version, you will need to put the alias you use to run kcli in a file called `env.sh` so that the deployment script can source it.
 - direct access to the deployed vms. Use something like this otherwise `sshuttle -r your_hypervisor 192.168.122.0/24 -v`)
 - Target platform needs:
-  - rhcos image ( *kcli download rhcosootpa* )
+  - rhcos image ( *kcli download rhcosootpa* ). To test latest image, use instead *kcli download rhcoslatest* and set template variable in your parameter file
   - centos image ( *kcli download centos7* )
 - For libvirt, make sure qemu version supports fw_cfg (that means installing qemu-kvm-ev on centos for instance)
 - Target platform needs ignition support. 
