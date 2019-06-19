@@ -22,7 +22,6 @@ The main features are:
 - pull secret
 - ssh public key
 - kcli >= 14.12 (container or pip version if deploying on something else than libvirt)
- - for container version, you will need to put the alias you use to run kcli in a file called `env.sh` so that the deployment script can source it.
 - direct access to the deployed vms. Use something like this otherwise `sshuttle -r your_hypervisor 192.168.122.0/24 -v`)
 - Target platform needs:
   - rhcos image ( *kcli download rhcosootpa* ). To test latest image, use instead *kcli download rhcoslatest* and set template variable in your parameter file
@@ -35,6 +34,8 @@ The main features are:
 ## How to Use
 
 ### Setting your environment
+
+if you create a file called *env.sh*, it will be sourced during deployment. You can put a specific kcli alias there if you're using the container version, or otherwise let the deployment script figure out the alias to use.
 
 You can either use default values that can be checked in the parameters section of the file `ocp.yml` or by running `kcli plan -i ocp.yml`
 

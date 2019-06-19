@@ -5,9 +5,36 @@ RED='\033[0;31m'
 BLUE='\033[0;36m'
 NC='\033[0m'
 
-[ -f env.sh ] && shopt -s expand_aliases && source env.sh
-client=$(kcli2 list --clients | grep X | awk -F'|' '{print $2}')
-kcli="kcli2 -C $client"
+[ -f env.sh ] && shopt -s expand_aliases  && source env.sh
+
+which kcli >/dev/null 2>&1
+BIN="$?"
+alias kcli >/dev/null 2>&1
+ALIAS="$?"
+
+if [ "$BIN" != "0" ] && [ "$ALIAS" != "0" ]; then
+  engine="docker"
+  which podman >/dev/null 2>&1 && engine="podman"
+  VOLUMES=""
+  [ -d /var/lib/libvirt/images ] && [ -d /var/run/libvirt:/var/run/libvirt ] && VOLUMES="-v /var/lib/libvirt/images:/var/lib/libvirt/images -v /var/run/libvirt:/var/run/libvirt"
+  alias kcli="$engine run -it --rm --security-opt label=disable -v $HOME/.kcli:/root/.kcli $VOLUMES -v $PWD:/workdir karmab/kcli"
+  echo -e "${BLUE}Using $(alias kcli)${NC}"
+fi
+
+shopt -s expand_aliases
+kcli -v >/dev/null 2>&1
+if [ "$?" != "0" ] ; then
+  echo -e "${RED}kcli not found. Install it from copr karmab/kcli or pull container${NC}"
+  exit 1
+fi
+
+client=$(kcli list --clients | grep X | awk -F'|' '{print $2}')
+echo -e "${BLUE}Deploying on client $client${NC}"
+kcli="kcli -C $client"
+#[ -f env.sh ] && kcli="eval kcli2 -C $client"
+#[ -f env.sh ] && kcli=$(alias kcli2 | awk -F "'" '{print $2}')" -C $client"
+alias kcli >/dev/null 2>&1 && kcli=$(alias kcli | awk -F "'" '{print $2}')" -C $client"
+
 if [ "$#" == '1' ]; then
   envname="$1"
   paramfile="$1"
@@ -58,10 +85,6 @@ mkdir -p $clusterdir || true
 
 shorttemplate=$(echo $template | sed 's/-\(openstack\|qemu\).qcow2//')
 echo -e "${BLUE}Using template $template...${NC}"
-kcli2 -C twix list
-echo $kcli
-$kcli list
-exit 0
 $kcli list --templates | grep -q $shorttemplate 
 if [ "$?" != "0" ]; then
  echo -e "${RED}Missing $template. Indicate correct template in your parameters file...${NC}"
