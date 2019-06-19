@@ -21,7 +21,7 @@ The main features are:
 - openshift-install binary needs to be installed from https://mirror.openshift.com/pub/openshift-v4/clients/ocp
 - pull secret
 - ssh public key
-- kcli >= 14.11 (container or pip version if deploying on something else than libvirt)
+- kcli >= 14.12 (container or pip version if deploying on something else than libvirt)
  - for container version, you will need to put the alias you use to run kcli in a file called `env.sh` so that the deployment script can source it.
 - direct access to the deployed vms. Use something like this otherwise `sshuttle -r your_hypervisor 192.168.122.0/24 -v`)
 - Target platform needs:
@@ -29,7 +29,8 @@ The main features are:
   - centos image ( *kcli download centos7* )
 - For libvirt, make sure qemu version supports fw_cfg (that means installing qemu-kvm-ev on centos for instance)
 - Target platform needs ignition support. 
-  - For ovirt/rhv, this either requires ovirt >= 4.3.4 or to install [an additional vdsm hook](https://gerrit.ovirt.org/#/c/100008), along with the custom property *ignitiondata*
+  - For ovirt/rhv, this either requires ovirt >= 4.3.4
+- On openstack, you will need to create a network with port security disabled (as we need a vip to be reachable on the masters). You will also need to create a port on this network and map it to a floating ip. Put the corresponding api_ip and public_api_ip in your parameter file. You can use [openstack.sh.sample](openstack.sh.sample) as a starting point. Finally, you will need to open relevant ports (80, 443, 6443 and 22623) in your security groups.
 
 ## How to Use
 
