@@ -55,10 +55,6 @@ parameters:
 {% if deploy_app %}
   - app.sh
 {% endif %}
-  - heapster.sh
-{% if skydive %}
-  - skydive.sh
-{% endif %}
   - kubevirt.sh
 {% if cdi %}
   - cdi.sh

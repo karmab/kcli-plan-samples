@@ -5,7 +5,6 @@ parameters:
  pool: default
  prefix: "ku"
  deploy_app: false
- skydive: false
  dashboard: true
  nfs: true
  sdn: flannel
@@ -74,10 +73,6 @@ parameters:
 {% endif %}
 {% if deploy_app %}
   - app.sh
-{% endif %}
-  - heapster.sh
-{% if skydive %}
-  - skydive.sh
 {% endif %}
 {% if nfs %}
   - nfs.sh

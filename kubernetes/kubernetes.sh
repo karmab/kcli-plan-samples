@@ -49,7 +49,3 @@ scp /root/join.yml root@{{ prefix }}node0{{ number + 1 }}:/root/
 ssh root@{{ prefix }}node0{{ number +1 }} ${CMD} > /root/{{ prefix }}node0{{ number +1 }}.log
 {% endfor %}
 {% endif %}
-{% if skydive %}
-kubectl create ns skydive
-kubectl create -n skydive -f https://raw.githubusercontent.com/skydive-project/skydive/master/contrib/kubernetes/skydive.yaml
-{% endif %}
