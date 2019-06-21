@@ -1,7 +1,7 @@
 john:
  type: network
  cidr: 192.168.8.0/24
- dhcp: True
+ dhcp: false
  nat: true
 
 john02:

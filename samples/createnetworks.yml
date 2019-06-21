@@ -8,3 +8,9 @@ net2:
  type: network
  cidr: 192.168.101.0/24
  dhcp: False
+
+net3:
+ type: network
+ cidr: 192.168.101.0/24
+ dhcp: true
+ pxe: 192.168.101.1
