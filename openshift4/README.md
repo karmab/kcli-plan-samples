@@ -1,32 +1,32 @@
-This repo provides a way for deploying ocp4 using an hybrid approach between upi and ipi, and by heavily leveraging kcli.
+This repo provides a way for deploying ocp4 using an alternative approach to ipi, and by heavily leveraging kcli.
 
 It's of course not supported in anyway by Red Hat.
 
 The initial target is ovirt/rhev and libvirt although the approach aims to be independent of the platform.
 
-This was also tested on kubevirt and openstack, aws and gcp.
+This was also tested on kubevirt, openstack, aws and gcp.
 
 The main features are:
 
-- deploy ocp using minimal infrastructure requirements.
-- no need for control over dns and pxe. Those elements are hosted as static pods on the master nodes. For cloud platforms, we use cloud public dns
+- No need to control dns. Those elements are hosted as static pods on the master nodes. (For cloud platforms, we do use cloud public dns)
+- Easily customize the vms.
 - Multiple clusters can live on the same network.
-- Same procedure for libvirt, ovirt, openstack or kubevirt.
-- No need to compile the installer to deploy on libvirt.
+- Single procedure for libvirt, ovirt, openstack or kubevirt.
+- No need to compile the installer
 - No need to tweak libvirtd.
-- The vms can be connected to a real bridge on libvirt.
+- Vms can be connected to a real bridge
 
-## requirements
+## Requirements
 
-- openshift-install binary needs to be installed from https://mirror.openshift.com/pub/openshift-v4/clients/ocp
-- pull secret
+- openshift-install binary installed (get it at https://mirror.openshift.com/pub/openshift-v4/clients/ocp)
+- valid pull secret
 - ssh public key
 - kcli >= 14.12 (container or pip version if deploying on something else than libvirt)
 - direct access to the deployed vms. Use something like this otherwise `sshuttle -r your_hypervisor 192.168.122.0/24 -v`)
 - Target platform needs:
   - rhcos image ( *kcli download rhcosootpa* ). To test latest image, use instead *kcli download rhcoslatest* and set template variable in your parameter file
   - centos image ( *kcli download centos7* )
-- For libvirt, make sure qemu version supports fw_cfg (that means installing qemu-kvm-ev on centos for instance)
+- For libvirt, support for fw_cfg in qemu (install qemu-kvm-ev on centos for instance)
 - Target platform needs ignition support. 
   - For ovirt/rhv, this either requires ovirt >= 4.3.4
 - On openstack, you will need to create a network with port security disabled (as we need a vip to be reachable on the masters). You will also need to create a port on this network and map it to a floating ip. Put the corresponding api_ip and public_api_ip in your parameter file. You can use [openstack.sh.sample](openstack.sh.sample) as a starting point. Finally, you will need to open relevant ports (80, 443, 6443 and 22623) in your security groups.
@@ -61,7 +61,7 @@ If you want to tweak them, create a parameter file similar to [*parameters.yml.s
 - *use_br* whether to create a bridge on top of the nics of the nodes (useful if planning to deploy kubevirt on top). Defaults to `false`
 - *api_ip* the ip to use for api ip. Defaults to `none`, in which case a temporary vm will be launched to gather a free one.
 
-### Deploy
+### Deploying
 
 - `./ocp.sh` or `ocp.sh your_parameter_file` if you have created one.
 
@@ -71,10 +71,10 @@ If you want to tweak them, create a parameter file similar to [*parameters.yml.s
 
 - for dns access to your app, you can create a conf file in /etc/NetworkManager/dnsmasq.d with the following line `server=/apps.$cluster.$domain/$api_ip` where api_ip is displayed during the install and added to your /etc/hosts
 
-### Adding more workers after initial installation
+### Adding more workers
 
 - with default settings, relaunch the plan with `kcli plan -f ocp.yml -P workers=new_number_of_workers -P scale=true $cluster`
-- with a parameterfile,  relaunch the plan with `kcli plan -f ocp.yml -P workers=new_number_of_workers -P scale=true --paramfile=your_parameter_file $cluster`
+- with a parameters file, relaunch the plan with `kcli plan -f ocp.yml -P workers=new_number_of_workers -P scale=true --paramfile=your_parameter_file $cluster`
 - wait for certificate requests to appear and approve them with `oc get csr -o name | xargs oc adm certificate approve`
 
 ### Cleaning up an install
@@ -95,9 +95,7 @@ We deploy :
 
 We first generate all the ignition files needed for the install.
 
-Then, if no api ip has been specified, we do a temporary deployment of a single vm using a centos7 template to gather a free ip
-
-With all this information, a kcli parameter file is created and stored in the same directory than the openshift artifacts for the given cluster.
+Then, if no api ip has been specified, we do a temporary deployment of a single vm using a centos7 template to gather a free ip.
 
 We then launch the deployment
 
@@ -109,7 +107,7 @@ Haproxy is created as static pod on the master nodes to load balance traffic to 
 
 Once bootstrap step is finished, the corresponding vm gets deleted, causing keepalived to migrate the api vip to one of the masters.
 
-Also note that for bootstrap, masters and workers nodes, we merge the ignition data generated by the openshift installer with the ones generated by kcli, in particular we prepend dns server on those nodes to point to our keepalived vip.
+Also note that for bootstrap, masters and workers nodes, we merge the ignition data generated by the openshift installer with the ones generated by kcli, in particular we prepend dns server on those nodes to point to our keepalived vip, force hostnames and inject static pods.
 
 ### On aws/gcp
 
