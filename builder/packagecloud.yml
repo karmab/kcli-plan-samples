@@ -16,5 +16,5 @@ packagecloud:
     origin: ~/kcli.spec
   - path: /root/packagecloud.sh
     origin: packagecloud.sh
- cmds:
-  - sh /root/packagecloud.sh
+ scripts:
+  - /root/packagecloud.sh
