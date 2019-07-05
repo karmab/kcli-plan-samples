@@ -28,7 +28,7 @@ if [ "$?" != "0" ] ; then
   exit 1
 fi
 
-client=$(kcli list --clients | grep X | awk -F'|' '{print $2}')
+client=$(kcli list --clients | grep X | awk -F'|' '{print $2}' | xargs)
 echo -e "${BLUE}Deploying on client $client${NC}"
 kcli="kcli -C $client"
 #[ -f env.sh ] && kcli="eval kcli2 -C $client"

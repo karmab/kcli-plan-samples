@@ -39,7 +39,7 @@ spec:
     imagePullPolicy: IfNotPresent
   containers:
   - name: mdns-publish
-    image: quay.io/openshift-metalkube/mdns-publisher:latest
+    image: quay.io/openshift-metal3/mdns-publisher:latest
     args:
     - "--debug"
     resources:
