@@ -13,6 +13,27 @@ spec:
   - name: conf-dir
     hostPath:
       path: "/etc/kubernetes"
+{% if 'bootstrap' not in name -%}
+  initContainers:
+  - name: fix-keepalived-conf
+    securityContext:
+      privileged: true
+    image: yauritux/busybox-curl
+    command:
+    - "/bin/sh"
+    - "-c"
+    - |
+      #/bin/sh
+      [ grep "{{ api_ip }}/" /etc/keepalived/keepalived.conf ] && exit 0
+      IF=$(ip r | awk '/^default/ {print $5}')
+      NETMASK=$(ip -o -f inet addr show $IF | awk '{print $4}'| tail -1 | cut -d/ -f2)
+      sed -i "s@{{ api_ip }}@{{ api_ip }}/$NETMASK@" /etc/keepalived/keepalived.conf
+    resources: {}
+    volumeMounts:
+    - name: conf-dir
+      mountPath: "/etc/keepalived"
+    imagePullPolicy: IfNotPresent
+{%- endif %}
   containers:
   - name: keepalived
     securityContext:
