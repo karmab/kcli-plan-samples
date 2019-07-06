@@ -142,6 +142,11 @@ if [[ "$platform" == *virt* ]] || [[ "$platform" == *openstack* ]]; then
         host_ip=$api_ip
     fi
     echo -e "${BLUE}Using $host_ip for api vip ...${NC}"
+    duplicates=$(grep -c "^[^#].*api.$cluster.$domain" /etc/hosts)
+    if [ "$duplicates" -gt "1" ] ; then
+      echo -e "${RED}Duplicate entries for api.$cluster.$domain found in /etc/hosts${NC}"
+      exit 1
+    fi
     grep -q "$host_ip api.$cluster.$domain" /etc/hosts || sudo sh -c "echo $host_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain >> /etc/hosts"
   fi
   if [ "$platform" == "kubevirt" ] || [ "$platform" == "openstack" ]; then
