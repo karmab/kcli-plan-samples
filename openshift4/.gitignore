@@ -1,6 +1,8 @@
-openshift_pull.json
+openshift_pull.json*
 .openshift_install.log
 clusters*
 clients*
 launch*
 env.sh
+*99-brew.yaml
+openshift-install
