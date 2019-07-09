@@ -197,7 +197,7 @@ if [[ "$platform" == *virt* ]] || [[ "$platform" == *openstack* ]]; then
   $kcli delete --yes $todelete
 else
   $kcliplan -f ocp_cloud.yml $cluster
-  openshift-install --dir=$clusterdir wait-for bootstrap-complete || exit 1
+  openshift-install --dir=$clusterdir wait-for bootstrap-complete --loglevel debug || exit 1
   api_ip=$($kcli info $cluster-master-0 -f ip -v)
   $kcli delete --yes $cluster-bootstrap $cluster-helper
   $kcli dns -n $domain -i $api_ip api.$cluster
@@ -215,6 +215,7 @@ fi
 if [ "$workers" -lt "1" ]; then
  oc adm taint nodes -l node-role.kubernetes.io/master node-role.kubernetes.io/master:NoSchedule-
 fi
+echo -e "${BLUE}Launching install-complete step. Note it will be retried one extra time in case of timeouts${NC}"
 openshift-install --dir=$clusterdir wait-for install-complete || openshift-install --dir=$clusterdir wait-for install-complete
 
 if [[ "$platform" != *virt* ]]; then
