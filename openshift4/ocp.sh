@@ -221,4 +221,8 @@ openshift-install --dir=$clusterdir wait-for install-complete || openshift-insta
 if [[ "$platform" != *virt* ]]; then
   echo -e "${BLUE}Deleting temporary entry for api.$cluster.$domain in your /etc/hosts...${NC}"
   sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
+elif [ -d /etc/NetworkManager/dnsmasq.d ] ; then
+  echo -e "${BLUE}Adding wildcard for apps.$cluster.$domain in NetworkManager...${NC}"
+  sudo sh -c "echo server=/apps.$cluster.$domain/$api_ip > /etc/NetworkManager/dnsmasq.d/$cluster.$domain.conf"
+  sudo systemctl reload NetworkManager
 fi
