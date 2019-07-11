@@ -56,6 +56,9 @@ parameters:
   - name: {{ network }}
  disks:
   - size: {{ disk_size }}
+{% if extra_disk %}
+  - size: {{ extra_disk_size }}
+{% endif %}
  files:
 {% if use_br %}
   - path: /etc/NetworkManager/dispatcher.d/98-brextscript
