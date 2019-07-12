@@ -46,9 +46,6 @@ parameters:
   - pre.sh
 {% endif %}
   - kubernetes.sh
-{% if dashboard %}
-  - dashboard.sh
-{% endif %}
 {% if multus %}
   - multus.sh
 {% endif %}

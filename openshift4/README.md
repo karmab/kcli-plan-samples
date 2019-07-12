@@ -30,6 +30,7 @@ The main features are:
 - Target platform needs ignition support. 
   - For ovirt/rhv, this either requires ovirt >= 4.3.4
 - On openstack, you will need to create a network with port security disabled (as we need a vip to be reachable on the masters). You will also need to create a port on this network and map it to a floating ip. Put the corresponding api_ip and public_api_ip in your parameter file. You can use [openstack.sh.sample](openstack.sh.sample) as a starting point. Finally, you will need to open relevant ports (80, 443, 6443 and 22623) in your security groups.
+- If defining yourself the vip to use, make sure it's excluded from your dhcp server.
 
 ## How to Use
 

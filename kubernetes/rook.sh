@@ -1,15 +1,9 @@
 cd /root
 git clone https://github.com/rook/rook
 cd rook/cluster/examples/kubernetes/ceph
-kubectl create namespace rook-ceph-system
-kubectl create configmap csi-cephfs-config -n rook-ceph-system --from-file=csi/template/cephfs
-kubectl create configmap csi-rbd-config -n rook-ceph-system --from-file=csi/template/rbd
+kubectl apply -f common.yaml
 kubectl apply -f csi/rbac/rbd
-kubectl apply -f csi/rbac/cephfs/
-#sed -i 's@rook/ceph@karmab/ceph@' operator-with-csi.yaml
-#ln -s /var/lib/kubelet/device-plugins /var/lib/kubelet/plugins_registry
-#kubectl create -f https://raw.githubusercontent.com/kubernetes/csi-api/release-1.13/pkg/crd/manifests/csidriver.yaml --validate=false
-#kubectl create -f https://raw.githubusercontent.com/kubernetes/csi-api/release-1.13/pkg/crd/manifests/csinodeinfo.yaml --validate=false
+kubectl apply -f csi/rbac/cephfs
 kubectl create -f operator-with-csi.yaml
 sleep 180 
 sed -i "s/useAllDevices: .*/useAllDevices: true/" cluster.yaml

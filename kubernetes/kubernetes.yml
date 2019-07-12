@@ -5,10 +5,9 @@ parameters:
  pool: default
  prefix: "ku"
  deploy_app: false
- dashboard: true
  nfs: true
  sdn: flannel
- k8s_version: 1.13.4
+ k8s_version: latest
  flannel_version: master
  multus: true
  master_memory: 6144
@@ -65,9 +64,6 @@ parameters:
   - pre.sh
 {% endif %}
   - kubernetes.sh
-{% if dashboard %}
-  - dashboard.sh
-{% endif %}
 {% if multus %}
   - multus.sh
 {% endif %}
@@ -77,9 +73,9 @@ parameters:
 {% if nfs %}
   - nfs.sh
 {% endif %}
-{% if rook %}
-  - install_rook.sh
-{% endif %}
+#{% if rook %}
+#  - install_rook.sh
+#{% endif %}
 
 {% if nodes > 0 %}
 {% for number in range(0, nodes) %}
