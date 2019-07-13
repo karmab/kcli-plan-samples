@@ -133,7 +133,7 @@ if [[ "$platform" == *virt* ]] || [[ "$platform" == *openstack* ]]; then
         host_ip=$api_ip
     fi
     sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
-    sudo sh -c "echo $host_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain >> /etc/hosts"
+    sudo sh -c "echo $host_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain prometheus-k8s-openshift-monitoring.apps.$cluster.$domain >> /etc/hosts"
     echo "api_ip: $api_ip" >> $paramfile
   else
     if [[ "$platform" == *openstack* ]]; then
@@ -147,7 +147,7 @@ if [[ "$platform" == *virt* ]] || [[ "$platform" == *openstack* ]]; then
       echo -e "${RED}Duplicate entries for api.$cluster.$domain found in /etc/hosts${NC}"
       exit 1
     fi
-    grep -q "$host_ip api.$cluster.$domain" /etc/hosts || sudo sh -c "echo $host_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain >> /etc/hosts"
+    grep -q "$host_ip api.$cluster.$domain" /etc/hosts || sudo sh -c "echo $host_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain prometheus-k8s-openshift-monitoring.apps.$cluster.$domain >> /etc/hosts"
   fi
   if [ "$platform" == "kubevirt" ] || [ "$platform" == "openstack" ]; then
     # bootstrap ignition is too big for kubevirt/openstack so we serve it from a dedicated temporary node
