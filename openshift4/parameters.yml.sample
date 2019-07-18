@@ -1,7 +1,8 @@
 cluster: testk
 numcpus: 4
+autotart: false
 network: default
-use_br: true
+use_br: false
 extra_disk: true
 master_memory: 16384
 worker_memory: 8192

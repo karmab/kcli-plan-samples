@@ -15,6 +15,7 @@ parameters:
  masters: 1
  workers: 1
  scale: false
+ autostart: false
  api_ip: 
 
 {% if not scale %}
@@ -51,6 +52,7 @@ parameters:
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ master_memory }}
+ autostart: {{ autostart }}
  dns: {{ api_ip }}
  nets:
   - name: {{ network }}
@@ -99,6 +101,7 @@ parameters:
  template: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ worker_memory }}
+ autostart: {{ autostart }}
  dns: {{ api_ip }}
  nets:
   - name: {{ network }}
