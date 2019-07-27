@@ -16,7 +16,7 @@ spec:
   - name: nginx-get-master-mco
     securityContext:
       privileged: true
-    image: yauritux/busybox-curl
+    image: docker.io/yauritux/busybox-curl
     command:
     - "curl"
     args:
@@ -30,7 +30,7 @@ spec:
   - name: nginx-get-worker-mco
     securityContext:
       privileged: true
-    image: yauritux/busybox-curl
+    image: docker.io/yauritux/busybox-curl
     command:
     - "curl"
     args:

@@ -17,7 +17,7 @@ spec:
   - name: mdns-render-config
     securityContext:
       privileged: true
-    image: yauritux/busybox-curl
+    image: docker.io/yauritux/busybox-curl
     command:
     - "/bin/sh"
     - "-c"
