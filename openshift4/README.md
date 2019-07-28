@@ -78,10 +78,24 @@ If you want to tweak them, create a parameter file similar to [*parameters.yml.s
 - with a parameters file, relaunch the plan with `kcli plan -f ocp.yml -P workers=new_number_of_workers -P scale=true --paramfile=your_parameter_file $cluster`
 - wait for certificate requests to appear and approve them with `oc get csr -o name | xargs oc adm certificate approve`
 
+### Using a custom openshift image
+
+You can put the following lines in your *env.sh* to achieve this:
+
+```
+export PULL_SECRET="xxx"
+export PATH=.:$PATH
+export OPENSHIFT_RELEASE_IMAGE="registry.svc.ci.openshift.org/kni/release:4.2.0-0.ci-2019-07-22-025130-kni.1"
+oc adm release extract --registry-config $PULL_SECRET --command=openshift-install --to . $OPENSHIFT_RELEASE_IMAGE
+```
+
 ### Cleaning up an install
 
-- if you named your cluster xx, the following will delete all the vms and the generated directory 
-  `cluster=xx ; kcli plan -d $cluster --yes; rm -rf clusters/$cluster`
+if you named your cluster xx, the following will delete all the vms and the generated directory 
+
+```
+cluster=xx ; kcli plan -d $cluster --yes; rm -rf clusters/$cluster
+```
 
 ## architecture
 
