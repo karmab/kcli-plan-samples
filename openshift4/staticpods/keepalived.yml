@@ -24,9 +24,9 @@ spec:
     - |
       #/bin/sh
       [ "$(hostname -s)" == "{{ cluster }}-bootstrap" ] && exit 0
-      [ grep "{{ api_ip }}/" /etc/keepalived/keepalived.conf ] && exit 0
       IF=$(ip r | awk '/^default/ {print $5}')
       NETMASK=$(ip -o -f inet addr show $IF | awk '{print $4}'| tail -1 | cut -d/ -f2)
+      [ grep "{{ api_ip }}/$NETMASK" /etc/keepalived/keepalived.conf ] && exit 0
       sed -i "s@{{ api_ip }}@{{ api_ip }}/$NETMASK@" /etc/keepalived/keepalived.conf
     resources: {}
     volumeMounts:
