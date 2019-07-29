@@ -16,11 +16,13 @@ parameters:
  workers: 1
  scale: false
  autostart: false
+ keys: []
  api_ip: 
 
 {% if not scale %}
 {{ cluster }}-bootstrap:
  template: {{ template }}
+ keys: {{ keys }}
  numcpus: 2
  memory: {{ bootstrap_memory }}
  dns: 127.0.0.1
@@ -50,6 +52,7 @@ parameters:
 {{ cluster }}-master-{{ num }}:
  domain: {{ cluster }}.{{ domain }} 
  template: {{ template }}
+ keys: {{ keys }}
  numcpus: {{ numcpus }}
  memory: {{ master_memory }}
  autostart: {{ autostart }}
@@ -99,6 +102,7 @@ parameters:
 {{ cluster }}-worker-{{ num }}:
  domain: {{ cluster }}.{{ domain }} 
  template: {{ template }}
+ keys: {{ keys }}
  numcpus: {{ numcpus }}
  memory: {{ worker_memory }}
  autostart: {{ autostart }}

@@ -31,8 +31,6 @@ fi
 client=$(kcli list --clients | grep X | awk -F'|' '{print $2}' | xargs)
 echo -e "${BLUE}Deploying on client $client${NC}"
 kcli="kcli -C $client"
-#[ -f env.sh ] && kcli="eval kcli2 -C $client"
-#[ -f env.sh ] && kcli=$(alias kcli2 | awk -F "'" '{print $2}')" -C $client"
 alias kcli >/dev/null 2>&1 && kcli=$(alias kcli | awk -F "'" '{print $2}')" -C $client"
 
 if [ "$#" == '1' ]; then
@@ -42,7 +40,11 @@ if [ "$#" == '1' ]; then
     echo -e "${RED}Specified parameter file $paramfile doesn't exist.Leaving...${NC}"
     exit 1
   else
-    while read line ; do export $(echo "$line" | cut -d: -f1 | xargs)=$(echo "$line" | cut -d: -f2 | xargs) ; done < $paramfile
+    while read line ; do
+        ( echo $line | grep -q ':' ) || continue
+        ( echo $line | grep -q '\[' ) && continue
+        export $(echo "$line" | cut -d: -f1 | xargs)=$(echo "$line" | cut -d: -f2 | xargs) ;
+    done < $paramfile
   fi
   kcliplan="$kcli plan --paramfile=$paramfile"
 else
