@@ -220,6 +220,11 @@ fi
 echo -e "${BLUE}Launching install-complete step. Note it will be retried one extra time in case of timeouts${NC}"
 openshift-install --dir=$clusterdir wait-for install-complete || openshift-install --dir=$clusterdir wait-for install-complete
 
+echo -e "${BLUE}Deploying certs autoapprover cronjob${NC}"
+oc create sa autoapprover -n openshift-infra
+oc adm policy add-cluster-role-to-user cluster-admin -z autoapprover -n openshift-infra
+oc create -f autoapprovercron.yml
+
 if [[ "$platform" != *virt* ]]; then
   echo -e "${BLUE}Deleting temporary entry for api.$cluster.$domain in your /etc/hosts...${NC}"
   sudo sed -i "/api.$cluster.$domain/d" /etc/hosts

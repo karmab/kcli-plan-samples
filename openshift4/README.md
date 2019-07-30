@@ -76,7 +76,6 @@ If you want to tweak them, create a parameter file similar to [*parameters.yml.s
 
 - with default settings, relaunch the plan with `kcli plan -f ocp.yml -P workers=new_number_of_workers -P scale=true $cluster`
 - with a parameters file, relaunch the plan with `kcli plan -f ocp.yml -P workers=new_number_of_workers -P scale=true --paramfile=your_parameter_file $cluster`
-- wait for certificate requests to appear and approve them with `oc get csr -o name | xargs oc adm certificate approve`
 
 ### Using a custom openshift image
 
