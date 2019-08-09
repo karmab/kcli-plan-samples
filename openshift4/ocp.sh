@@ -186,7 +186,7 @@ if [[ "$platform" != *virt* ]] && [[ "$platform" != *openstack* ]]; then
       sleep 5
   done
   $kcli ssh root@$cluster-bootstrap-helper "yum -y install httpd ; systemctl start httpd ; systemctl stop firewalld"
-  $kcli scp $cluster/bootstrap.ign root@$cluster-bootstrap-helper:/var/www/html/bootstrap
+  $kcli scp clusters/$cluster/bootstrap.ign root@$cluster-bootstrap-helper:/var/www/html/bootstrap
   sed s@https://api-int.$cluster.$domain:22623/config/master@http://$cluster-bootstrap-helper.$cluster.$domain/bootstrap@ $clusterdir/master.ign > $clusterdir/bootstrap.ign
 fi
 
@@ -199,14 +199,8 @@ if [[ "$platform" == *virt* ]] || [[ "$platform" == *openstack* ]]; then
   $kcli delete --yes $todelete
 else
   $kcliplan -f ocp_cloud.yml $cluster
-  openshift-install --dir=$clusterdir wait-for bootstrap-complete --loglevel debug || exit 1
-  api_ip=$($kcli info $cluster-master-0 -f ip -v)
+  openshift-install --dir=$clusterdir wait-for bootstrap-complete || exit 1
   $kcli delete --yes $cluster-bootstrap $cluster-helper
-  $kcli dns -n $domain -i $api_ip api.$cluster
-  $kcli dns -n $domain -i $api_ip api-int.$cluster
-  echo -e "${BLUE}Adding temporary entry for api.$cluster.$domain in your /etc/hosts...${NC}"
-  sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
-  sudo sh -c "echo $api_ip api.$cluster.$domain >> /etc/hosts"
 fi
 
 if [[ "$platform" == *virt* ]]; then
@@ -221,9 +215,7 @@ echo -e "${BLUE}Launching install-complete step. Note it will be retried one ext
 openshift-install --dir=$clusterdir wait-for install-complete || openshift-install --dir=$clusterdir wait-for install-complete
 
 echo -e "${BLUE}Deploying certs autoapprover cronjob${NC}"
-oc create sa autoapprover -n openshift-infra
-oc adm policy add-cluster-role-to-user cluster-admin -z autoapprover -n openshift-infra
-oc create -f autoapprovercron.yml
+oc create -f autoapprover.yml
 
 if [[ "$platform" != *virt* ]]; then
   echo -e "${BLUE}Deleting temporary entry for api.$cluster.$domain in your /etc/hosts...${NC}"

@@ -16,24 +16,38 @@ parameters:
  scale: false
  tag: cnvlab
 
-#apps.{{ cluster }}.{{ domain }}:
-# type: loadbalancer
-# nets:
-# - name: default
-#   alias: ['*']
-# ports:
-# - 80
-# - 443
-# vms:
-#{% if workers > 0 %}
-#{% for num in range(0, workers) %}
-# - {{ cluster }}-worker-{{ num }}
-#{% endfor %}
-#{% else %}
-#{% for num in range(0, masters) %}
-# - {{ cluster }}-master-{{ num }}
-#{% endfor %}
-#{% endif %}
+api.{{ cluster }}:
+ type: loadbalancer
+ domain: {{ domain }}
+ checkport: 8080
+ alias: ['api-int.{{ cluster }}.{{ domain }}']
+ ports:
+ - 6443
+ - 22623
+ vms:
+ - {{ cluster }}-bootstrap
+{% for num in range(0, masters) %}
+ - {{ cluster }}-master-{{ num }}
+{% endfor %}
+
+apps.{{ cluster }}:
+ type: loadbalancer
+ domain: {{ domain }}
+ checkport: 80
+ alias: ['*']
+ ports:
+ - 80
+ - 443
+ vms:
+{% if workers > 0 %}
+{% for num in range(0, workers) %}
+ - {{ cluster }}-worker-{{ num }}
+{% endfor %}
+{% else %}
+{% for num in range(0, masters) %}
+ - {{ cluster }}-master-{{ num }}
+{% endfor %}
+{% endif %}
 
 {% if not scale %}
 {{ cluster }}-bootstrap:
@@ -41,14 +55,14 @@ parameters:
  numcpus: 2
  memory: {{ bootstrap_memory }}
  nets:
-  - name: {{ network }}
-    alias:
-    - api-int.{{ cluster }}.{{ domain }}
-    - api.{{ cluster }}.{{ domain }}
+ - name: {{ network }}
  reservedns: true
  disks:
-  - size: {{ disk_size }}
+ - size: {{ disk_size }}
  tags: [{{ tag }}]
+ files:
+ - path: /etc/kubernetes/manifests/apicheck.yml
+   origin: staticpods/apicheck.yml
 
 {% for num in range(0, masters) %}
 {{ cluster }}-master-{{ num }}:
@@ -57,21 +71,20 @@ parameters:
  numcpus: {{ numcpus }}
  memory: {{ master_memory }}
  nets:
-  - name: {{ network }}
-{% if num == 0 and workers == 0 %}
-    alias: ["*"]
-{% endif %}
+ - name: {{ network }}
  reservedns: true
  disks:
-  - size: {{ disk_size }}
-{% if use_br %}
+ - size: {{ disk_size }}
  files:
-  - path: /etc/NetworkManager/dispatcher.d/98-brextscript
-    origin: 98-brextscript
-    mode: 755
-  - path: /etc/sysconfig/network-scripts/ifcfg-brext
-    origin: ifcfg-brext
+{% if use_br %}
+ - path: /etc/NetworkManager/dispatcher.d/98-brextscript
+   origin: 98-brextscript
+   mode: 755
+ - path: /etc/sysconfig/network-scripts/ifcfg-brext
+   origin: ifcfg-brext
 {% endif %}
+ - path: /etc/kubernetes/manifests/apicheck.yml
+   origin: staticpods/apicheck.yml
  tags: [{{ tag }}]
 {% endfor %}
 
@@ -84,23 +97,20 @@ parameters:
  numcpus: {{ numcpus }}
  memory: {{ worker_memory }}
  nets:
-  - name: {{ network }}
-{% if num == 0 %}
-    alias: ["*"]
-{% endif %}
+ - name: {{ network }}
  reservedns: true
  disks:
-  - size: {{ disk_size }}
+ - size: {{ disk_size }}
 {% if extra_disk %}
-  - size: {{ extra_disk_size }}
+ - size: {{ extra_disk_size }}
 {% endif %}
 {% if use_br %}
  files:
-  - path: /etc/NetworkManager/dispatcher.d/98-brextscript
-    origin: 98-brextscript
-    mode: 755
-  - path: /etc/sysconfig/network-scripts/ifcfg-brext
-    origin: ifcfg-brext
+ - path: /etc/NetworkManager/dispatcher.d/98-brextscript
+   origin: 98-brextscript
+   mode: 755
+ - path: /etc/sysconfig/network-scripts/ifcfg-brext
+   origin: ifcfg-brext
 {% endif %}
  tags: [{{ tag }}]
 {% endfor %}
