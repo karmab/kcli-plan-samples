@@ -15,12 +15,16 @@ parameters:
  workers: 1
  scale: false
  tag: cnvlab
+ api_internal: false
 
 api.{{ cluster }}:
  type: loadbalancer
  domain: {{ domain }}
- checkport: 8080
+ checkport: 6080
+ checkpath: /readyz
+{% if not api_internal %}
  alias: ['api-int.{{ cluster }}.{{ domain }}']
+{% endif %}
  ports:
  - 6443
  - 22623
@@ -29,6 +33,22 @@ api.{{ cluster }}:
 {% for num in range(0, masters) %}
  - {{ cluster }}-master-{{ num }}
 {% endfor %}
+
+{% if api_internal %}
+api-int.{{ cluster }}:
+ type: loadbalancer
+ internal: true
+ domain: {{ domain }}
+ checkport: 6080
+ ports:
+ - 6443
+ - 22623
+ vms:
+ - {{ cluster }}-bootstrap
+{% for num in range(0, masters) %}
+ - {{ cluster }}-master-{{ num }}
+{% endfor %}
+{% endif %}
 
 apps.{{ cluster }}:
  type: loadbalancer
@@ -60,9 +80,6 @@ apps.{{ cluster }}:
  disks:
  - size: {{ disk_size }}
  tags: [{{ tag }}]
- files:
- - path: /etc/kubernetes/manifests/apicheck.yml
-   origin: staticpods/apicheck.yml
 
 {% for num in range(0, masters) %}
 {{ cluster }}-master-{{ num }}:
@@ -83,8 +100,17 @@ apps.{{ cluster }}:
  - path: /etc/sysconfig/network-scripts/ifcfg-brext
    origin: ifcfg-brext
 {% endif %}
- - path: /etc/kubernetes/manifests/apicheck.yml
-   origin: staticpods/apicheck.yml
+{% if type == 'gcp' %}
+ - path: /usr/local/bin/gcp-hack.sh
+   origin: gcp-hack.sh
+   mode: 755
+ - path: /etc/systemd/system/gcp-hack.service
+   origin: gcp-hack.service
+   mode: 644
+ - path: /etc/systemd/system-preset/00-gcp-hack.preset
+   origin: gcp-hack.preset
+   mode: 644
+{% endif %}
  tags: [{{ tag }}]
 {% endfor %}
 
@@ -104,8 +130,8 @@ apps.{{ cluster }}:
 {% if extra_disk %}
  - size: {{ extra_disk_size }}
 {% endif %}
-{% if use_br %}
  files:
+{% if use_br %}
  - path: /etc/NetworkManager/dispatcher.d/98-brextscript
    origin: 98-brextscript
    mode: 755

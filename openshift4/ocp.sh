@@ -200,7 +200,7 @@ if [[ "$platform" == *virt* ]] || [[ "$platform" == *openstack* ]]; then
 else
   $kcliplan -f ocp_cloud.yml $cluster
   openshift-install --dir=$clusterdir wait-for bootstrap-complete || exit 1
-  $kcli delete --yes $cluster-bootstrap $cluster-helper
+  $kcli delete --yes $cluster-bootstrap $cluster-bootstrap-helper
 fi
 
 if [[ "$platform" == *virt* ]]; then
@@ -217,10 +217,10 @@ openshift-install --dir=$clusterdir wait-for install-complete || openshift-insta
 echo -e "${BLUE}Deploying certs autoapprover cronjob${NC}"
 oc create -f autoapprover.yml
 
-if [[ "$platform" != *virt* ]]; then
-  echo -e "${BLUE}Deleting temporary entry for api.$cluster.$domain in your /etc/hosts...${NC}"
-  sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
-elif [ -d /etc/NetworkManager/dnsmasq.d ] ; then
+#if [[ "$platform" != *virt* ]]; then
+#  echo -e "${BLUE}Deleting temporary entry for api.$cluster.$domain in your /etc/hosts...${NC}"
+#  sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
+if [ -d /etc/NetworkManager/dnsmasq.d ] ; then
   echo -e "${BLUE}Adding wildcard for apps.$cluster.$domain in NetworkManager...${NC}"
   sudo sh -c "echo server=/apps.$cluster.$domain/$api_ip > /etc/NetworkManager/dnsmasq.d/$cluster.$domain.conf"
   sudo systemctl reload NetworkManager
