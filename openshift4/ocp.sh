@@ -94,7 +94,7 @@ if [ "$?" != "0" ]; then
 fi
 
 pub_key=`cat $pub_key`
-pull_secret=`cat $pull_secret | tr -d '\n'`
+pull_secret=`cat $pull_secret | tr -d [:space:]`
 sed "s%DOMAIN%$domain%" install-config.yaml > $clusterdir/install-config.yaml
 sed -i "s%WORKERS%$workers%" $clusterdir/install-config.yaml
 sed -i "s%MASTERS%$masters%" $clusterdir/install-config.yaml
@@ -215,7 +215,7 @@ echo -e "${BLUE}Launching install-complete step. Note it will be retried one ext
 openshift-install --dir=$clusterdir wait-for install-complete || openshift-install --dir=$clusterdir wait-for install-complete
 
 echo -e "${BLUE}Deploying certs autoapprover cronjob${NC}"
-oc create -f autoapprover.yml
+oc create -f autoapprovercron.yml
 
 #if [[ "$platform" != *virt* ]]; then
 #  echo -e "${BLUE}Deleting temporary entry for api.$cluster.$domain in your /etc/hosts...${NC}"
