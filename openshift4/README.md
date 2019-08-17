@@ -84,7 +84,7 @@ You can put the following lines in your *env.sh* to achieve this:
 ```
 export PULL_SECRET="xxx"
 export PATH=.:$PATH
-export OPENSHIFT_RELEASE_IMAGE="registry.svc.ci.openshift.org/kni/release:4.2.0-0.ci-2019-07-22-025130-kni.1"
+export OPENSHIFT_RELEASE_IMAGE="registry.svc.ci.openshift.org/ocp/release:4.2"
 oc adm release extract --registry-config $PULL_SECRET --command=openshift-install --to . $OPENSHIFT_RELEASE_IMAGE
 ```
 
