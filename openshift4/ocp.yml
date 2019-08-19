@@ -18,6 +18,7 @@ parameters:
  autostart: false
  keys: []
  api_ip: 
+ dns_ip: 
 
 {% if not scale %}
 {{ cluster }}-bootstrap:
@@ -56,7 +57,7 @@ parameters:
  numcpus: {{ numcpus }}
  memory: {{ master_memory }}
  autostart: {{ autostart }}
- dns: {{ api_ip }}
+ dns: {{ dns_ip }}
  nets:
   - name: {{ network }}
  disks:
@@ -106,7 +107,7 @@ parameters:
  numcpus: {{ numcpus }}
  memory: {{ worker_memory }}
  autostart: {{ autostart }}
- dns: {{ api_ip }}
+ dns: {{ dns_ip }}
  nets:
   - name: {{ network }}
  disks:

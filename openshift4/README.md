@@ -29,7 +29,7 @@ The main features are:
 - For libvirt, support for fw_cfg in qemu (install qemu-kvm-ev on centos for instance)
 - Target platform needs ignition support. 
   - For ovirt/rhv, this either requires ovirt >= 4.3.4
-- On openstack, you will need to create a network with port security disabled (as we need a vip to be reachable on the masters). You will also need to create a port on this network and map it to a floating ip. Put the corresponding api_ip and public_api_ip in your parameter file. You can use [openstack.sh.sample](openstack.sh.sample) as a starting point. Finally, you will need to open relevant ports (80, 443, 6443 and 22623) in your security groups.
+- On openstack, you will need to create a network with port security disabled (as we need a vip to be reachable on the masters). You will also need to create a port on this network and map it to a floating ip. Put the corresponding api_ip, dns_ip and public_api_ip in your parameter file. You can use [openstack.sh.sample](openstack.sh.sample) as a starting point. Finally, you will need to open relevant ports (80, 443, 6443 and 22623) in your security groups.
 - If defining yourself the vip to use, make sure it's excluded from your dhcp server.
 
 ## How to Use
@@ -61,6 +61,7 @@ If you want to tweak them, create a parameter file similar to [*parameters.yml.s
 - *extra\_disk_size* size for secondary disk. Defaults to `30Gb`
 - *use_br* whether to create a bridge on top of the nics of the nodes (useful if planning to deploy kubevirt on top). Defaults to `false`
 - *api_ip* the ip to use for api ip. Defaults to `none`, in which case a temporary vm will be launched to gather a free one.
+- *dns_ip* the ip to use for dns ip. Defaults to `none`, in which case a temporary vm will be launched to gather a free one.
 
 ### Deploying
 

@@ -58,6 +58,7 @@ helper_sleep="${helper_sleep:-15}"
 default_template=$(grep -m1 template: ocp.yml | awk -F: '{print $2}' | xargs)
 template="${template:-$default_template}"
 api_ip="${api_ip:-}"
+dns_ip="${dns_ip:-}"
 public_api_ip="${public_api_ip:-}"
 bootstrap_api_ip="${bootstrap_api_ip:-}"
 domain="${domain:-karmalabs.com}"
@@ -151,6 +152,18 @@ if [[ "$platform" == *virt* ]] || [[ "$platform" == *openstack* ]]; then
     fi
     grep -q "$host_ip api.$cluster.$domain" /etc/hosts || sudo sh -c "echo $host_ip api.$cluster.$domain console-openshift-console.apps.$cluster.$domain oauth-openshift.apps.$cluster.$domain prometheus-k8s-openshift-monitoring.apps.$cluster.$domain >> /etc/hosts"
   fi
+  if [ -z "$dns_ip" ]; then
+    # we deploy a temp vm to grab an ip for the dns, if not predefined
+    $kcli vm -p $helper_template -P plan=$cluster -P nets=[$network] $cluster-dns-helper
+    dns_ip=""
+    while [ "$dns_ip" == "" ] ; do
+      dns_ip=$($kcli info -f ip -v $cluster-dns-helper)
+      echo -e "${BLUE}Waiting 5s to retrieve dns ip from dns helper node...${NC}"
+      sleep 5
+    done
+    $kcli delete --yes $cluster-dns-helper
+  fi
+  echo -e "${BLUE}Using $dns_ip for dns vip ...${NC}"
   if [ "$platform" == "kubevirt" ] || [ "$platform" == "openstack" ]; then
     # bootstrap ignition is too big for kubevirt/openstack so we serve it from a dedicated temporary node
     if [ "$platform" == "kubevirt" ]; then

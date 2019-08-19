@@ -23,13 +23,19 @@ spec:
     - "-c"
     - |
       #/bin/sh
+      IF=$(ip r | awk '/^default/ {print $5}')
+      grep "interface $IF" /etc/keepalived/keepalived.conf
+      if [ "$?" != "0" ] ; then
+        sed -i "s@interface .*@interface $IF@" /etc/keepalived/keepalived.conf
+      fi
       grep "{{ api_ip }}/" /etc/keepalived/keepalived.conf
       if [ "$?" == "0" ] ; then
         exit 0
+      else
+        NETMASK=$(ip -o -f inet addr show $IF | awk '{print $4}'| tail -1 | cut -d/ -f2)
+        sed -i "s@{{ api_ip }}@{{ api_ip }}/$NETMASK@" /etc/keepalived/keepalived.conf
+        sed -i "s@{{ dns_ip }}@{{ dns_ip }}/$NETMASK@" /etc/keepalived/keepalived.conf
       fi
-      IF=$(ip r | awk '/^default/ {print $5}')
-      NETMASK=$(ip -o -f inet addr show $IF | awk '{print $4}'| tail -1 | cut -d/ -f2)
-      sed -i "s@{{ api_ip }}@{{ api_ip }}/$NETMASK@" /etc/keepalived/keepalived.conf
     resources: {}
     volumeMounts:
     - name: conf-dir
