@@ -77,6 +77,8 @@ if  [ "$INSTALLER" == "" ]; then
  echo -e "${RED}Missing openshift-install binary. Get it at https://mirror.openshift.com/pub/openshift-v4/clients/ocp${NC}"
  exit 1
 fi
+INSTALLER_VERSION=$(openshift-install version | head -1 | cut -d" " -f2)
+echo -e "${BLUE}Using installer version $INSTALLER_VERSION...${NC}"
 OC=$(which oc 2>/dev/null)
 if  [ "$OC" == "" ]; then
  echo -e "${RED}Missing oc binary. Get it at https://mirror.openshift.com/pub/openshift-v4/clients/ocp${NC}"
@@ -221,7 +223,7 @@ if [[ "$platform" == *virt* ]]; then
   curl --silent -kL https://api.$cluster.$domain:22623/config/worker -o $clusterdir/worker.ign
 fi
 
-if [ "$workers" -lt "1" ]; then
+if [[ "$INSTALLER_VERSION" == v4.2* ]] && [ "$workers" -lt "1" ]; then
  oc adm taint nodes -l node-role.kubernetes.io/master node-role.kubernetes.io/master:NoSchedule-
 fi
 echo -e "${BLUE}Launching install-complete step. Note it will be retried one extra time in case of timeouts${NC}"
