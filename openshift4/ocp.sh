@@ -232,11 +232,12 @@ openshift-install --dir=$clusterdir wait-for install-complete || openshift-insta
 echo -e "${BLUE}Deploying certs autoapprover cronjob${NC}"
 oc create -f autoapprovercron.yml
 
-#if [[ "$platform" != *virt* ]]; then
-#  echo -e "${BLUE}Deleting temporary entry for api.$cluster.$domain in your /etc/hosts...${NC}"
-#  sudo sed -i "/api.$cluster.$domain/d" /etc/hosts
 if [ -d /etc/NetworkManager/dnsmasq.d ] ; then
   echo -e "${BLUE}Adding wildcard for apps.$cluster.$domain in NetworkManager...${NC}"
-  sudo sh -c "echo server=/apps.$cluster.$domain/$api_ip > /etc/NetworkManager/dnsmasq.d/$cluster.$domain.conf"
+  sudo sh -c "echo server=/apps.$cluster.$domain/$dns_ip > /etc/NetworkManager/dnsmasq.d/$cluster.$domain.conf"
   sudo systemctl reload NetworkManager
+elif [ -d /Users ] ; then
+  echo -e "${BLUE}Adding wildcard for apps.$cluster.$domain in /etc/resolver...${NC}"
+  [ -d /etc/resolver ] || sudo mkdir /etc/resolver 
+  sudo sh -c "echo nameserver $dns_ip > /etc/resolver/$cluster.$domain"
 fi
