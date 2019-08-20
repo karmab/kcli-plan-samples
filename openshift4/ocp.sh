@@ -166,6 +166,15 @@ if [[ "$platform" == *virt* ]] || [[ "$platform" == *openstack* ]]; then
     $kcli delete --yes $cluster-dns-helper
   fi
   echo -e "${BLUE}Using $dns_ip for dns vip ...${NC}"
+  if [ -d /etc/NetworkManager/dnsmasq.d ] ; then
+    echo -e "${BLUE}Adding wildcard for apps.$cluster.$domain in NetworkManager...${NC}"
+    sudo sh -c "echo server=/apps.$cluster.$domain/$dns_ip > /etc/NetworkManager/dnsmasq.d/$cluster.$domain.conf"
+    sudo systemctl reload NetworkManager
+  elif [ -d /Users ] ; then
+    echo -e "${BLUE}Adding wildcard for apps.$cluster.$domain in /etc/resolver...${NC}"
+    [ -d /etc/resolver ] || sudo mkdir /etc/resolver 
+    sudo sh -c "echo nameserver $dns_ip > /etc/resolver/$cluster.$domain"
+  fi
   if [ "$platform" == "kubevirt" ] || [ "$platform" == "openstack" ]; then
     # bootstrap ignition is too big for kubevirt/openstack so we serve it from a dedicated temporary node
     if [ "$platform" == "kubevirt" ]; then
@@ -231,13 +240,3 @@ openshift-install --dir=$clusterdir wait-for install-complete || openshift-insta
 
 echo -e "${BLUE}Deploying certs autoapprover cronjob${NC}"
 oc create -f autoapprovercron.yml
-
-if [ -d /etc/NetworkManager/dnsmasq.d ] ; then
-  echo -e "${BLUE}Adding wildcard for apps.$cluster.$domain in NetworkManager...${NC}"
-  sudo sh -c "echo server=/apps.$cluster.$domain/$dns_ip > /etc/NetworkManager/dnsmasq.d/$cluster.$domain.conf"
-  sudo systemctl reload NetworkManager
-elif [ -d /Users ] ; then
-  echo -e "${BLUE}Adding wildcard for apps.$cluster.$domain in /etc/resolver...${NC}"
-  [ -d /etc/resolver ] || sudo mkdir /etc/resolver 
-  sudo sh -c "echo nameserver $dns_ip > /etc/resolver/$cluster.$domain"
-fi
