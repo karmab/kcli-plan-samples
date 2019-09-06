@@ -3,7 +3,7 @@ parameters:
     package: kcli
     numcpus: 2
     memory: 6144
-    template: Fedora-Cloud-Base-29-1.2.x86_64.qcow2
+    template: Fedora-Cloud-Base-30-1.2.x86_64.qcow2
 
 copr:
  template: {{ template }}
