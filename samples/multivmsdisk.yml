@@ -1,0 +1,16 @@
+parameters:
+ vms: 2
+
+shared_disk.img:
+ type: disk
+ size: 5
+ pool: default
+ vms:
+{% for i in range(0, vms) %}
+ - centos{{ i }}
+{% endfor %}
+
+{% for i in range(0, vms) %}
+centos{{ i }}:
+ template: CentOS-7-x86_64-GenericCloud.qcow2
+{% endfor %}
