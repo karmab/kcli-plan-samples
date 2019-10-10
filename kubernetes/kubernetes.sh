@@ -5,8 +5,6 @@ CIDR="10.244.0.0/16"
 {% endif %} 
 {% if masters > 1 %}
 kubeadm init --control-plane-endpoint "{{ prefix }}-master.{{ network }}:6443" --pod-network-cidr $CIDR --upload-certs
-CERTKEY=$(grep certificate-key /var/log/messages | head -1 | sed 's/.*certificate-key \(.*\)/\1/')
-echo $CERTKEY > /root/certkey
 {% else %}
 kubeadm init --pod-network-cidr $CIDR
 {% endif %}
@@ -40,12 +38,17 @@ sleep 60
 
 {% if masters > 1 %}
 {% for number in range(1,masters) %}
+CERTKEY=$(grep certificate-key /var/log/messages | head -1 | sed 's/.*certificate-key \(.*\)/\1/')
 MASTERCMD="$CMD --control-plane --certificate-key $CERTKEY"
 echo $MASTERCMD > /root/mastercmd.sh
 ssh-keyscan -H {{ prefix }}-master-0{{ number }} >> ~/.ssh/known_hosts 
 scp /etc/kubernetes/admin.conf root@{{ prefix }}-master-0{{ number }}:/etc/kubernetes/
 echo ssh root@{{ prefix }}-master-0{{ number }} $MASTERCMD > /root/{{ prefix }}-master-0{{ number }}.log 2>&1
 ssh root@{{ prefix }}-master-0{{ number }} $MASTERCMD >> /root/{{ prefix }}-master-0{{ number }}.log 2>&1
+scp /etc/kubernetes/admin.conf {{ prefix }}-master-0{{ number }}:/root
+ssh {{ prefix }}-master-0{{ number }} mkdir -p /root/.kube
+ssh {{ prefix }}-master-0{{ number }} cp -i /root/admin.conf /root/.kube/config
+ssh {{ prefix }}-master-0{{ number }} chown root:root /root/.kube/config
 {% endfor %}
 {% endif %}
 
