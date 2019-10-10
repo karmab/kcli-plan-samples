@@ -1,9 +1,11 @@
 parameters:
- nodes: 1
+ masters: 1
+ workers: 0
  domain: karmalabs.com
  template: CentOS-7-x86_64-GenericCloud.qcow2
  pool: default
- prefix: "ku"
+ network: default
+ prefix: ku
  deploy_app: false
  nfs: true
  sdn: flannel
@@ -11,19 +13,34 @@ parameters:
  master_memory: 6144
  node_memory: 4096
  notifycmd: "kubectl get pod --all-namespaces"
- feature_gates: CSIBlockVolume=true
 
-{{prefix}}master:
+{% if masters > 1 %}
+{{ prefix }}-master:
+ type: loadbalancer
+ nets:
+ - name: {{ network }}
+ ports:
+ - 6443
+ vms:
+{% for number in range(0, masters) %}
+  - {{prefix}}-master-0{{ number }}
+{% endfor %}
+{%endif %}
+
+{% for number in range(0, masters) %}
+{{prefix}}-master-0{{ number }}:
  template: {{ template }}
  numcpus: 2
  memory: {{ master_memory }}
  reservedns: true
  sharedkey: true
  domain: {{ domain }}
- notifycmd: {{ notifycmd }}
+{% if number == 0 %}
  notify: true
+ notifycmd: {{ notifycmd }}
+{% endif %}
  nets:
-  - default
+  - {{ network }}
  disks:
   - size: 50
  pool: {{ pool }}
@@ -31,15 +48,13 @@ parameters:
 {% if type == 'ovirt' %}
   - ovirt_fix.sh
 {% endif %}
-  - join.yml
-  - config.yml
   - path: /etc/yum.repos.d/kubernetes.repo
     origin: kubernetes.repo
-{% if nfs %}
+{% if nfs and number == 0 %}
   - nfs.yml
   - nfs.sh
 {% endif %}
-{% if multus %}
+{% if multus and number == 0 %}
   - multus.yml
   - cni-plugins.yml
   - l2-bridge.yml
@@ -50,6 +65,7 @@ parameters:
 {% else %}
   - pre.sh
 {% endif %}
+{% if number == 0 %}
   - kubernetes.sh
 {% if multus %}
   - multus.sh
@@ -60,10 +76,11 @@ parameters:
 {% if nfs %}
   - nfs.sh
 {% endif %}
+{% endif %}
+{% endfor %}
 
-{% if nodes > 0 %}
-{% for number in range(0, nodes) %}
-{{prefix }}node0{{ number + 1 }}:
+{% for number in range(0, workers) %}
+{{prefix }}-worker-0{{ number }}:
  template: {{ template }}
  numcpus: 2
  memory: {{ node_memory }}
@@ -71,7 +88,7 @@ parameters:
  sharedkey: true
  domain: {{ domain }}
  nets:
-  - default
+  - {{ network }}
  disks:
   - size: 50
  pool: {{ pool }}
@@ -85,4 +102,3 @@ parameters:
   - pre.sh
 {% endif %}
 {% endfor %}
-{% endif %}

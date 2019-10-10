@@ -11,7 +11,11 @@ apiServer:
   timeoutForControlPlane: 4m0s
 certificatesDir: /etc/kubernetes/pki
 clusterName: kubernetes
-controlPlaneEndpoint: ""
+{% if masters < 1 -%}
+controlPlaneEndpoint: kumaster:6443
+{% else %}
+controlPlaneEndpoint: kumaster00:6443
+{% endif %}
 controllerManager: {}
 dns:
   type: CoreDNS
