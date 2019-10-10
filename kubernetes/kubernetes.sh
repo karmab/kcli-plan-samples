@@ -11,12 +11,7 @@ export KUBECONFIG=/root/admin.conf
 echo "export KUBECONFIG=/root/admin.conf" >>/root/.bashrc
 kubectl taint nodes --all node-role.kubernetes.io/master-
 {% if sdn == 'flannel' %}
-#FLANNEL={{ flannel_version }}
-#if [ "$FLANNEL" == "latest" ] ; then
-#  FLANNEL=`curl -s https://api.github.com/repos/coreos/flannel/releases/latest| jq -r .tag_name`
-#fi
-#kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/$FLANNEL/Documentation/kube-flannel.yml
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/62e44c867a2846fefb68bd5f178daf4da3095ccb/Documentation/kube-flannel.yml
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 {% elif sdn == 'weavenet' %}
 kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=`kubectl version | base64 | tr -d '\n'`"
 {% elif sdn == 'calico' %}
