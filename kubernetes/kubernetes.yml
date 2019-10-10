@@ -2,6 +2,7 @@ parameters:
  masters: 1
  workers: 0
  domain: karmalabs.com
+ template: CentOS-7-x86_64-GenericCloud.qcow2
  pool: default
  network: default
  prefix: ku
@@ -11,14 +12,7 @@ parameters:
  multus: false
  master_memory: 6144
  node_memory: 4096
- template: CentOS-7-x86_64-GenericCloud.qcow2
  notifycmd: "kubectl get pod --all-namespaces"
-
-{% if template == 'CentOS-7-x86_64-GenericCloud.qcow2' %}
-CentOS-7-x86_64-GenericCloud.qcow2:
- type: template
- url: http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
-{% endif %}
 
 {% if masters > 1 %}
 {{ prefix }}-master:
