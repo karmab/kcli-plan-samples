@@ -1,0 +1,22 @@
+parameters:
+ memory: 8192
+ numcpus: 4
+ disk_size: 64
+
+macosx:
+  memory: {{ memory }}
+  numcpus: {{ numcpus }}
+  cpumodel: Penryn
+  cpuflags:
+  - name: invtsc
+    enable: true
+  disks:
+  - name: ESP.qcow2
+    interface: sata
+  - name: macosx.qcow2
+    interface: sata
+  nets: 
+  - name: default
+    type: e1000-82545em
+  pool: default
+  iso: BaseSystem.iso
