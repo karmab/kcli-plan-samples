@@ -391,3 +391,8 @@
   file: ceph/upstream.yml
   description: ceph cluster on 3 vms
   numvms: 3
+
+- name: golang
+  file: development/golang.yml
+  description: golang dev box
+  numvms: 1
