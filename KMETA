@@ -235,10 +235,16 @@
   numvms: 1
 
 - name: openshift4_crc
-  file: openshift4/crc.yml
+  file: openshift4/crc/kcli_plan.yml
   description: Openshift4 based on crc
   numvms: 1
   comments: crc vm is run within vm
+
+- name: openshift4_baremetal
+  file: openshift4/baremetal/kcli_plan.yml
+  description: Openshift4 Baremetal deployment
+  numvms: 1
+  comments: openshift baremetal installer to be used with an existing install-config.yaml
 
 - name: openshift_origin
   file: openshift3/origin.yml

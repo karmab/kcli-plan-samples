@@ -1,2 +1,5 @@
 recreate.sh
 launch.sh
+*openshift_pull.json*
+install-config.yaml
+install-config.yaml.*

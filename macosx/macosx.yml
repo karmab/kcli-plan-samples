@@ -19,11 +19,11 @@ macosx:
   - name: ESP.qcow2
     interface: sata
     macosx: true
-  - size: {{ disk_size }}
-    interface: sata
   - name: BaseSystem.img
     interface: sata
     thin: false
+  - size: {{ disk_size }}
+    interface: sata
   nets: 
   - name: {{ network }}
     type: e1000-82545em

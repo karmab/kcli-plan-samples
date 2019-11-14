@@ -1,0 +1,38 @@
+parameters:
+ image: CentOS-7-x86_64-GenericCloud.qcow2
+ network: default
+ pool: default                                                                                                                                 
+ memory: 12288                                                                                                            
+ provisioning_net: provisioning
+ baremetal_net: baremetal
+ cluster: mycluster
+ pullsecret_path: ./openshift_pull.json
+ installconfig_path: ./install-config.yaml
+
+{% if image == 'CentOS-7-x86_64-GenericCloud.qcow2' %}
+CentOS-7-x86_64-GenericCloud.qcow2:
+ type: image
+ url: http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
+{% endif %}
+
+openshift-installer: 
+ image: {{ image }} 
+ pool: {{ pool }} 
+ numcpus: 16   
+ memory: 32768  
+ privatekey: true
+ notify: true
+ notifycmd: /root/oc --kubeconfig=/root/{{ cluster}}/auth/kubeconfig get clusterversion
+ nets:                                                                                                                                         
+ - name: {{ baremetal_net }}                                                                                                                    
+ - name: {{ provisioning_net }}
+   noconf: yes                                                                                                                                   
+ disks:                                                                                                                                           
+ - 90                                                                                                                                              
+ files:                                                                                                                                             
+ - origin: {{ pullsecret_path }}                                                                                                                     
+   path: /root/openshift_pull.json                                                                                                                    
+ - path: /root/install-config.yaml                                                                                                                           
+   origin: {{ installconfig_path }}
+ scripts:
+ - baremetal.sh
