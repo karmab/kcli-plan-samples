@@ -1,5 +1,5 @@
 echo export KUBECONFIG=/root/{{ cluster }}/auth/kubeconfig >> /root/.bashrc
-yum -y install bridge-utils libvirt-libs
+yum -y install bridge-utils libvirt-libs ipmitool
 echo -e "DEVICE=baremetal\nTYPE=Bridge\nONBOOT=yes\nNM_CONTROLLED=no\nBOOTPROTO=dhcp" > /etc/sysconfig/network-scripts/ifcfg-baremetal
 echo -e "DEVICE=eth0\nTYPE=Ethernet\nONBOOT=yes\nNM_CONTROLLED=no\nBRIDGE=baremetal" > /etc/sysconfig/network-scripts/ifcfg-eth0
 ifup eth0
@@ -14,8 +14,9 @@ tar zxf oc.tar.gz
 rm -rf oc.tar.gz
 export PULL_SECRET="openshift_pull.json"
 export OPENSHIFT_RELEASE_IMAGE=$(curl -s https://mirror.openshift.com/pub/openshift-v4/clients/ocp-dev-preview/latest/release.txt | grep 'Pull From: quay.io' | awk -F ' ' '{print $3}' | xargs)
-chmod +x /root/oc
+chmod +x oc
 ./oc adm release extract --registry-config $PULL_SECRET --command=openshift-baremetal-install --to . $OPENSHIFT_RELEASE_IMAGE
-mkdir /root/{{ cluster }}
+mkdir {{ cluster }}
 cp install-config.yaml {{ cluster }}
+# python ipmi.py off
 #./openshift-baremetal-install --dir {{ cluster }} --log-level debug create cluster

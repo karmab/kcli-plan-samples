@@ -34,5 +34,6 @@ openshift-installer:
    path: /root/openshift_pull.json                                                                                                                    
  - path: /root/install-config.yaml                                                                                                                           
    origin: {{ installconfig_path }}
+ - ipmi.py
  scripts:
  - baremetal.sh
