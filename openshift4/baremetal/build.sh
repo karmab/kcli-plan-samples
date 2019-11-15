@@ -1,5 +1,8 @@
-yum -y install libvirt-client libvirt-devel gcc-c++ git golang-bin
+yum -y install libvirt-client libvirt-devel gcc-c++ git wget
+wget https://dl.google.com/go/go{{ go_version }}.linux-amd64.tar.gz
+tar -C /usr/local -xzf go{{ go_version }}.linux-amd64.tar.gz
 export GOPATH=/root/go
+export PATH=$PATH:/usr/local/go/bin:${GOPATH}/bin:${GOPATH}/src/github/openshift/installer/bin
 echo export GOPATH=/root/go >> ~/.bashrc
 echo export PATH=\$PATH:/usr/local/go/bin:\$GOPATH/bin:\$GOPATH/src/github/openshift/installer/bin >> ~/.bashrc
 echo alias go_installer=\"cd \$GOPATH/src/github.com/openshift/installer\">> ~/.bashrc
@@ -10,13 +13,14 @@ curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 git clone https://github.com/openshift/installer.git
 cd installer
 dep ensure
-{% if prs %}
+export HOME=/root
 git config --global user.email "you@example.com"
 git config --global user.name "Your Name"
+{% if prs %}
 {% for pr in prs %}
 curl -L https://github.com/openshift/installer/pull/{{ pr }}.patch | git am
 {% endfor %}
 {% endif %}
-TAGS=libvirt hack/build.sh
+TAGS='libvirt baremetal' hack/build.sh
 cp bin/openshift-install /root/openshift-baremetal-install
 chmod u+x /root/openshift-baremetal-install

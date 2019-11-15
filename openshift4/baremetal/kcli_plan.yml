@@ -8,9 +8,11 @@ parameters:
  cluster: mycluster
  pullsecret_path: ./openshift_pull.json
  installconfig_path: ./install-config.yaml
- run: false
- build: true
+ run: true
+ build: false
+ prefix: openshift
  prs: []
+ go_version: 1.12.12
 
 {% if image == 'CentOS-7-x86_64-GenericCloud.qcow2' %}
 CentOS-7-x86_64-GenericCloud.qcow2:
@@ -18,7 +20,7 @@ CentOS-7-x86_64-GenericCloud.qcow2:
  url: http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
 {% endif %}
 
-openshift-installer: 
+{{ prefix }}-installer: 
  image: {{ image }} 
  pool: {{ pool }} 
  numcpus: 16   

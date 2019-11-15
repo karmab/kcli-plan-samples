@@ -1,5 +1,5 @@
 echo export KUBECONFIG=/root/{{ cluster }}/auth/kubeconfig >> /root/.bashrc
-yum -y install bridge-utils libvirt-libs ipmitool
+yum -y install libvirt-libs ipmitool bridge-utils
 echo -e "DEVICE=baremetal\nTYPE=Bridge\nONBOOT=yes\nNM_CONTROLLED=no\nBOOTPROTO=dhcp" > /etc/sysconfig/network-scripts/ifcfg-baremetal
 echo -e "DEVICE=eth0\nTYPE=Ethernet\nONBOOT=yes\nNM_CONTROLLED=no\nBRIDGE=baremetal" > /etc/sysconfig/network-scripts/ifcfg-eth0
 ifup eth0
@@ -22,7 +22,10 @@ oc adm release extract --registry-config $PULL_SECRET --command=openshift-bareme
 {% endif %}
 mkdir {{ cluster }}
 cp install-config.yaml {{ cluster }}
+PROVISIONING_IP=$(grep libvirtURI install-config.yaml.u08 | awk -F'/' '{ print $3 }' | awk -F'@' '{ print $2 }')
+ssh-keyscan -H $PROVISIONING_IP >> ~/.ssh/known_hosts
 {% if run %}
 python ipmi.py off
+# export OPENSHIFT_INSTALL_RELEASE_IMAGE_OVERRIDE=registry.svc.ci.openshift.org/ocp/release:4.3
 openshift-baremetal-install --dir {{ cluster }} --log-level debug create cluster
 {% endif %}
