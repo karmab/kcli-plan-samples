@@ -6,9 +6,17 @@ This repository provides a plan which deploys a vm where
 - launch the install against a set of baremetal nodes
 
 ## Why
-to deploy baremetal using bare minimum on the provisioning node
 
-## What is needed on the provisioning node
+To deploy baremetal using bare minimum on the provisioning node
+
+## Requirements
+
+### Data
+
+- a valid install-config.yaml 
+- a pull secret to put in openshift_pull.json
+
+### on the provisioning node
 
 - libvirt daemon (with fw_cfg support)
 - two physical bridges:
@@ -17,8 +25,6 @@ to deploy baremetal using bare minimum on the provisioning node
 
 ## Launch
 
-Gather your install-config.yaml and put your pull secret in openshift_pull.json
-
 ```
 kcli create plan
 ```
@@ -26,10 +32,10 @@ kcli create plan
 ## Known issues
 
 During the install, you will need to manually create a config map for the baremetal operator to properly launch.
-Adapt the *metal3-cm.yml.sample* file, Copy it to *metal3-cm.yml* and run the following commands:
+Adapt the *metal3-cm.yaml.sample* file, Copy it to *metal3-cm.yaml* and run the following commands:
 
 ```
-oc create -f metal3-cm.yml -n openshift-machine-api
+oc create -f metal3-cm.yaml -n openshift-machine-api
 ```
 
 ## Parameters

@@ -5,7 +5,7 @@ parameters:
  memory: 12288                                                                                                            
  provisioning_net: provisioning
  baremetal_net: baremetal
- cluster: mycluster
+ cluster: ocp
  pullsecret_path: ./openshift_pull.json
  installconfig_path: ./install-config.yaml
  run: true
@@ -45,7 +45,8 @@ CentOS-7-x86_64-GenericCloud.qcow2:
  - path: /root/ipmi.py
    origin: ipmi.py
    mode: 700
- - metal3-cm.yml.sample
+ - metal3-cm.yaml.sample
+ - clouds.yaml
  scripts:
 {% if build %}
  - build.sh

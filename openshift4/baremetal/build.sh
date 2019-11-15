@@ -4,7 +4,7 @@ tar -C /usr/local -xzf go{{ go_version }}.linux-amd64.tar.gz
 export GOPATH=/root/go
 export PATH=$PATH:/usr/local/go/bin:${GOPATH}/bin:${GOPATH}/src/github/openshift/installer/bin
 echo export GOPATH=/root/go >> ~/.bashrc
-echo export PATH=\$PATH:/usr/local/go/bin:\$GOPATH/bin:\$GOPATH/src/github/openshift/installer/bin >> ~/.bashrc
+echo export PATH=/root:\$PATH:/usr/local/go/bin:\$GOPATH/bin:\$GOPATH/src/github/openshift/installer/bin >> ~/.bashrc
 echo alias go_installer=\"cd \$GOPATH/src/github.com/openshift/installer\">> ~/.bashrc
 mkdir -p ${GOPATH}/{bin,pkg,src}
 mkdir -p ${GOPATH}/src/github.com/openshift
