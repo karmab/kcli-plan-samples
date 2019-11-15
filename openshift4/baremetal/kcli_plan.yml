@@ -13,6 +13,7 @@ parameters:
  prefix: openshift
  prs: []
  go_version: 1.12.12
+ tag: 4.3
 
 {% if image == 'CentOS-7-x86_64-GenericCloud.qcow2' %}
 CentOS-7-x86_64-GenericCloud.qcow2:

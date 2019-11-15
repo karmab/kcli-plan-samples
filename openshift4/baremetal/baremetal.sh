@@ -37,6 +37,6 @@ PROVISIONING_IP=$(grep libvirtURI install-config.yaml.u08 | awk -F'/' '{ print $
 ssh-keyscan -H $PROVISIONING_IP >> ~/.ssh/known_hosts
 {% if run %}
 python ipmi.py off
-# export OPENSHIFT_INSTALL_RELEASE_IMAGE_OVERRIDE=registry.svc.ci.openshift.org/ocp/release:4.3
+export OPENSHIFT_INSTALL_RELEASE_IMAGE_OVERRIDE=registry.svc.ci.openshift.org/ocp/release:{{ tag }}
 openshift-baremetal-install --dir {{ cluster }} --log-level debug create cluster
 {% endif %}
