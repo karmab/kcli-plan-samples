@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+
+import os
 import sys
 import yaml
 
@@ -11,4 +14,6 @@ with open(installfile) as f:
         address = host['bmc']['address'].replace('ipmi://', '')
         username = host['bmc']['username']
         password = host['bmc']['password']
-        print("ipmitool -H %s -U %s -P %s -I lanplus chassis power %s" % (address, username, password, action))
+        cmd = "ipmitool -H %s -U %s -P %s -I lanplus chassis power %s" % (address, username, password, action)
+        print(cmd)
+        os.system(cmd)
