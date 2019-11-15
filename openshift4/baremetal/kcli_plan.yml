@@ -8,6 +8,9 @@ parameters:
  cluster: mycluster
  pullsecret_path: ./openshift_pull.json
  installconfig_path: ./install-config.yaml
+ run: false
+ build: true
+ prs: []
 
 {% if image == 'CentOS-7-x86_64-GenericCloud.qcow2' %}
 CentOS-7-x86_64-GenericCloud.qcow2:
@@ -30,10 +33,15 @@ openshift-installer:
  disks:                                                                                                                                           
  - 90                                                                                                                                              
  files:                                                                                                                                             
+{% if not build %}
  - origin: {{ pullsecret_path }}                                                                                                                     
    path: /root/openshift_pull.json                                                                                                                    
+{% endif %}
  - path: /root/install-config.yaml                                                                                                                           
    origin: {{ installconfig_path }}
  - ipmi.py
  scripts:
+{% if build %}
+ - build.sh
+{% endif %}
  - baremetal.sh

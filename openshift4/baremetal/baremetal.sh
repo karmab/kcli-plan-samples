@@ -12,11 +12,17 @@ cd /root
 curl --silent https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz > oc.tar.gz
 tar zxf oc.tar.gz
 rm -rf oc.tar.gz
+export PATH=/root:$PATH
+chmod +x oc
+
+{% if not build %}
 export PULL_SECRET="openshift_pull.json"
 export OPENSHIFT_RELEASE_IMAGE=$(curl -s https://mirror.openshift.com/pub/openshift-v4/clients/ocp-dev-preview/latest/release.txt | grep 'Pull From: quay.io' | awk -F ' ' '{print $3}' | xargs)
-chmod +x oc
-./oc adm release extract --registry-config $PULL_SECRET --command=openshift-baremetal-install --to . $OPENSHIFT_RELEASE_IMAGE
+oc adm release extract --registry-config $PULL_SECRET --command=openshift-baremetal-install --to . $OPENSHIFT_RELEASE_IMAGE
+{% endif %}
 mkdir {{ cluster }}
 cp install-config.yaml {{ cluster }}
-# python ipmi.py off
-#./openshift-baremetal-install --dir {{ cluster }} --log-level debug create cluster
+{% if run %}
+python ipmi.py off
+openshift-baremetal-install --dir {{ cluster }} --log-level debug create cluster
+{% endif %}
