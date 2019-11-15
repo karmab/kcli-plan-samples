@@ -35,6 +35,7 @@ mkdir {{ cluster }}
 cp install-config.yaml {{ cluster }}
 PROVISIONING_IP=$(grep libvirtURI install-config.yaml.u08 | awk -F'/' '{ print $3 }' | awk -F'@' '{ print $2 }')
 ssh-keyscan -H $PROVISIONING_IP >> ~/.ssh/known_hosts
+echo -e "Host=*\nStrictHostKeyChecking=no\n" > .ssh/config
 {% if run %}
 python ipmi.py off
 export OPENSHIFT_INSTALL_RELEASE_IMAGE_OVERRIDE=registry.svc.ci.openshift.org/ocp/release:{{ tag }}
