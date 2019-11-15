@@ -16,6 +16,7 @@ dep ensure
 export HOME=/root
 git config --global user.email "you@example.com"
 git config --global user.name "Your Name"
+COMMIT_ID=$(git rev-parse HEAD)
 {% if prs %}
 {% for pr in prs %}
 curl -L https://github.com/openshift/installer/pull/{{ pr }}.patch | git am

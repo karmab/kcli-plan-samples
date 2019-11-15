@@ -26,10 +26,10 @@ kcli create plan
 ## Known issues
 
 During the install, you will need to manually create a config map for the baremetal operator to properly launch.
-Adapt the *metal3-config.yml* file to your need
+Adapt the *metal3-cm.yml.sample* file, Copy it to *metal3-cm.yml* and run the following commands:
 
 ```
-oc create -f metal3-config.yml -n openshift-machine-api
+oc create -f metal3-cm.yml -n openshift-machine-api
 ```
 
 ## Parameters

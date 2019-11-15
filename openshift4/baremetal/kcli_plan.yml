@@ -42,6 +42,7 @@ CentOS-7-x86_64-GenericCloud.qcow2:
  - path: /root/install-config.yaml                                                                                                                           
    origin: {{ installconfig_path }}
  - ipmi.py
+ - metal3-cm.yml.sample
  scripts:
 {% if build %}
  - build.sh
