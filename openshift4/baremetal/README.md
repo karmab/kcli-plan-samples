@@ -1,7 +1,7 @@
 ## Purpose
 
 This repository provides a plan which deploys a vm where
-- openshift-baremetal-install is downloaded or compiled from source (with an additional list of PRS to apply)
+- openshift-baremetal-install is downloaded or compiled from source (with an additional list of PR numbers to apply)
 - stop the nodes to deploy through ipmi
 - launch the install against a set of baremetal nodes
 
