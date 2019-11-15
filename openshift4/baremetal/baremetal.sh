@@ -29,7 +29,7 @@ mv jq /usr/bin
 chmod u+x /usr/bin/jq
 export RHCOS_URI=$(curl -s -S https://raw.githubusercontent.com/openshift/installer/$COMMIT_ID/data/data/rhcos.json | jq .images.openstack.path)
 export RHCOS_PATH=$(curl -s -S https://raw.githubusercontent.com/openshift/installer/$COMMIT_ID/data/data/rhcos.json | jq .images.baseURI)
-envsubt metal3-config.yml.sample > metal3-config.yml
+envsubst metal3-config.yml.sample > metal3-config.yml
 
 mkdir {{ cluster }}
 cp install-config.yaml {{ cluster }}
