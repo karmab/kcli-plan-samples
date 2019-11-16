@@ -1,13 +1,13 @@
 ## Purpose
 
-This repository provides a plan which deploys a vm where
+This repository provides a plan which deploys a vm where:
 - openshift-baremetal-install is downloaded or compiled from source (with an additional list of PR numbers to apply)
 - stop the nodes to deploy through ipmi
 - launch the install against a set of baremetal nodes
 
 ## Why
 
-To deploy baremetal using bare minimum on the provisioning node
+To deploy baremetal using `bare minimum` on the provisioning node
 
 ## Requirements
 
@@ -28,6 +28,13 @@ To deploy baremetal using bare minimum on the provisioning node
 ```
 kcli create plan
 ```
+
+## Interacting in the vm
+
+The deployed vm comes with a set of helpers for you:
+- scripts run.sh and clean.sh allow you to manually launch an install or clean a failed one
+- you can run *openstack baremetal node list* during deployment to check the status of the provisioning of the nodes (Give some time after launching an install before ironic is accessible).
+- script *ipmi.py* can be used to check the power status of the baremetal node or to stop them (using `ipmi.py off`)
 
 ## Known issues
 
@@ -61,7 +68,7 @@ oc create -f metal3-config.yaml.sample -n openshift-machine-api
 
 ## I want to use virtual masters
 
-although this is not the primary scope of this repository, you can
+Although this is not the primary scope of this repository, you can
 
 - make sure that you have proper dns set for the virtual masters. The masters need to be named xx-master-$num for openshift install to succeed
 - make sure that you have dhcp entries associated to the virtual masters macs . Collect those macs

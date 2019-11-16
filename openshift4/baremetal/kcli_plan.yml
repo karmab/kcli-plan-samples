@@ -5,6 +5,8 @@ parameters:
  memory: 12288                                                                                                            
  disk_size: 30
  provisioning_net: provisioning
+ provisioning_ip: 172.22.0.253
+ provisioning_netmask: 255.255.255.0
  baremetal_net: baremetal
  cluster: ocp
  pullsecret_path: ./openshift_pull.json
@@ -50,6 +52,8 @@ CentOS-7-x86_64-GenericCloud.qcow2:
    mode: 700
  - metal3-config.yaml.sample
  - clouds.yaml
+ - run.sh
+ - clean.sh
  scripts:
 {% if build %}
  - build.sh

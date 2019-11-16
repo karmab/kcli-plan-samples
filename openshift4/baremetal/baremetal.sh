@@ -7,7 +7,7 @@ echo -e "DEVICE=baremetal\nTYPE=Bridge\nONBOOT=yes\nNM_CONTROLLED=no\nBOOTPROTO=
 echo -e "DEVICE=eth0\nTYPE=Ethernet\nONBOOT=yes\nNM_CONTROLLED=no\nBRIDGE=baremetal" > /etc/sysconfig/network-scripts/ifcfg-eth0
 ifup eth0
 ifup baremetal
-echo -e "DEVICE=provisioning\nTYPE=Bridge\nONBOOT=yes\nNM_CONTROLLED=no\nBOOTPROTO=static\nIPADDR=172.22.0.253\nNETMASK=255.255.255.0" > /etc/sysconfig/network-scripts/ifcfg-provisioning
+echo -e "DEVICE=provisioning\nTYPE=Bridge\nONBOOT=yes\nNM_CONTROLLED=no\nBOOTPROTO=static\nIPADDR={{ provisioning_ip }}\nNETMASK={{ provisioning_netmask }}" > /etc/sysconfig/network-scripts/ifcfg-provisioning
 echo -e "DEVICE=eth1\nTYPE=Ethernet\nONBOOT=yes\nNM_CONTROLLED=no\nBRIDGE=provisioning" > /etc/sysconfig/network-scripts/ifcfg-eth1
 ifup eth1
 ifup provisioning
@@ -34,15 +34,9 @@ export RHCOS_URI=$(curl -s -S https://raw.githubusercontent.com/openshift/instal
 export RHCOS_PATH=$(curl -s -S https://raw.githubusercontent.com/openshift/installer/$COMMIT_ID/data/data/rhcos.json | jq .baseURI | sed 's/"//g')
 envsubst < metal3-config.yaml.sample > metal3-config.yaml
 
-mkdir {{ cluster }}
-cp install-config.yaml {{ cluster }}
 PROVISIONING_IP=$(grep libvirtURI install-config.yaml.u08 | awk -F'/' '{ print $3 }' | awk -F'@' '{ print $2 }')
 ssh-keyscan -H $PROVISIONING_IP >> ~/.ssh/known_hosts
 echo -e "Host=*\nStrictHostKeyChecking=no\n" > .ssh/config
 {% if run %}
-python ipmi.py off
-export KUBECONFIG=/root/{{ cluster }}/auth/kubeconfig
-export OS_CLOUD=metal3-bootstrap
-export OPENSHIFT_INSTALL_RELEASE_IMAGE_OVERRIDE=registry.svc.ci.openshift.org/ocp/release:{{ tag }}
-openshift-baremetal-install --dir {{ cluster }} --log-level debug create cluster
+run.sh
 {% endif %}
