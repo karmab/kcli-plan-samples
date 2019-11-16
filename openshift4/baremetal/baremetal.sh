@@ -7,7 +7,7 @@ echo -e "DEVICE=baremetal\nTYPE=Bridge\nONBOOT=yes\nNM_CONTROLLED=no\nBOOTPROTO=
 echo -e "DEVICE=eth0\nTYPE=Ethernet\nONBOOT=yes\nNM_CONTROLLED=no\nBRIDGE=baremetal" > /etc/sysconfig/network-scripts/ifcfg-eth0
 ifup eth0
 ifup baremetal
-echo -e "DEVICE=provisioning\nTYPE=Bridge\nONBOOT=yes\nNM_CONTROLLED=no\nBOOTPROTO=static\nIPADDR={{ provisioning_installer_ip }}\nNETMASK={{ provisioning_netmask }}" > /etc/sysconfig/network-scripts/ifcfg-provisioning
+echo -e "DEVICE=provisioning\nTYPE=Bridge\nONBOOT=yes\nNM_CONTROLLED=no\nBOOTPROTO=static\nIPADDR={{ provisioning_installer_ip }}\nPREFIX={{ provisioning_cidr }}" > /etc/sysconfig/network-scripts/ifcfg-provisioning
 echo -e "DEVICE=eth1\nTYPE=Ethernet\nONBOOT=yes\nNM_CONTROLLED=no\nBRIDGE=provisioning" > /etc/sysconfig/network-scripts/ifcfg-eth1
 ifup eth1
 ifup provisioning

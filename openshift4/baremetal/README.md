@@ -51,7 +51,7 @@ oc create -f metal3-config.yaml -n openshift-machine-api
 ## Parameters
 
 |Parameter                 |Default Value                      |
-|-----------------------   |-----------------------------------|
+|--------------------------|-----------------------------------|
 |image                     |CentOS-7-x86_64-GenericCloud.qcow2 |
 |network                   |default                            |
 |pool                      |default                            |
@@ -60,7 +60,7 @@ oc create -f metal3-config.yaml -n openshift-machine-api
 |provisioning_interface    |eno1                               |
 |provisioning_net          |provisioning                       |
 |provisioning_ip           |172.22.0.3                         |
-|provisioning_netmask      |255.255.255.0                      |
+|provisioning_cidr         |24                                 |
 |provisioning_range        | 172.22.0.10,172.22.0.100          |
 |provisioning_installer_ip |172.22.0.253                       |
 |cache_url                 |                                   |
@@ -87,12 +87,11 @@ Although this is not the primary scope of this repository, you can
 - set vbmcd dameon and client on the provisioning node
 - create vbmc ports for them with the following commands to run on the provisioning node
 ```
-vbmc add openshift-master-0 --port 6230 --username admin --password password --libvirt-uri qemu:///system
-vbmc start openshift-master-0
-vbmc add openshift-master-1 --port 6231 --username admin --password password --libvirt-uri qemu:///system
-vbmc start openshift-master-1
-vbmc add openshift-master-2 --port 6232 --username admin --password password --libvirt-uri qemu:///system
-vbmc start openshift-master-2
+MASTERS=3
+for num in $(seq 0 $(( MASTERS -1 )))` ; do
+vbmc add openshift-master-$NUM --port 623$NUM --username admin --password password --libvirt-uri qemu:///system
+vbmc start openshift-master-$NUM
+done
 ```
 
 - add the masters information in your install-config.yaml with lines similar to this one and by changing NUM depending on the master and PROVISIONING_IP to the ip of your provisioning node

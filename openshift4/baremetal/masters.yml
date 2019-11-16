@@ -6,8 +6,9 @@ parameters:
  provisioning_net: provisioning
  external_net: baremetal
  external_macs: []
+ masters: 3
 
-{% for num in range(0, 3) %}
+{% for num in range(0, masters) %}
 openshift-master-{{ num }}:
  numcpus: {{ numcpus }}
  start: false

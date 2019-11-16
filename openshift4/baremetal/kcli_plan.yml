@@ -7,7 +7,7 @@ parameters:
  provisioning_interface: eno1
  provisioning_net: provisioning
  provisioning_ip: 172.22.0.3
- provisioning_netmask: 255.255.255.0
+ provisioning_cidr: 24
  provisioning_range: 172.22.0.10,172.22.0.100
  provisioning_installer_ip: 172.22.0.253
  cache_url:
