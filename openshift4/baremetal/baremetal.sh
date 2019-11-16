@@ -34,7 +34,7 @@ export RHCOS_URI=$(curl -s -S https://raw.githubusercontent.com/openshift/instal
 export RHCOS_PATH=$(curl -s -S https://raw.githubusercontent.com/openshift/installer/$COMMIT_ID/data/data/rhcos.json | jq .baseURI | sed 's/"//g')
 envsubst < metal3-config.yaml.sample > metal3-config.yaml
 
-PROVISIONING_IP=$(grep libvirtURI install-config.yaml.u08 | awk -F'/' '{ print $3 }' | awk -F'@' '{ print $2 }')
+PROVISIONING_IP=$(grep libvirtURI install-config.yaml | awk -F'/' '{ print $3 }' | awk -F'@' '{ print $2 }')
 ssh-keyscan -H $PROVISIONING_IP >> ~/.ssh/known_hosts
 echo -e "Host=*\nStrictHostKeyChecking=no\n" > .ssh/config
 {% if run %}
