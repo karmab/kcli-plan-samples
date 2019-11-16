@@ -63,8 +63,11 @@ oc create -f metal3-config.yaml.sample -n openshift-machine-api
 
 although this is not the primary scope of this repository, you can
 
+- make sure that you have proper dns set for the virtual masters. The masters need to be named xx-master-$num for openshift install to succeed
+- make sure that you have dhcp entries associated to the virtual masters macs . Collect those macs
+- create 3 empty master vms using the `masters.yml` plan and by passing as a parameter the list of external macs
+ `kcli create plan -f masters.yml -P external_macs=[XX,YY,ZZ]`
 - set vbmcd dameon and client on the provisioning node
-- create 3 empty master vms using the `masters.yml` plan
 - create vbmc ports for them with the following commands to run on the provisioning node
 ```
 vbmc add openshift-master-0 --port 6230 --username admin --password password --libvirt-uri qemu:///system
