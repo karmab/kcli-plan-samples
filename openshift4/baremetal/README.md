@@ -32,10 +32,10 @@ kcli create plan
 ## Known issues
 
 During the install, you will need to manually create a config map for the baremetal operator to properly launch.
-Adapt the *metal3-cm.yaml.sample* file, Copy it to *metal3-cm.yaml* and run the following commands:
+The *metal3-config.yaml* is rendered during the deployment but tweak if needed and run the following commands:
 
 ```
-oc create -f metal3-cm.yaml -n openshift-machine-api
+oc create -f metal3-config.yaml.sample -n openshift-machine-api
 ```
 
 ## Parameters
@@ -46,9 +46,10 @@ oc create -f metal3-cm.yaml -n openshift-machine-api
 |network            |default                            |
 |pool               |default                            |
 |memory             | 12288                             |
+|disk_size          | 20                                |
 |provisioning_net   |provisioning                       |
 |baremetal_net      |baremetal                          |
-|cluster            |mycluster                          |
+|cluster            |ocp                                |
 |pullsecret_path    | ./openshift_pull.json             |
 |installconfig_path | ./install-config.yaml             |
 |run                |True                               |
@@ -56,6 +57,7 @@ oc create -f metal3-cm.yaml -n openshift-machine-api
 |prefix             |openshift                          |
 |prs                |[]                                 |
 |go_version         |1.12.12                            |
+|tag                |4.3                                |
 
 ## I want to use virtual masters
 

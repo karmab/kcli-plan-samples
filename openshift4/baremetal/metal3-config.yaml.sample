@@ -13,4 +13,4 @@ data:
   ironic_inspector_endpoint: http://172.22.0.3:5050/v1/
   provisioning_interface: eno1
   provisioning_ip: 172.22.0.3/24
-  rhcos_image_url: ${RHCOS_URI}/${RHCOS_PATH}
+  rhcos_image_url: ${RHCOS_PATH}/${RHCOS_URI}

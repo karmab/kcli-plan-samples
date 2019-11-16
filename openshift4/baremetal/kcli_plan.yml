@@ -3,6 +3,7 @@ parameters:
  network: default
  pool: default                                                                                                                                 
  memory: 12288                                                                                                            
+ disk_size: 30
  provisioning_net: provisioning
  baremetal_net: baremetal
  cluster: ocp
@@ -27,14 +28,16 @@ CentOS-7-x86_64-GenericCloud.qcow2:
  numcpus: 16   
  memory: 32768  
  privatekey: true
+{% if run %}
  notify: true
  notifycmd: /root/oc --kubeconfig=/root/{{ cluster}}/auth/kubeconfig get clusterversion
+{% endif %}
  nets:                                                                                                                                         
  - name: {{ baremetal_net }}                                                                                                                    
  - name: {{ provisioning_net }}
    noconf: yes                                                                                                                                   
  disks:                                                                                                                                           
- - 90                                                                                                                                              
+ - {{ disk_size }}                                                                                                                                          
  files:                                                                                                                                             
 {% if not build %}
  - origin: {{ pullsecret_path }}                                                                                                                     
@@ -45,7 +48,7 @@ CentOS-7-x86_64-GenericCloud.qcow2:
  - path: /root/ipmi.py
    origin: ipmi.py
    mode: 700
- - metal3-cm.yaml.sample
+ - metal3-config.yaml.sample
  - clouds.yaml
  scripts:
 {% if build %}
