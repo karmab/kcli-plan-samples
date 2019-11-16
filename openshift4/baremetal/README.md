@@ -38,41 +38,51 @@ The deployed vm comes with a set of helpers for you:
 
 ## Known issues
 
-During the install, you will need to manually create a config map for the baremetal operator to properly launch.
-The *metal3-config.yaml* is rendered during the deployment but tweak if needed and run the following commands:
+During the install, A config map needs to be created for the baremetal operator to properly launch.
+The *metal3-config.yaml* is rendered during the deployment. Tweak it with the parameters provisioning_* and cache_url if needed
+The script *fix_configmap.sh* is run continuously during the install until the config map gets injected.
+
+For the record, this is the command launched
 
 ```
-oc create -f metal3-config.yaml.sample -n openshift-machine-api
+oc create -f metal3-config.yaml -n openshift-machine-api
 ```
 
 ## Parameters
 
-|Parameter          |Default Value                      |
-|-------------------|-----------------------------------|
-|image              |CentOS-7-x86_64-GenericCloud.qcow2 |
-|network            |default                            |
-|pool               |default                            |
-|memory             | 12288                             |
-|disk_size          | 20                                |
-|provisioning_net   |provisioning                       |
-|baremetal_net      |baremetal                          |
-|cluster            |ocp                                |
-|pullsecret_path    | ./openshift_pull.json             |
-|installconfig_path | ./install-config.yaml             |
-|run                |True                               |
-|build              |False                              |
-|prefix             |openshift                          |
-|prs                |[]                                 |
-|go_version         |1.12.12                            |
-|tag                |4.3                                |
+|Parameter                 |Default Value                      |
+|-----------------------   |-----------------------------------|
+|image                     |CentOS-7-x86_64-GenericCloud.qcow2 |
+|network                   |default                            |
+|pool                      |default                            |
+|memory                    | 12288                             |
+|disk_size                 | 20                                |
+|provisioning_interface    |eno1                               |
+|provisioning_net          |provisioning                       |
+|provisioning_ip           |172.22.0.3                         |
+|provisioning_netmask      |255.255.255.0                      |
+|provisioning_range        | 172.22.0.10,172.22.0.100          |
+|provisioning_installer_ip |172.22.0.253                       |
+|cache_url                 |                                   |
+|baremetal_net             |baremetal                          |
+|cluster                   |ocp                                |
+|pullsecret_path           | ./openshift_pull.json             |
+|installconfig_path        | ./install-config.yaml             |
+|run                       |True                               |
+|build                     |False                              |
+|prefix                    |openshift                          |
+|prs                       |[]                                 |
+|go_version                |1.12.12                            |
+|tag                       |4.3                                |
 
-## I want to use virtual masters
+## I want to use virtual masters and physical workers
 
 Although this is not the primary scope of this repository, you can
 
 - make sure that you have proper dns set for the virtual masters. The masters need to be named xx-master-$num for openshift install to succeed
 - make sure that you have dhcp entries associated to the virtual masters macs . Collect those macs
 - create 3 empty master vms using the `masters.yml` plan and by passing as a parameter the list of external macs
+ 
  `kcli create plan -f masters.yml -P external_macs=[XX,YY,ZZ]`
 - set vbmcd dameon and client on the provisioning node
 - create vbmc ports for them with the following commands to run on the provisioning node
