@@ -10,9 +10,9 @@ node_ips:
 - 192.168.100.12
 - 192.168.100.13
 node_names:
-- smallnode01
-- mediumnode02
-- bignode03
+- froutnode01
+- froutnode02
+- froutnode03
 network: nodhcpnet
 dhcp_ip: 192.168.100.9
 dhcp_netmask: 255.255.255.0
