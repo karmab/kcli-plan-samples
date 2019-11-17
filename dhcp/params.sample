@@ -1,0 +1,20 @@
+prefix: frout
+domain: zzz.karmalabs.com
+nodes: 3
+node_macs:
+- aa:bb:cc:dd:ee:01
+- aa:bb:cc:dd:ee:02
+- aa:bb:cc:dd:ee:03
+node_ips:
+- 192.168.100.11
+- 192.168.100.12
+- 192.168.100.13
+node_names:
+- smallnode01
+- mediumnode02
+- bignode03
+network: nodhcpnet
+dhcp_ip: 192.168.100.9
+dhcp_netmask: 255.255.255.0
+dhcp_gateway: 192.168.100.1
+dhcp_dns: 192.168.100.1

@@ -4,15 +4,15 @@ parameters:
  memory: 2048
  prefix: prout
  domain: karmalabs.com
- nodes: 1
+ nodes:
  node_macs: []
  node_ips: []
  node_names: []
- network: nodhcpnet
- dhcp_ip: 192.168.100.9
- dhcp_netmask: 255.255.255.0
- dhcp_gateway: 192.168.100.1
- dhcp_dns: 192.168.100.1
+ network:
+ dhcp_ip: 
+ dhcp_netmask: 
+ dhcp_gateway: 
+ dhcp_dns: 
  
 {{ prefix }}-dhcp-helper:
  image: {{ image }}
