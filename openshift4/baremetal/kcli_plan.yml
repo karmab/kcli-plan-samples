@@ -56,9 +56,15 @@ CentOS-7-x86_64-GenericCloud.qcow2:
    mode: 700
  - metal3-config.yaml.sample
  - clouds.yaml
- - run.sh
- - clean.sh
- - fix_configmap.sh
+ - path: /root/run.sh
+   origin: 
+   mode: 700
+ - path: /root/clean.sh
+   origin: clean.sh
+   mode: 700
+ - path: /root/fix_configmap.sh
+   origin: fix_configmap.sh
+    mode: 700
  scripts:
 {% if build %}
  - build.sh
