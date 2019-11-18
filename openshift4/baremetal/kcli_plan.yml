@@ -61,9 +61,6 @@ CentOS-7-x86_64-GenericCloud.qcow2:
  - path: /root/clean.sh
    origin: clean.sh
    mode: 700
- - path: /root/fix_configmap.sh
-   origin: fix_configmap.sh
-   mode: 700
  scripts:
 {% if build %}
  - build.sh
