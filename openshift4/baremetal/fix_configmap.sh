@@ -1,6 +1,6 @@
 export PATH=/root:$PATH
 export HOME=/root
-export KUBECONFIG=/root/{{ cluster }}/auth/kubeconfig
+export KUBECONFIG=/root/ocp/auth/kubeconfig
 while True ; do
     oc create -f metal3-config.yaml -n openshift-machine-api
     if [ "$?" == "0" ] ; then

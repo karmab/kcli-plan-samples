@@ -12,7 +12,6 @@ parameters:
  provisioning_installer_ip: 172.22.0.253
  cache_url:
  baremetal_net: baremetal
- cluster: ocp
  pullsecret_path: ./openshift_pull.json
  installconfig_path: ./install-config.yaml
  run: true
@@ -36,7 +35,7 @@ CentOS-7-x86_64-GenericCloud.qcow2:
  privatekey: true
 {% if run %}
  notify: true
- notifycmd: /root/oc --kubeconfig=/root/{{ cluster}}/auth/kubeconfig get clusterversion
+ notifycmd: /root/oc --kubeconfig=/root/ocp/auth/kubeconfig get clusterversion
 {% endif %}
  nets:                                                                                                                                         
  - name: {{ baremetal_net }}                                                                                                                    

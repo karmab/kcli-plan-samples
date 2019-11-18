@@ -65,7 +65,6 @@ oc create -f metal3-config.yaml -n openshift-machine-api
 |provisioning_installer_ip |172.22.0.253                       |
 |cache_url                 |                                   |
 |baremetal_net             |baremetal                          |
-|cluster                   |ocp                                |
 |pullsecret_path           | ./openshift_pull.json             |
 |installconfig_path        | ./install-config.yaml             |
 |run                       |True                               |

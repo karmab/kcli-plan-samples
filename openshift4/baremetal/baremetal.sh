@@ -1,4 +1,4 @@
-echo export KUBECONFIG=/root/{{ cluster }}/auth/kubeconfig >> /root/.bashrc
+echo export KUBECONFIG=/root/ocp/auth/kubeconfig >> /root/.bashrc
 echo export OPENSHIFT_INSTALL_RELEASE_IMAGE_OVERRIDE=registry.svc.ci.openshift.org/ocp/release:{{ tag }} >> /root/.bashrc
 echo export OS_CLOUD=metal3-bootstrap >> /root/.bashrc
 yum -y install libvirt-libs ipmitool bridge-utils centos-release-openstack-train mkisofs screen
@@ -30,6 +30,9 @@ fi
 wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
 mv jq /usr/bin
 chmod u+x /usr/bin/jq
+wget -O yq https://github.com/mikefarah/yq/releases/download/2.4.1/yq_linux_amd64
+mv yq /usr/bin
+chmod u+x /usr/bin/yq
 export RHCOS_URI=$(curl -s -S https://raw.githubusercontent.com/openshift/installer/$COMMIT_ID/data/data/rhcos.json | jq .images.openstack.path | sed 's/"//g')
 export RHCOS_PATH=$(curl -s -S https://raw.githubusercontent.com/openshift/installer/$COMMIT_ID/data/data/rhcos.json | jq .baseURI | sed 's/"//g')
 envsubst < metal3-config.yaml.sample > metal3-config.yaml
