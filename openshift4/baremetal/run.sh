@@ -1,4 +1,5 @@
 python ipmi.py off
+export HOME=/root
 export PATH=/root:$PATH
 export KUBECONFIG=/root/ocp/auth/kubeconfig
 export OS_CLOUD=metal3-bootstrap
