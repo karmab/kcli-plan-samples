@@ -1,6 +1,6 @@
 rm -rf /root/ocp
 export LIBVIRT_DEFAULT_URI=$(grep libvirtURI install-config.yaml | sed 's/libvirtURI: //' | xargs)
-CLUSTER=$(cat install-config.yaml | yq r .metadata.name)
+CLUSTER=$(yq r install-config.yaml metadata.name)
 BOOTSTRAP=$(virsh list --name | grep $CLUSTER-bootstrap)
 virsh destroy $BOOTSTRAP
 virsh undefine $BOOTSTRAP
