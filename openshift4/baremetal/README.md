@@ -23,6 +23,21 @@ To deploy baremetal using `bare minimum` on the provisioning node
     - baremetal with a nic from the external network
     - provisioning with a nic from the provisioning network. Ideally assign it an ip of 172.22.0.1/24
 
+Here's a script you can run on the provisioning node for that
+
+```
+export PROV_CONN=eno1
+export MAIN_CONN=eno2
+sudo nmcli connection add ifname provisioning type bridge con-name provisioning
+sudo nmcli con add type bridge-slave ifname "$PROV_CONN" master provisioning
+sudo nmcli connection add ifname baremetal type bridge con-name baremetal
+sudo nmcli con add type bridge-slave ifname "$MAIN_CONN" master baremetal
+sudo nmcli con down "System $MAIN_CONN"; sudo pkill dhclient; sudo dhclient baremetal
+sudo nmcli connection modify provisioning ipv4.addresses 172.22.0.1/24 ipv4.method manual
+sudo nmcli con down provisioning
+sudo nmcli con up provisioning
+```
+
 ## Launch
 
 ```
