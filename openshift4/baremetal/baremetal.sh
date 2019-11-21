@@ -25,11 +25,9 @@ bash /root/get_installer.sh
 if [ -z "$COMMIT_ID" ] ; then
 export COMMIT_ID=$(./openshift-baremetal-install version | grep '^built from commit' | awk '{print $4}')
 fi
-wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
-mv jq /usr/bin
+curl -Ls https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 > /usr/bin/jq
 chmod u+x /usr/bin/jq
-wget -O yq https://github.com/mikefarah/yq/releases/download/2.4.1/yq_linux_amd64
-mv yq /usr/bin
+curl -Ls https://github.com/mikefarah/yq/releases/download/2.4.1/yq_linux_amd64 > /usr/bin/yq
 chmod u+x /usr/bin/yq
 export RHCOS_URI=$(curl -s -S https://raw.githubusercontent.com/openshift/installer/$COMMIT_ID/data/data/rhcos.json | jq .images.openstack.path | sed 's/"//g')
 export RHCOS_PATH=$(curl -s -S https://raw.githubusercontent.com/openshift/installer/$COMMIT_ID/data/data/rhcos.json | jq .baseURI | sed 's/"//g')
