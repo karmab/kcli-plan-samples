@@ -42,4 +42,5 @@ ssh-keyscan -H $PROVISIONING_IP >> ~/.ssh/known_hosts
 echo -e "Host=*\nStrictHostKeyChecking=no\n" > .ssh/config
 {% if run %}
 run.sh
+sed -i "s/metal3-bootstrap/metal3/" /root/.bashrc
 {% endif %}
