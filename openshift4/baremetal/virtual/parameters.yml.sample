@@ -1,0 +1,6 @@
+domain: karmalabs.com
+cluster: testk
+masters: 1
+workers: 2
+pull_secret: CHANGEME
+ssh_key: CHANGEME
