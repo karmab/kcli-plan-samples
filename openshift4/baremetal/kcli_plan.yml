@@ -20,6 +20,7 @@ parameters:
  prs: []
  go_version: 1.12.12
  tag: 4.3
+ keys: []
 
 {% if image == 'CentOS-7-x86_64-GenericCloud.qcow2' %}
 CentOS-7-x86_64-GenericCloud.qcow2:
@@ -31,6 +32,7 @@ CentOS-7-x86_64-GenericCloud.qcow2:
  image: {{ image }} 
  pool: {{ pool }} 
  numcpus: 16   
+ keys: {{ keys }}
  memory: 32768  
  privatekey: true
  notify: true

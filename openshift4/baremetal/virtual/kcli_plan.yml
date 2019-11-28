@@ -8,10 +8,11 @@ parameters:
  external_net: baremetal
  masters: 1
  workers: 2
+ cidr: 192.168.111.0/24
 
 {{ external_net }}:
  type: network
- cidr: 192.168.111.0/24
+ cidr: {{ cidr }}
 
 {{ provisioning_net }}:
  type: network
@@ -19,14 +20,14 @@ parameters:
  dhcp: False
 
 {% for num in range(0, masters) %}
-openshift_master_{{ num }}:
+openshift-master-{{ num }}:
  numcpus: {{ numcpus }}
  start: false
  masters_memory: {{ masters_memory }}
  reserveip: True
  nets:
   - name: {{ provisioning_net }}
-    mac: aa:bb:cc:dd:ef:0{{ num +1 }}
+    mac: "aa:bb:cc:dd:ef:0{{ num +1 }}"
   - name: {{ external_net }}
     ip: 192.168.111.2{{ num +1 }}
  disks:
@@ -37,14 +38,14 @@ openshift_master_{{ num }}:
 {%- endfor %}
 
 {% for num in range(0, workers) %}
-openshift_worker_{{ num }}:
+openshift-worker-{{ num }}:
  numcpus: {{ numcpus }}
  start: false
  workers_memory: {{ workers_memory }}
  reserveip: True
  nets:
   - name: {{ provisioning_net }}
-    mac: aa:bb:cc:dd:ef:1{{ num +1 }}
+    mac: "aa:bb:cc:dd:ef:1{{ num +1 }}"
   - name: {{ external_net }}
     ip: 192.168.111.3{{ num +1 }}
  disks:

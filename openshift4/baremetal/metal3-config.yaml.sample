@@ -4,7 +4,7 @@ metadata:
   name: metal3-config
   namespace: openshift-machine-api
 data:
-  cache_url: {{ cache_url or '${RHCOS_URI}' }}
+  cache_url: {{ cache_url or '""' }}
   deploy_kernel_url: http://{{ provisioning_ip }}:6180/images/ironic-python-agent.kernel
   deploy_ramdisk_url: http://{{ provisioning_ip }}:6180/images/ironic-python-agent.initramfs
   dhcp_range: {{ provisioning_range }}
