@@ -3,6 +3,7 @@ export HOME=/root
 export PATH=/root:$PATH
 export KUBECONFIG=/root/ocp/auth/kubeconfig
 export OS_CLOUD=metal3-bootstrap
+echo export PATH=/root:\$PATH >> /root/.bashrc
 export OPENSHIFT_INSTALL_RELEASE_IMAGE_OVERRIDE=registry.svc.ci.openshift.org/ocp/release:{{ tag }}
 mkdir -p ocp/openshift
 cp install-config.yaml ocp
