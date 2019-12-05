@@ -51,18 +51,6 @@ The deployed vm comes with a set of helpers for you:
 - you can run *openstack baremetal node list* during deployment to check the status of the provisioning of the nodes (Give some time after launching an install before ironic is accessible).
 - script *ipmi.py* can be used to check the power status of the baremetal node or to stop them (using `ipmi.py off`)
 
-## Known issues
-
-During the install, A config map needs to be created for the baremetal operator to properly launch.
-The *metal3-config.yaml* is rendered during the deployment. Tweak it with the parameters provisioning_* and cache_url if needed
-The script *fix_configmap.sh* is run continuously during the install until the config map gets injected.
-
-For the record, this is the command launched
-
-```
-oc create -f metal3-config.yaml -n openshift-machine-api
-```
-
 ## Parameters
 
 |Parameter                 |Default Value                      |
