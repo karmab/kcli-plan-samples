@@ -1,0 +1,23 @@
+numa:
+  numcpus: 8
+  nets: 
+   - default
+  pool: default
+  image: CentOS-7-x86_64-GenericCloud.qcow2
+  numamode: preferred
+  cpupinning:
+  - 0: 0
+  - 1: 0
+  - 2: 0
+  - 3: 0
+  - 4: 0
+  - 5: 0
+  - 6: 0
+  - 7: 0
+  numa:
+  - id: 0
+    cpus: 0-1
+    memory: 2048
+  - id: 1
+    cpus: 2-3
+    memory: 5120
