@@ -12,12 +12,8 @@ echo -e "DEVICE=eth1\nTYPE=Ethernet\nONBOOT=yes\nNM_CONTROLLED=no\nBRIDGE=provis
 ifup eth1
 ifup provisioning
 cd /root
-curl --silent https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz > oc.tar.gz
-tar zxf oc.tar.gz
-rm -rf oc.tar.gz
 export PATH=/root:$PATH
-chmod +x oc
-
+bash /root/get_clients.sh
 {% if not build %}
 bash /root/get_installer.sh
 {% endif %}
@@ -25,10 +21,6 @@ bash /root/get_installer.sh
 if [ -z "$COMMIT_ID" ] ; then
 export COMMIT_ID=$(./openshift-baremetal-install version | grep '^built from commit' | awk '{print $4}')
 fi
-curl -Ls https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 > /usr/bin/jq
-chmod u+x /usr/bin/jq
-curl -Ls https://github.com/mikefarah/yq/releases/download/2.4.1/yq_linux_amd64 > /usr/bin/yq
-chmod u+x /usr/bin/yq
 export RHCOS_URI=$(curl -s -S https://raw.githubusercontent.com/openshift/installer/$COMMIT_ID/data/data/rhcos.json | jq .images.openstack.path | sed 's/"//g')
 export RHCOS_PATH=$(curl -s -S https://raw.githubusercontent.com/openshift/installer/$COMMIT_ID/data/data/rhcos.json | jq .baseURI | sed 's/"//g')
 envsubst < metal3-config.yaml.sample > metal3-config.yaml

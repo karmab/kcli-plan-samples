@@ -65,6 +65,9 @@ CentOS-7-x86_64-GenericCloud.qcow2:
  - path: /root/clean.sh
    origin: clean.sh
    mode: 700
+ - path: /root/get_clients.sh
+   origin: get_clients.sh
+   mode: 700
  - path: /root/get_installer.sh
    origin: get_installer.sh
    mode: 700
