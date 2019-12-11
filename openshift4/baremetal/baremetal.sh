@@ -11,13 +11,12 @@ echo -e "DEVICE=provisioning\nTYPE=Bridge\nONBOOT=yes\nNM_CONTROLLED=no\nBOOTPRO
 echo -e "DEVICE=eth1\nTYPE=Ethernet\nONBOOT=yes\nNM_CONTROLLED=no\nBRIDGE=provisioning" > /etc/sysconfig/network-scripts/ifcfg-eth1
 ifup eth1
 ifup provisioning
-cd /root
-export PATH=/root:$PATH
 bash /root/get_clients.sh
 {% if not build %}
 bash /root/get_installer.sh
 {% endif %}
 
+cd /root
 if [ -z "$COMMIT_ID" ] ; then
 export COMMIT_ID=$(./openshift-baremetal-install version | grep '^built from commit' | awk '{print $4}')
 fi
