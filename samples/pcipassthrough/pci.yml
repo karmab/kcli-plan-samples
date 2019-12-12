@@ -1,0 +1,8 @@
+pci1:
+  numcpus: 8
+  nets: 
+   - default
+  pool: default
+  image: CentOS-7-x86_64-GenericCloud.qcow2
+  pcidevices:
+  - "01:00.0"
