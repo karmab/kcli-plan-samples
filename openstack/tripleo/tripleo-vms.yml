@@ -1,0 +1,50 @@
+parameters:
+ pool: default
+ controllers: 1
+ computes: 1
+ numcpus: 4
+ controller_memory: 6144
+ compute_memory: 6144
+ controller_disk: 50
+ compute_disk: 50
+
+tripleoprovisioning:
+ type: network
+ cidr: 10.0.0.0/24
+ dhcp: False
+ nat: False
+
+tripleopublic:
+ type: network
+ cidr: 192.168.101.0/24
+ dhcp: True
+
+{% for num in range(0, controllers) %}
+tricontroller0{{ num }}:
+ cloudinit: False
+ memory: {{ controller_memory }}
+ numcpus: {{ numcpus }}
+ disks:
+  - {{ controller_memory }}
+ nets:
+  - name: tripleoprovisioning
+    mac: aa:bb:cc:dd:ee:0{{ num }}
+ pool: {{ pool }}
+ start: False
+ nested: False
+{% endfor %}
+
+{% for num in range(0, computes) %}
+tricompute0{{ num }}:
+ cloudinit: False
+ memory: {{ compute_memory }}
+ numcpus: {{ numcpus }}
+ disks:
+  - {{ compute_memory }}
+ nets:
+  - name: tripleoprovisioning
+    mac: aa:bb:cc:dd:ef:0{{ num }}
+ pool: {{ pool }}
+ start: False
+ nested: False
+{% endfor %}
