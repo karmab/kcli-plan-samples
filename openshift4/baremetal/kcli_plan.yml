@@ -32,6 +32,9 @@ parameters:
  pool: {{ pool }} 
  numcpus: 16   
  keys: {{ keys }}
+{% if 'rhel-8' in image %}
+ rhnregister: true
+{% endif %}
  memory: 32768  
  privatekey: true
  notify: true
