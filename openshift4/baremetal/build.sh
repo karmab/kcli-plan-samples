@@ -23,5 +23,6 @@ curl -L https://github.com/openshift/installer/pull/{{ pr }}.patch | git am
 {% endfor %}
 {% endif %}
 TAGS='libvirt baremetal' hack/build.sh
-cp bin/openshift-install /root/openshift-baremetal-install
-chmod u+x /root/openshift-baremetal-install
+mkdir /root/bin
+cp bin/openshift-install /root/bin/openshift-baremetal-install
+chmod u+x /root/bin/openshift-baremetal-install

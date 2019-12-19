@@ -37,9 +37,9 @@ CentOS-7-x86_64-GenericCloud.qcow2:
  privatekey: true
  notify: true
 {% if run %}
- notifycmd: /root/oc --kubeconfig=/root/ocp/auth/kubeconfig get clusterversion
+ notifycmd: oc --kubeconfig=/root/ocp/auth/kubeconfig get clusterversion
 {% else %}
- notifycmd: ls /root/openshift-baremetal-install
+ notifycmd: ls /root/bin/openshift-baremetal-install
 {% endif %}
  nets:                                                                                                                                         
  - name: {{ baremetal_net }}                                                                                                                    

@@ -11,6 +11,9 @@ echo -e "DEVICE=provisioning\nTYPE=Bridge\nONBOOT=yes\nNM_CONTROLLED=no\nBOOTPRO
 echo -e "DEVICE=eth1\nTYPE=Ethernet\nONBOOT=yes\nNM_CONTROLLED=no\nBRIDGE=provisioning" > /etc/sysconfig/network-scripts/ifcfg-eth1
 ifup eth1
 ifup provisioning
+export PATH=/root/bin:$PATH
+mkdir /root/bin
+cd /root/bin
 bash /root/get_clients.sh
 {% if not build %}
 bash /root/get_installer.sh
@@ -18,7 +21,7 @@ bash /root/get_installer.sh
 
 cd /root
 if [ -z "$COMMIT_ID" ] ; then
-export COMMIT_ID=$(./openshift-baremetal-install version | grep '^built from commit' | awk '{print $4}')
+export COMMIT_ID=$(openshift-baremetal-install version | grep '^built from commit' | awk '{print $4}')
 fi
 export RHCOS_URI=$(curl -s -S https://raw.githubusercontent.com/openshift/installer/$COMMIT_ID/data/data/rhcos.json | jq .images.openstack.path | sed 's/"//g')
 export RHCOS_PATH=$(curl -s -S https://raw.githubusercontent.com/openshift/installer/$COMMIT_ID/data/data/rhcos.json | jq .baseURI | sed 's/"//g')
@@ -28,6 +31,6 @@ PROVISIONING_IP=$(grep libvirtURI install-config.yaml | awk -F'/' '{ print $3 }'
 ssh-keyscan -H $PROVISIONING_IP >> ~/.ssh/known_hosts
 echo -e "Host=*\nStrictHostKeyChecking=no\n" > .ssh/config
 {% if run %}
-run.sh
+bash run.sh
 sed -i "s/metal3-bootstrap/metal3/" /root/.bashrc
 {% endif %}
