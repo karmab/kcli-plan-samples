@@ -1,5 +1,6 @@
 parameters:
  image: CentOS-7-x86_64-GenericCloud.qcow2
+ image_url: http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
  network: default
  pool: default                                                                                                                                 
  memory: 12288                                                                                                            
@@ -22,11 +23,9 @@ parameters:
  tag: 4.3
  keys: []
 
-{% if image == 'CentOS-7-x86_64-GenericCloud.qcow2' %}
-CentOS-7-x86_64-GenericCloud.qcow2:
+{{ image }}:
  type: image
- url: http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
-{% endif %}
+ image_url: {{ image_url }}
 
 {{ prefix }}-installer: 
  image: {{ image }} 
@@ -70,6 +69,9 @@ CentOS-7-x86_64-GenericCloud.qcow2:
    mode: 700
  - path: /root/get_installer.sh
    origin: get_installer.sh
+   mode: 700
+ - path: /root/network.sh
+   origin: {{ 'network8.sh' if 'rhel-8' in image  else 'network7.sh' }}
    mode: 700
  scripts:
 {% if build %}
