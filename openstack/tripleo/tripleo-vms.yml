@@ -8,16 +8,11 @@ parameters:
  controller_disk: 50
  compute_disk: 50
 
-tripleoprovisioning:
+tripleoprov:
  type: network
- cidr: 10.0.0.0/24
+ cidr: 192.168.100.0/24
  dhcp: False
  nat: False
-
-tripleopublic:
- type: network
- cidr: 192.168.101.0/24
- dhcp: True
 
 {% for num in range(0, controllers) %}
 tricontroller0{{ num }}:
@@ -27,7 +22,7 @@ tricontroller0{{ num }}:
  disks:
   - {{ controller_memory }}
  nets:
-  - name: tripleoprovisioning
+  - name: tripleoprov
     mac: aa:bb:cc:dd:ee:0{{ num }}
  pool: {{ pool }}
  start: False
@@ -42,7 +37,7 @@ tricompute0{{ num }}:
  disks:
   - {{ compute_memory }}
  nets:
-  - name: tripleoprovisioning
+  - name: tripleoprov
     mac: aa:bb:cc:dd:ef:0{{ num }}
  pool: {{ pool }}
  start: False
