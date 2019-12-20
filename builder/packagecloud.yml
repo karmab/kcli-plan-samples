@@ -12,8 +12,6 @@ packagecloud:
  files:
   - path: /root/.packagecloud
     origin: ~/packagecloud
-  - path: /root/package.spec
-    origin: ~/kcli.spec
   - path: /root/packagecloud.sh
     origin: packagecloud.sh
  cmds:
