@@ -11,10 +11,10 @@ parameters:
  provisioning_cidr: 24
  provisioning_range: 172.22.0.10,172.22.0.100
  provisioning_installer_ip: 172.22.0.253
- cache_url:
  baremetal_net: baremetal
  pullsecret_path: ./openshift_pull.json
  installconfig_path: ./install-config.yaml
+ cache: false
  run: true
  build: false
  prefix: openshift
@@ -75,6 +75,9 @@ parameters:
    mode: 700
  - path: /root/network.sh
    origin: {{ 'network8.sh' if 'rhel-8' in image  else 'network7.sh' }}
+   mode: 700
+ - path: /root/cache.sh
+   origin: cache.sh
    mode: 700
  scripts:
 {% if build %}

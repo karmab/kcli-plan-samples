@@ -66,7 +66,7 @@ The deployed vm comes with a set of helpers for you:
 |provisioning_cidr         |24                                 |
 |provisioning_range        | 172.22.0.10,172.22.0.100          |
 |provisioning_installer_ip |172.22.0.253                       |
-|cache_url                 |                                   |
+|cache                     |False                              |
 |baremetal_net             |baremetal                          |
 |pullsecret_path           | ./openshift_pull.json             |
 |installconfig_path        | ./install-config.yaml             |
@@ -76,6 +76,7 @@ The deployed vm comes with a set of helpers for you:
 |prs                       |[]                                 |
 |go_version                |1.12.12                            |
 |tag                       |4.3                                |
+
 
 ## I want to use virtual masters and physical workers
 

@@ -10,6 +10,10 @@ bash /root/get_clients.sh
 bash /root/get_installer.sh
 {% endif %}
 
+{% if cache %}
+bash /root/cache.sh
+{% endif %}
+
 cd /root
 if [ -z "$COMMIT_ID" ] ; then
 export COMMIT_ID=$(openshift-baremetal-install version | grep '^built from commit' | awk '{print $4}')

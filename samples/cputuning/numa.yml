@@ -1,5 +1,6 @@
 numa:
   numcpus: 8
+  memory: 7168
   nets: 
    - default
   pool: default
