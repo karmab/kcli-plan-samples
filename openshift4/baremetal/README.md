@@ -75,8 +75,8 @@ The deployed vm comes with a set of helpers for you:
 |prefix                    |openshift                          |
 |prs                       |[]                                 |
 |go_version                |1.12.12                            |
-|tag                       |4.3                                |
-
+|tag                       |4.4                                |
+|rhnwait                   |30                                 |
 
 ## I want to use virtual masters and physical workers
 

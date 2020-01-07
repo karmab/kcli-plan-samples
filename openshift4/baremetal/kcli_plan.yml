@@ -20,8 +20,9 @@ parameters:
  prefix: openshift
  prs: []
  go_version: 1.12.12
- tag: 4.3
+ tag: 4.4
  keys: []
+ rhnwait: 30
 
 {{ image }}:
  type: image
@@ -34,6 +35,7 @@ parameters:
  keys: {{ keys }}
 {% if 'rhel-8' in image %}
  rhnregister: true
+ rhnwait: {{ rhnwait }}
 {% endif %}
  memory: 32768  
  privatekey: true
