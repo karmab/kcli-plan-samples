@@ -1,6 +1,7 @@
 echo export KUBECONFIG=/root/ocp/auth/kubeconfig >> /root/.bashrc
 echo export OPENSHIFT_INSTALL_RELEASE_IMAGE_OVERRIDE=registry.svc.ci.openshift.org/ocp/release:{{ tag }} >> /root/.bashrc
 echo export OS_CLOUD=metal3-bootstrap >> /root/.bashrc
+echo export OS_ENDPOINT=http://172.22.0.2:6385 >> /root/.bashrc
 bash /root/network.sh
 export PATH=/root/bin:$PATH
 mkdir /root/bin
@@ -20,6 +21,7 @@ export COMMIT_ID=$(openshift-baremetal-install version | grep '^built from commi
 fi
 export RHCOS_URI=$(curl -s -S https://raw.githubusercontent.com/openshift/installer/$COMMIT_ID/data/data/rhcos.json | jq .images.openstack.path | sed 's/"//g')
 export RHCOS_PATH=$(curl -s -S https://raw.githubusercontent.com/openshift/installer/$COMMIT_ID/data/data/rhcos.json | jq .baseURI | sed 's/"//g')
+export PRIMARY_IP=$(hostname -I | cut -d" " -f1)
 envsubst < metal3-config.yaml.sample > metal3-config.yaml
 
 PROVISIONING_IP=$(grep libvirtURI install-config.yaml | awk -F'/' '{ print $3 }' | awk -F'@' '{ print $2 }')
@@ -28,4 +30,5 @@ echo -e "Host=*\nStrictHostKeyChecking=no\n" > .ssh/config
 {% if run %}
 bash run.sh
 sed -i "s/metal3-bootstrap/metal3/" /root/.bashrc
+sed -i "s/172.22.0.2/172.22.0.3/" /root/.bashrc
 {% endif %}
