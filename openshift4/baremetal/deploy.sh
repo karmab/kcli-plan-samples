@@ -27,8 +27,8 @@ envsubst < metal3-config.yaml.sample > metal3-config.yaml
 PROVISIONING_IP=$(grep libvirtURI install-config.yaml | awk -F'/' '{ print $3 }' | awk -F'@' '{ print $2 }')
 ssh-keyscan -H $PROVISIONING_IP >> ~/.ssh/known_hosts
 echo -e "Host=*\nStrictHostKeyChecking=no\n" > .ssh/config
-{% if run %}
-bash run.sh
+{% if deploy %}
+bash deploy_openshift.sh
 sed -i "s/metal3-bootstrap/metal3/" /root/.bashrc
 sed -i "s/172.22.0.2/172.22.0.3/" /root/.bashrc
 {% endif %}

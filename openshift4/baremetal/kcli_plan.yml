@@ -15,7 +15,7 @@ parameters:
  pullsecret_path: ./openshift_pull.json
  installconfig_path: ./install-config.yaml
  cache: false
- run: true
+ deploy: true
  build: false
  prefix: openshift
  prs: []
@@ -23,6 +23,8 @@ parameters:
  tag: 4.4
  keys: []
  rhnwait: 30
+ deploy_cnf: false
+ cnf_env_path: ./env.sh
 
 {{ image }}:
  type: image
@@ -40,7 +42,7 @@ parameters:
  memory: 32768  
  privatekey: true
  notify: true
-{% if run %}
+{% if deploy %}
  notifycmd: oc --kubeconfig=/root/ocp/auth/kubeconfig get clusterversion
 {% else %}
  notifycmd: ls /root/bin/openshift-baremetal-install
@@ -63,8 +65,8 @@ parameters:
    mode: 700
  - metal3-config.yaml.sample
  - clouds.yaml
- - path: /root/run.sh
-   origin: run.sh
+ - path: /root/deploy_openshift.sh
+   origin: deploy_openshift.sh
    mode: 700
  - path: /root/clean.sh
    origin: clean.sh
@@ -81,8 +83,14 @@ parameters:
  - path: /root/cache.sh
    origin: cache.sh
    mode: 700
+{% if deploy_cnf %}
+ - origin: {{ cnf_path }}
+   path: /root/env.sh
+ - origin: deploy_cnf.sh
+   path: /root/deploy_cnf.sh
+{% endif %}
  scripts:
 {% if build %}
  - build.sh
 {% endif %}
- - baremetal.sh
+ - deploy.sh

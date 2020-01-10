@@ -47,7 +47,7 @@ kcli create plan
 ## Interacting in the vm
 
 The deployed vm comes with a set of helpers for you:
-- scripts run.sh and clean.sh allow you to manually launch an install or clean a failed one
+- scripts deploy.sh and clean.sh allow you to manually launch an install or clean a failed one
 - you can run *openstack baremetal node list* during deployment to check the status of the provisioning of the nodes (Give some time after launching an install before ironic is accessible).
 - script *ipmi.py* can be used to check the power status of the baremetal node or to stop them (using `ipmi.py off`)
 
@@ -70,7 +70,7 @@ The deployed vm comes with a set of helpers for you:
 |baremetal_net             |baremetal                          |
 |pullsecret_path           | ./openshift_pull.json             |
 |installconfig_path        | ./install-config.yaml             |
-|run                       |True                               |
+|deploy                    |True                               |
 |build                     |False                              |
 |prefix                    |openshift                          |
 |prs                       |[]                                 |
