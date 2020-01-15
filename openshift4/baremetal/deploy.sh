@@ -31,4 +31,8 @@ echo -e "Host=*\nStrictHostKeyChecking=no\n" > .ssh/config
 bash deploy_openshift.sh
 sed -i "s/metal3-bootstrap/metal3/" /root/.bashrc
 sed -i "s/172.22.0.2/172.22.0.3/" /root/.bashrc
+{% if cnf %}
+cd cnf
+bash deploy.sh
+{% endif %}
 {% endif %}

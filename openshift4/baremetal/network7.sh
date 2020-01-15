@@ -1,4 +1,4 @@
-yum -y install libvirt-libs libvirt-client ipmitool bridge-utils centos-release-openstack-train mkisofs tmux screen
+yum -y install libvirt-libs libvirt-client ipmitool bridge-utils centos-release-openstack-train mkisofs tmux screen make
 yum -y install python2-openstackclient python2-ironicclient
 echo -e "DEVICE=baremetal\nTYPE=Bridge\nONBOOT=yes\nNM_CONTROLLED=no\nBOOTPROTO=dhcp" > /etc/sysconfig/network-scripts/ifcfg-baremetal
 echo -e "DEVICE=eth0\nTYPE=Ethernet\nONBOOT=yes\nNM_CONTROLLED=no\nBRIDGE=baremetal" > /etc/sysconfig/network-scripts/ifcfg-eth0

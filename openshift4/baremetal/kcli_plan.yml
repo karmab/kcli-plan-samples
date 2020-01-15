@@ -23,8 +23,7 @@ parameters:
  tag: 4.4
  keys: []
  rhnwait: 30
- deploy_cnf: false
- cnf_env_path: ./env.sh
+ cnf: false
 
 {{ image }}:
  type: image
@@ -83,12 +82,10 @@ parameters:
  - path: /root/cache.sh
    origin: cache.sh
    mode: 700
-{% if deploy_cnf %}
- - origin: {{ cnf_path }}
-   path: /root/env.sh
- - origin: deploy_cnf.sh
-   path: /root/deploy_cnf.sh
-{% endif %}
+ - origin: cnf
+   path: /root/cnf
+ - origin: extras
+   path: /root/extras
  scripts:
 {% if build %}
  - build.sh
