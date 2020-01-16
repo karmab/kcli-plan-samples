@@ -19,3 +19,13 @@ sed -i "s@image:.*@image: registry-proxy.engineering.redhat.com/rh-osbs/performa
 cp performance_profile.patch.yaml feature-configs/$FEATURES_DIR/performance
 # launch deployment
 FEATURES_ENVIRONMENT=$FEATURES_DIR make feature-deploy
+
+# deploy ptp
+cd 
+git clone https://github.com/openshift-kni/baremetal-deploy
+cd features/ptp
+cp myvars.example myvars
+bash deploy.sh
+bash test.sh
+# deploy sriov
+cd ~/baremetal-deploy/features/sriov
