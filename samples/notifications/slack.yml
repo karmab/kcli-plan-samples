@@ -1,0 +1,6 @@
+slack:
+ image: CentOS-8-GenericCloud-8.1.1911-20200113.3.x86_64.qcow2
+ notify: true
+ notifymethods:
+ - slack
+ notifyscript: info.sh
