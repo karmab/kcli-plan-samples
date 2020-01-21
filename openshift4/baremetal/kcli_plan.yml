@@ -84,6 +84,8 @@ parameters:
    mode: 700
  - origin: cnf
    path: /root/cnf
+ - origin: manifests
+   path: /root/manifests
  scripts:
 {% if build %}
  - build.sh
