@@ -42,7 +42,7 @@ parameters:
  privatekey: true
  notify: true
 {% if deploy %}
- notifycmd: oc --kubeconfig=/root/ocp/auth/kubeconfig get clusterversion
+ notifyscript: check.sh
 {% else %}
  notifycmd: ls /root/bin/openshift-baremetal-install
 {% endif %}
@@ -84,8 +84,6 @@ parameters:
    mode: 700
  - origin: cnf
    path: /root/cnf
- - origin: extras
-   path: /root/extras
  scripts:
 {% if build %}
  - build.sh

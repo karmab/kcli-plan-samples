@@ -28,4 +28,4 @@ cp myvars.example myvars
 bash deploy.sh
 bash test.sh
 # deploy sriov
-cd ~/baremetal-deploy/features/sriov
+#cd ~/baremetal-deploy/features/sriov

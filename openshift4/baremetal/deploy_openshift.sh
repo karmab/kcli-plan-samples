@@ -8,4 +8,5 @@ cp install-config.yaml ocp
 openshift-baremetal-install --dir ocp --log-level debug create manifests
 cp metal3-config.yaml ocp/openshift/99_metal3-config.yaml
 openshift-baremetal-install --dir ocp --log-level debug create cluster
-openshift-baremetal-install --dir ocp --log-level wait-for install-complete
+openshift-baremetal-install --dir ocp --log-level debug wait-for install-complete
+openshift-baremetal-install --dir ocp --log-level debug wait-for install-complete
