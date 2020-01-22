@@ -1,0 +1,22 @@
+parameters:
+ image: CentOS-7-x86_64-GenericCloud.qcow2
+ disk_size: 20
+ memory: 2048
+ ip: 192.168.122.99
+ netmask: 255.255.255.0
+ gateway: 192.168.122.1
+ dns: 8.8.8.8
+ numcpus: 2
+
+staticipvm:
+ image: {{ image }}
+ memory: {{ memory }}
+ numcpus: {{ numcpus}}
+ disks:
+  - size: {{ disk_size }}
+ nets:
+  - name: default
+    ip: {{ ip }}
+    mask: {{ netmask }}
+    gateway: {{ gateway }}
+    dns: {{ dns }}
