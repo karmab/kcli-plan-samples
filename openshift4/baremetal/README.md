@@ -77,6 +77,8 @@ The deployed vm comes with a set of helpers for you:
 |go_version                |1.12.12                            |
 |tag                       |4.4                                |
 |rhnwait                   |30                                 |
+|cnf                       |False                              |
+|cnf_features              |performance,ptp,sriov,sctp         |
 
 ## I want to use virtual masters and physical workers
 
