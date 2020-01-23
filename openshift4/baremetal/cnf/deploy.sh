@@ -1,4 +1,4 @@
-export KUBECONFIG=$HOME/ocp/auth/kubeconfig
+export KUBECONFIG=${KUBECONFIG:-/root/ocp/auth/kubeconfig}
 FEATURES_DIR="validation"
 export FEATURES="{{ cnf_features | join(' ') }}"
 
@@ -14,20 +14,14 @@ for node in $worker_nodes ; do
   oc label $node ptp/slave=''
 done
 
-if [ "$num_workers" -lt 2 ] ; then
-for node in $worker_nodes ; do 
+# tag all workers but last as worker-rt
+sctp_node=$(echo "$worker_nodes" | tail  -1)
+other_nodes=$(echo "$worker_nodes" | grep -v $sctp_node)
+for node in $other_nodes ; do 
   oc label $node node-role.kubernetes.io/worker-rt=""
 done
-else
-  # tag all workers but last as worker-rt
-  sctp_node=$(echo "$worker_nodes" | tail  -1)
-  other_nodes=$(echo "$worker_nodes" | grep -v $sctpnode)
-  for node in $other_nodes ; do 
-    oc label $node node-role.kubernetes.io/worker-rt=""
-  done
-  # tag last worker as sctp
-  oc label $sctp_node node-role.kubernetes.io/worker-sctp=""
-fi
+# tag last worker as sctp
+oc label $sctp_node node-role.kubernetes.io/worker-sctp=""
 
 # MCP
 # create sctp machineconfigpool
@@ -40,7 +34,7 @@ git clone https://github.com/openshift-kni/cnf-features-deploy
 cd cnf-features-deploy
 # create our own env structure
 cp -r feature-configs/demo feature-configs/$FEATURES_DIR
-sed -i "s@image:.*@image: registry-proxy.engineering.redhat.com/rh-osbs/performance-addon-operators-bundle-registry:v4.4.0-8@" feature-configs/$FEATURES_DIR/performance/operator_catalogsource.patch.yaml
+sed -i "s@image:.*@image: registry-proxy.engineering.redhat.com/rh-osbs/performance-addon-operators-bundle-registry:v4.4.0@" feature-configs/$FEATURES_DIR/performance/operator_catalogsource.patch.yaml
 rm -rf feature-configs/$FEATURES_DIR/performance/performance_profile.patch.yaml
 cp ../performance_profile.patch.yaml feature-configs/$FEATURES_DIR/performance
 FEATURES_ENVIRONMENT=$FEATURES_DIR make feature-deploy
