@@ -1,6 +1,6 @@
-
+export KUBECONFIG=$HOME/ocp/auth/kubeconfig
 FEATURES_DIR="validation"
-export FEATURES="performance ptp sctp sriov"
+export FEATURES="{{ cnf_features | join(' ') }}"
 
 # TAGGING
 MASTER_NODES=$(oc get nodes --selector='node-role.kubernetes.io/master' -o name)

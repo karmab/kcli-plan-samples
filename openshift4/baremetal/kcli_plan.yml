@@ -24,6 +24,11 @@ parameters:
  keys: []
  rhnwait: 30
  cnf: false
+ cnf_features:
+ - performance
+ - ptp
+ - sctp
+ - sriov
 
 {{ image }}:
  type: image
