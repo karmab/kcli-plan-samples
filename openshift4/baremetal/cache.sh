@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 yum -y install httpd
 systemctl enable --now httpd
 cd /var/www/html

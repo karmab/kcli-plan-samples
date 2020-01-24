@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
 python /root/ipmi.py off
 export HOME=/root
 export KUBECONFIG=/root/ocp/auth/kubeconfig

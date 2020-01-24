@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 export KUBECONFIG=/root/ocp/auth/kubeconfig
 echo "Cluster info:"
 oc get clusterversion

@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
 export KUBECONFIG=${KUBECONFIG:-/root/ocp/auth/kubeconfig}
 FEATURES_DIR="validation"
 export FEATURES="{{ cnf_features | join(' ') }}"

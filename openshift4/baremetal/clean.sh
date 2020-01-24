@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 rm -rf /root/ocp
 export LIBVIRT_DEFAULT_URI=$(grep libvirtURI install-config.yaml | sed 's/libvirtURI: //' | xargs)
 cluster=$(yq r install-config.yaml metadata.name)
