@@ -1,0 +1,6 @@
+prefix: myenv
+image: rhel-8.1-x86_64-kvm.qcow2
+cache: true
+installconfig_path: ./install-config.yaml.mine
+keys:
+- ssh-rsa XXX
