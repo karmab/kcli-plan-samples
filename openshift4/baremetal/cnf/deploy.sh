@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+#set -euo pipefail
 
 export KUBECONFIG=${KUBECONFIG:-/root/ocp/auth/kubeconfig}
 FEATURES_DIR="validation"
@@ -38,7 +38,7 @@ git clone https://github.com/openshift-kni/cnf-features-deploy
 cd cnf-features-deploy
 # create our own env structure
 cp -r feature-configs/demo feature-configs/$FEATURES_DIR
-sed -i "s@image:.*@image: registry-proxy.engineering.redhat.com/rh-osbs/performance-addon-operators-bundle-registry:v4.4.0@" feature-configs/$FEATURES_DIR/performance/operator_catalogsource.patch.yaml
+sed -i "s@image:.*@image: registry-proxy.engineering.redhat.com/rh-osbs/performance-addon-operator-bundle-registry:v4.4.0@" feature-configs/$FEATURES_DIR/performance/operator_catalogsource.patch.yaml
 rm -rf feature-configs/$FEATURES_DIR/performance/performance_profile.patch.yaml
 cp ../performance_profile.patch.yaml feature-configs/$FEATURES_DIR/performance
 FEATURES_ENVIRONMENT=$FEATURES_DIR make feature-deploy

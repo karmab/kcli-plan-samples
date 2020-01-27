@@ -24,9 +24,6 @@ export RHCOS_PATH=$(curl -s -S https://raw.githubusercontent.com/openshift/insta
 export PRIMARY_IP=$(hostname -I | cut -d" " -f1)
 envsubst < metal3-config.yaml.sample > metal3-config.yaml
 
-PROVISIONING_IP=$(grep libvirtURI install-config.yaml | awk -F'/' '{ print $3 }' | awk -F'@' '{ print $2 }')
-ssh-keyscan -H $PROVISIONING_IP >> ~/.ssh/known_hosts
-echo -e "Host=*\nStrictHostKeyChecking=no\n" > .ssh/config
 {% if deploy %}
 bash deploy_openshift.sh
 sed -i "s/metal3-bootstrap/metal3/" /root/.bashrc
