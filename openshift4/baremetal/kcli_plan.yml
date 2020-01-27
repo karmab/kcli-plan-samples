@@ -1,6 +1,6 @@
 parameters:
- image: CentOS-7-x86_64-GenericCloud.qcow2
- image_url: http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
+ image: centos7
+ image_url:
  network: default
  pool: default                                                                                                                                 
  numcpus: 16   
@@ -35,9 +35,7 @@ parameters:
 
 {{ image }}:
  type: image
-{% if image_url != None %}
  url: {{ image_url }}
-{% endif %}
 
 {{ prefix }}-installer: 
  image: {{ image }} 

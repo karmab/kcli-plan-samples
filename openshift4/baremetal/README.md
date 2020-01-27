@@ -56,6 +56,7 @@ The deployed vm comes with a set of helpers for you:
 |Parameter                 |Default Value                      |
 |--------------------------|-----------------------------------|
 |image                     |CentOS-7-x86_64-GenericCloud.qcow2 |
+|image_url                 |                                   |
 |network                   |default                            |
 |pool                      |default                            |
 |memory                    | 12288                             |
