@@ -3,8 +3,10 @@ parameters:
  image_url: http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
  network: default
  pool: default                                                                                                                                 
- memory: 12288                                                                                                            
+ numcpus: 16   
+ memory: 32768
  disk_size: 30
+ rhnregister: true
  provisioning_interface: eno1
  provisioning_net: provisioning
  provisioning_ip: 172.22.0.3
@@ -15,6 +17,7 @@ parameters:
  pullsecret_path: ./openshift_pull.json
  installconfig_path: ./install-config.yaml
  cache: false
+ notify: true
  deploy: true
  build: false
  prefix: openshift
@@ -39,15 +42,15 @@ parameters:
 {{ prefix }}-installer: 
  image: {{ image }} 
  pool: {{ pool }} 
- numcpus: 16   
+ numcpus: {{ numcpus }}
  keys: {{ keys }}
 {% if 'rhel-8' in image %}
- rhnregister: true
+ rhnregister: {{ rhnregister }}
  rhnwait: {{ rhnwait }}
 {% endif %}
- memory: 32768  
+ memory: {{ memory }}
  privatekey: true
- notify: true
+ notify: {{ notify }}
 {% if deploy %}
  notifyscript: check.sh
 {% else %}

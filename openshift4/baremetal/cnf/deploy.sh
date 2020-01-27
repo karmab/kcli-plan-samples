@@ -9,7 +9,6 @@ export FEATURES="{{ cnf_features | join(' ') }}"
 # TAGGING
 master_nodes=$(oc get nodes --selector='node-role.kubernetes.io/master' -o name)
 worker_nodes=$(oc get nodes --selector='node-role.kubernetes.io/worker' -o name)
-num_workers=$(echo $worker_nodes | wc -l)
 # tag first master for ptp
 first_master=$(echo $master_nodes | head -1)
 oc label $first_master ptp/grandmaster=''
@@ -18,20 +17,13 @@ for node in $worker_nodes ; do
   oc label $node ptp/slave=''
 done
 
-# tag all workers but last as worker-rt
-sctp_node=$(echo "$worker_nodes" | tail  -1)
-other_nodes=$(echo "$worker_nodes" | grep -v $sctp_node)
-for node in $other_nodes ; do 
-  oc label $node node-role.kubernetes.io/worker-rt=""
+# tag all workers as worker-cnf
+for node in $worker_nodes ; do 
+  oc label $node node-role.kubernetes.io/worker-cnf=""
 done
-# tag last worker as sctp
-oc label $sctp_node node-role.kubernetes.io/worker-sctp=""
 
 # MCP
-# create sctp machineconfigpool
-oc create -f mcp_sctp.yml
-# create worker-rt machineconfigpool
-oc create -f mcp_rt.yml
+oc create -f mcp_cnf.yml
 
 # DEPLOY
 git clone https://github.com/openshift-kni/cnf-features-deploy

@@ -18,6 +18,7 @@ platform:
     ingressVIP: CHANGEME
     dnsVIP: CHANGEME
     provisioningBridge: provisioning
+    provisioningNetworkInterface: eno1
     externalBridge: baremetal
     hosts:
       - name: openshift-master-0
@@ -44,6 +45,3 @@ platform:
           password: CHANGEME
         bootMACAddress: CHANGEME
         hardwareProfile: default
-pullSecret: 'CHANGEME'
-sshKey: |
-  CHANGEME
