@@ -20,6 +20,7 @@ parameters:
  notify: true
  deploy: true
  build: false
+ wait_workers: false
  prefix: openshift
  prs: []
  go_version: 1.12.12

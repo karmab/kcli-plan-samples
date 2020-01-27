@@ -72,6 +72,7 @@ The deployed vm comes with a set of helpers for you:
 |pullsecret_path           | ./openshift_pull.json             |
 |installconfig_path        | ./install-config.yaml             |
 |deploy                    |True                               |
+|wait_workers              |True                               |
 |build                     |False                              |
 |prefix                    |openshift                          |
 |prs                       |[]                                 |
