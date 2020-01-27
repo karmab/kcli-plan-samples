@@ -3,10 +3,10 @@ parameters:
  ldap_password: unix1234
  ldap_domain: karmalabs.com 
  ldap_organization: Karmalabs
- template: rhel-server-7.5-x86_64-kvm.qcow2
+ image: rhel-server-7.5-x86_64-kvm.qcow2
 
 rhvengine:
- template: {{ template }}
+ image: {{ template }}
  rhnregister: true
  memory: 8192
  numcpus: 2
@@ -24,7 +24,7 @@ rhvengine:
   - provision.sh
 
 rhvnode01:
- template: {{ template
+ image: {{ template
  rhnregister: true
  memory: 8192
  numcpus: 2
@@ -40,7 +40,7 @@ rhvnode01:
   - advanced/node.sh
 
 rhvnode02:
- template: {{ template }}
+ image: {{ template }}
  rhnregister: true
  memory: 8192
  numcpus: 2

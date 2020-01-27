@@ -1,10 +1,10 @@
 parameters:
  openshift_version: 3.11
- template: rhel-server-7.5-x86_64-kvm.qcow2
+ image: rhel-server-7.5-x86_64-kvm.qcow2
  memory: 8192
 
 ocp:
- template: {{ template }}
+ image: {{ template }}
  rhnregister: true
  numcpus: 2
  memory: {{ memory }}

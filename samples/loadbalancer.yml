@@ -12,7 +12,7 @@ lb1:
   - vm2
 
 vm1:
- template: CentOS-7-x86_64-GenericCloud.qcow2
+ image: CentOS-7-x86_64-GenericCloud.qcow2
  cmds:
  - setenforce 0
  - yum -y install httpd
@@ -24,7 +24,7 @@ vm1:
  - systemctl restart sshd
 
 vm2:
- template: CentOS-7-x86_64-GenericCloud.qcow2
+ image: CentOS-7-x86_64-GenericCloud.qcow2
  cmds:
  - setenforce 0
  - yum -y install httpd

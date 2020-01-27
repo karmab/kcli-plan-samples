@@ -1,6 +1,6 @@
 parameters:
  admin_password: unix1234
- template: rhel-server-7.5-x86_64-kvm.qcow2
+ image: rhel-server-7.5-x86_64-kvm.qcow2
 
 provisioning1:
  type: network
@@ -38,7 +38,7 @@ external1:
  dhcp: False
 
 under12:
- template: {{ template }}
+ image: {{ template }}
  rhnregister: true
  memory: 12192
  numcpus: 4

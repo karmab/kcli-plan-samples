@@ -6,7 +6,7 @@ parameters:
  katello_version: 3.5
 
 katello:
- template: CentOS-7-x86_64-GenericCloud.qcow2
+ image: CentOS-7-x86_64-GenericCloud.qcow2
  memory: 8192
  numcpus: 2
  reservedns: true

@@ -21,7 +21,7 @@ parameters:
 {% endif %}
 
 nfs:
- template: {{ template }}
+ image: {{ template }}
  numcpus: 2
  memory: {{ memory }}
  domain: {{ domain }}
@@ -32,7 +32,7 @@ nfs:
   - nfs.sh
 
 {{ cluster }}1:
- template: {{ template }}
+ image: {{ template }}
  numcpus: 2
  memory: {{ memory }}
  domain: {{ domain }}
@@ -61,7 +61,7 @@ nfs:
     origin: istio.patch
 
 {{ cluster }}2:
- template: {{ template }}
+ image: {{ template }}
  numcpus: 2
  memory: {{ memory }}
  domain: {{ domain }}

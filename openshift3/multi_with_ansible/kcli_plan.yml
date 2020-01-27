@@ -1,5 +1,5 @@
 parameters:
- template: rhel-server-7.5-x86_64-kvm.qcow2
+ image: rhel-server-7.5-x86_64-kvm.qcow2
  domain: default
  base_disk_size: 60
  gluster_disk_size: 100
@@ -21,7 +21,7 @@ parameters:
 
 {% for master in range(0, masters) %}
 m0{{ master + 1 }}:
- template: {{ template }}
+ image: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ master_memory }}
  rhnregister: true
@@ -44,7 +44,7 @@ m0{{ master + 1 }}:
 
 {% for node in range(0, nodes) %}
 n0{{ node + 1 }}:
- template: {{ template }}
+ image: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ node_memory }}
  rhnregister: true
@@ -62,7 +62,7 @@ n0{{ node + 1 }}:
 
 {% for infra in range(0, infras) %}
 i0{{ infra + 1 }}:
- template: {{ template }}
+ image: {{ template }}
  numcpus: {{ numcpus }}
  memory: {{ infra_memory }}
  rhnregister: true

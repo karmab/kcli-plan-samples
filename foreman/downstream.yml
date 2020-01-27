@@ -2,11 +2,11 @@ parameters:
  password: unix1234
  organization: Karmalabs
  location: Madrid
- template: rhel-server-7.5-x86_64-kvm.qcow2
+ image: rhel-server-7.5-x86_64-kvm.qcow2
  version: 6.3
 
 satellite:
- template: {{ template }}
+ image: {{ template }}
  rhnregister: true
  memory: 8192
  numcpus: 2

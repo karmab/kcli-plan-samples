@@ -20,4 +20,4 @@ windows:
   disks:
    - size: 40
      interface: sata
-     template: SummitVM.qcow2
+     image: SummitVM.qcow2

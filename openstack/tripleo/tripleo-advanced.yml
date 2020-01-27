@@ -1,5 +1,5 @@
 parameters:
- template: rhel-server-7.5-x86_64-kvm.qcow2
+ image: rhel-server-7.5-x86_64-kvm.qcow2
  user: testk
  password: testk
  project: testk
@@ -17,7 +17,7 @@ tripleopublic:
  dhcp: False
 
 undercloud:
- template: {{ template }}
+ image: {{ template }}
  rhnregister: true
  memory: 8192
  numcpus: 2

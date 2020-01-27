@@ -1,8 +1,8 @@
 parameters:
- template: rhcos-410.8.20190402.0-qemu.qcow2
+ image: rhcos-410.8.20190402.0-qemu.qcow2
 
 testbridgecos:
- template: {{ template }}
+ image: {{ template }}
  reserveip: true
  disks:
  - 20

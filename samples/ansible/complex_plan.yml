@@ -37,7 +37,7 @@ kubedemo:
  nat: true
 
 master:
- template: CentOS-7-x86_64-GenericCloud.qcow2
+ image: CentOS-7-x86_64-GenericCloud.qcow2
  numcpus: 2
  memory: 3096
  nets:
@@ -56,7 +56,7 @@ master:
 
 
 node:
- template: CentOS-7-x86_64-GenericCloud.qcow2
+ image: CentOS-7-x86_64-GenericCloud.qcow2
  numcpus: 2
  memory: 2048
  nets:

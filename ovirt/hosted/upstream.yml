@@ -2,7 +2,7 @@ parameters:
  password: unix1234
 
 rhvnfs:
- template: CentOS-7-x86_64-GenericCloud.qcow2
+ image: CentOS-7-x86_64-GenericCloud.qcow2
  memory: 2048
  numcpus: 2
  nets:
@@ -16,7 +16,7 @@ rhvnfs:
   - nfs.sh
 
 rhvnode01:
- template: CentOS-7-x86_64-GenericCloud.qcow2
+ image: CentOS-7-x86_64-GenericCloud.qcow2
  memory: 8192
  cpumodel: host-model
  cpuflags:
@@ -44,7 +44,7 @@ rhvnode01:
   - bootstrap.sh
 
 rhvnode02:
- template: CentOS-7-x86_64-GenericCloud.qcow2
+ image: CentOS-7-x86_64-GenericCloud.qcow2
  memory: 8192
  cpumodel: host-model
  cpuflags:

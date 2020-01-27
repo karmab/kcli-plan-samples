@@ -4,7 +4,7 @@ vm1:
   nets: 
    - default
   pool: default
-  template: CentOS-7-x86_64-GenericCloud.qcow2
+  image: CentOS-7-x86_64-GenericCloud.qcow2
 vm2:
   memory: 512
   numcpus: 1
@@ -12,4 +12,4 @@ vm2:
   nets: 
    - default
   pool: default
-  template: CentOS-7-x86_64-GenericCloud.qcow2
+  image: CentOS-7-x86_64-GenericCloud.qcow2

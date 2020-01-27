@@ -6,7 +6,7 @@ coreos_production_qemu_image.img:
  url: https://stable.release.core-os.net/amd64-usr/current/coreos_production_qemu_image.img.bz2
 
 koreos:
- template: coreos_production_qemu_image.img
+ image: coreos_production_qemu_image.img
  memory: 2048
  numcpus: 1
  disks:

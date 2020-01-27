@@ -1,11 +1,11 @@
 parameters:
- template: CentOS-7-x86_64-GenericCloud.qcow2
+ image: CentOS-7-x86_64-GenericCloud.qcow2
  memory: 8144
  user_password: user
  admin_password: admin
 
 gluster01:
- template: {{ template }}
+ image: {{ template }}
  memory: {{ memory }}
  numcpus: 4
  disks: 
@@ -29,7 +29,7 @@ gluster01:
   - heketi.sh
 
 gluster02:
- template: {{ template }}
+ image: {{ template }}
  memory: {{ memory }}
  numcpus: 4
  disks:
@@ -45,7 +45,7 @@ gluster02:
   - requisites.sh
 
 gluster03:
- template: {{ template }}
+ image: {{ template }}
  memory: {{ memory }}
  numcpus: 4
  disks:

@@ -9,7 +9,7 @@ parameters:
  numcpus: 2
 
 ovirt:
- template: CentOS-7-x86_64-GenericCloud.qcow2
+ image: CentOS-7-x86_64-GenericCloud.qcow2
  memory: {{ memory }}
  numcpus: {{ numcpus }}
  reservedns: true

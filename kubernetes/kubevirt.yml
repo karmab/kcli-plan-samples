@@ -6,7 +6,7 @@ parameters:
  install_kcli: false
 
 {{ prefix }}master:
- template: {{ template }}
+ image: {{ template }}
  numcpus: 2
  memory: {{ master_memory }}
  reservedns: true
@@ -66,7 +66,7 @@ parameters:
 {% if nodes > 0 %}
 {% for number in range(0, nodes) %}
 {{ prefix }}node0{{ number + 1 }}:
- template: {{ template }}
+ image: {{ template }}
  numcpus: 2
  memory: {{ node_memory }}
  reservedns: true

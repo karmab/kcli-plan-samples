@@ -25,7 +25,7 @@ parameters:
 {% endif %}
 
 nfs:
- template: {{ template }}
+ image: {{ template }}
  numcpus: 2
  memory: {{ memory }}
  domain: {{ domain }}

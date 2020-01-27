@@ -1,11 +1,11 @@
 parameters:
- template: Fedora-Cloud-Base-28-1.1.x86_64.qcow2
+ image: Fedora-Cloud-Base-28-1.1.x86_64.qcow2
  sharedfolders:
   - /tmp/x
   - /tmp/y
 
 sharedfoldersvm:
- template: {{ template }}
+ image: {{ template }}
  memory: 1024
  numcpus: 2
  disks:

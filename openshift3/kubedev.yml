@@ -1,5 +1,5 @@
 parameters:
-  template: Fedora-Cloud-Base-28-1.1.x86_64.qcow2
+  image: Fedora-Cloud-Base-28-1.1.x86_64.qcow2
   memory: 8192
   disk_size: 50
   github_user: karmab
@@ -7,7 +7,7 @@ parameters:
   branch: master
 
 kubedev:
- template: {{ template }}
+ image: {{ template }}
  numcpus: 4
  memory: {{ memory }}
  nets:

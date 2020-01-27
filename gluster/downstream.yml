@@ -2,11 +2,11 @@ parameters:
  user: testk
  password: testk
  volume: testkvol
- template: rhel-server-7.5-x86_64-kvm.qcow2
+ image: rhel-server-7.5-x86_64-kvm.qcow2
  memory: 8144
 
 gluster01:
- template: {{ template }}
+ image: {{ template }}
  memory: {{ memory }}
  rhnregister: true
  numcpus: 4
@@ -24,7 +24,7 @@ gluster01:
   - provision.sh
 
 gluster02:
- template: {{ template }}
+ image: {{ template }}
  rhnregister: true
  memory: {{ memory }}
  numcpus: 4

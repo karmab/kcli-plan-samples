@@ -30,7 +30,7 @@ parameters:
  external_floating: 192.168.122.202
 
 {{ version }}:
- template: CentOS-7-x86_64-GenericCloud.qcow2
+ image: CentOS-7-x86_64-GenericCloud.qcow2
  memory: {{ memory }}
  numcpus: {{ numcpus }}
  disks: 
