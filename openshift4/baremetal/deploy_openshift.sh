@@ -10,10 +10,12 @@ export KUBECONFIG=/root/ocp/auth/kubeconfig
 export OS_CLOUD=metal3-bootstrap
 export OPENSHIFT_INSTALL_RELEASE_IMAGE_OVERRIDE=registry.svc.ci.openshift.org/ocp/release:{{ tag }}
 mkdir -p ocp/openshift
+{% if config_host is defined %}
 if [ "$(grep -q libvirtURI /root/install-config.yaml)" != "0" ] ; then
   SPACES=$(grep apiVIP /root/install-config.yaml | sed 's/apiVIP.*//' | sed 's/ /\\ /'g)
   sed -i "/hosts/i${SPACES}libvirtURI: qemu+ssh://root@{{ config_host }}/system" /root/install-config.yaml
 fi
+{% endif %}
 PROVISIONING_IP=$(grep libvirtURI install-config.yaml | awk -F'/' '{ print $3 }' | awk -F'@' '{ print $2 }')
 ssh-keyscan -H $PROVISIONING_IP >> ~/.ssh/known_hosts
 echo -e "Host=*\nStrictHostKeyChecking=no\n" > .ssh/config
@@ -29,7 +31,7 @@ fi
 cp install-config.yaml ocp
 openshift-baremetal-install --dir ocp --log-level debug create manifests
 cp metal3-config.yaml ocp/openshift/99_metal3-config.yaml
-cp manifests/*.yaml ocp/openshift/
+ls manifests/*.yaml >/dev/null 2>&1 && cp manifests/*.yaml ocp/openshift/
 openshift-baremetal-install --dir ocp --log-level debug create cluster || true
 openshift-baremetal-install --dir ocp --log-level debug wait-for install-complete || openshift-baremetal-install --dir ocp --log-level debug wait-for install-complete
 {% if wait_workers %}
