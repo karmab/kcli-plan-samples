@@ -1,4 +1,5 @@
 parameters:
+ prefix: openshift
  memory: 16384
  numcpus: 8
  disk_size: 30
@@ -9,16 +10,17 @@ parameters:
  masters: 3
 
 {% for num in range(0, masters) %}
-openshift-master-{{ num }}:
+{{ prefix }}-master-{{ num }}:
  numcpus: {{ numcpus }}
  start: false
  memory: {{ memory }}
- reserveip: True
  nets:
   - name: {{ provisioning_net }}
     mac: aa:bb:cc:dd:ee:0{{ num +1 }}
   - name: {{ external_net }}
+{% if external_macs|length == masters %}
     mac: {{ external_macs[num] }}
+{% endif %}
  disks: 
 {%- for size in [disk_size] + extra_disks %}
   - size: {{ size }}
