@@ -12,8 +12,13 @@ with open(installfile) as f:
     for host in hosts:
         name = host['name']
         address = host['bmc']['address'].replace('ipmi://', '')
+        if ':' in address:
+            address, port = address.split(':')
+            port = '-p %s' % port
+        else:
+            port = ''
         username = host['bmc']['username']
         password = host['bmc']['password']
-        cmd = "ipmitool -H %s -U %s -P %s -I lanplus chassis power %s" % (address, username, password, action)
+        cmd = "ipmitool -H %s -U %s -P %s -I lanplus %s chassis power %s" % (address, username, password, port, action)
         print(cmd)
         os.system(cmd)
