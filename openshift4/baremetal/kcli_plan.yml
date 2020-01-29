@@ -1,5 +1,5 @@
 parameters:
- image: centos7
+ image: CentOS-8-GenericCloud-8.1.1911-20200113.3.x86_64.qcow2
  image_url:
  network: default
  pool: default                                                                                                                                 
@@ -87,7 +87,7 @@ parameters:
    origin: get_installer.sh
    mode: 700
  - path: /root/network.sh
-   origin: {{ 'network8.sh' if 'rhel-8' in image or 'Centos-8' in image else 'network7.sh' }}
+   origin: network8.sh
    mode: 700
  - path: /root/cache.sh
    origin: cache.sh
