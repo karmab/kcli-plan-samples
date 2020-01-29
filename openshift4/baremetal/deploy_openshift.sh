@@ -28,6 +28,9 @@ if [ "$(grep -q sshKey /root/install-config.yaml)" != "0" ] ; then
     echo -e "sshKey: |\n  $SSHKEY" >> /root/install-config.yaml
 fi
 
+{% if virtual %}
+bash /root/virtual.sh
+{% endif %}
 cp install-config.yaml ocp
 openshift-baremetal-install --dir ocp --log-level debug create manifests
 cp metal3-config.yaml ocp/openshift/99_metal3-config.yaml

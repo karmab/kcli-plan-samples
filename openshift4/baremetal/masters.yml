@@ -16,7 +16,7 @@ parameters:
  memory: {{ memory }}
  nets:
   - name: {{ provisioning_net }}
-    mac: aa:bb:cc:dd:ee:0{{ num +1 }}
+    mac: aa:bb:cc:dd:ee:0{{ num + 2 }}
   - name: {{ external_net }}
 {% if external_macs|length == masters %}
     mac: {{ external_macs[num] }}

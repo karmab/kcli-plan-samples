@@ -28,6 +28,7 @@ parameters:
  keys: []
  rhnwait: 30
  cnf: false
+ virtual: false
  cnf_features:
  - performance
  - ptp
@@ -91,6 +92,14 @@ parameters:
  - path: /root/cache.sh
    origin: cache.sh
    mode: 700
+{% if virtual  %}
+ - path: /root/virtual.sh
+   origin: virtual.sh
+   mode: 700
+ - path: /root/vbmc.py
+   origin: vbmc.py
+   mode: 700
+{% endif %}
  - origin: cnf
    path: /root/cnf
  - origin: manifests
