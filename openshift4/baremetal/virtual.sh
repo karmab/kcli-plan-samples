@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+# set -euo pipefail
 
 yum -y install pkgconf-pkg-config libvirt-devel gcc python3-libvirt
 pip3 install virtualbmc

@@ -1,0 +1,46 @@
+apiVersion: v1
+baseDomain: karmalabs.com
+metadata:
+  name: ostest
+networking:
+  machineCIDR: 192.168.122.0/24
+compute:
+- name: worker
+  replicas: 0
+controlPlane:
+  name: master
+  replicas: 3
+  platform:
+    baremetal: {}
+platform:
+  baremetal:
+    apiVIP: 192.168.122.254
+    ingressVIP: 192.168.122.253
+    dnsVIP: 192.168.122.252
+    provisioningBridge: provisioning
+    externalBridge: baremetal
+    hosts:
+      - name: openshift-master-0
+        role: master
+        bmc:
+          address: ipmi://DONTCHANGEME:6230
+          username: admin
+          password: password
+        bootMACAddress: aa:bb:cc:dd:ee:02
+        hardwareProfile: default
+      - name: openshift-master-1
+        role: master
+        bmc:
+          address: ipmi://DONTCHANGEME:6231
+          username: admin
+          password: password
+        bootMACAddress: aa:bb:cc:dd:ee:03
+        hardwareProfile: default
+      - name: openshift-master-2
+        role: master
+        bmc:
+          address: ipmi://DONTCHANGEME:6232
+          username: admin
+          password: password
+        bootMACAddress: aa:bb:cc:dd:ee:04
+        hardwareProfile: default

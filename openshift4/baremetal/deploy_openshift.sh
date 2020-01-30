@@ -2,9 +2,6 @@
 
 set -euo pipefail
 
-PYTHON="python"
-which python3 >/dev/null 2>&1 && PYTHON="python3"
-$PYTHON /root/ipmi.py off
 export HOME=/root
 export KUBECONFIG=/root/ocp/auth/kubeconfig
 export OS_CLOUD=metal3-bootstrap
@@ -31,6 +28,9 @@ fi
 {% if virtual %}
 bash /root/virtual.sh
 {% endif %}
+PYTHON="python"
+which python3 >/dev/null 2>&1 && PYTHON="python3"
+$PYTHON /root/ipmi.py off
 cp install-config.yaml ocp
 openshift-baremetal-install --dir ocp --log-level debug create manifests
 cp metal3-config.yaml ocp/openshift/99_metal3-config.yaml
