@@ -45,7 +45,7 @@ parameters:
  pool: {{ pool }} 
  numcpus: {{ numcpus }}
  keys: {{ keys }}
-{% if 'rhel-8' in image %}
+{% if 'rhel' in image %}
  rhnregister: {{ rhnregister }}
  rhnwait: {{ rhnwait }}
 {% endif %}
