@@ -1,5 +1,5 @@
 parameters:
- image: CentOS-8-GenericCloud-8.1.1911-20200113.3.x86_64.qcow2
+ image: centos8
  image_url:
  network: default
  pool: default                                                                                                                                 
@@ -14,8 +14,9 @@ parameters:
  provisioning_range: 172.22.0.10,172.22.0.100
  provisioning_installer_ip: 172.22.0.253
  baremetal_net: baremetal
- pullsecret_path: ./openshift_pull.json
- installconfig_path: ./install-config.yaml
+ pullsecret_path: openshift_pull.json
+ installconfig_path: install-config.yaml
+ notifyscript: check.sh
  cache: false
  notify: true
  deploy: true
@@ -52,7 +53,7 @@ parameters:
  privatekey: true
  notify: {{ notify }}
 {% if deploy %}
- notifyscript: check.sh
+ notifyscript: {{ notifyscript }}
 {% else %}
  notifycmd: ls /root/bin/openshift-baremetal-install
 {% endif %}

@@ -55,7 +55,7 @@ The deployed vm comes with a set of helpers for you:
 
 |Parameter                 |Default Value                      |
 |--------------------------|-----------------------------------|
-|image                     |CentOS-7-x86_64-GenericCloud.qcow2 |
+|image                     |centos8                            |
 |image_url                 |                                   |
 |network                   |default                            |
 |pool                      |default                            |
@@ -80,38 +80,18 @@ The deployed vm comes with a set of helpers for you:
 |tag                       |4.4                                |
 |rhnwait                   |30                                 |
 |cnf                       |False                              |
-|cnf_features              |performance,ptp,sriov,sctp         |
+|cnf_features              |performance,ptp,sriov,dpdk, sctp   |
+|virtual                   |false                              |
 
 ## I want to use virtual masters and physical workers
 
-Although this is not the primary scope of this repository, you can
+Although this is not the primary scope of this repository, you can.
 
-- make sure that you have proper dns set for the virtual masters. The masters need to be named xx-master-$num for openshift install to succeed
-- make sure that you have dhcp entries associated to the virtual masters macs . Collect those macs
+- make sure you have proper dns set for the virtual masters. The masters need to be named xx-master-$num for openshift install to succeed
+- make sure you have dhcp entries associated to the virtual masters macs. Collect those macs.
 - create 3 empty master vms using the `masters.yml` plan and by passing as a parameter the list of external macs
  
  `kcli create plan -f masters.yml -P external_macs=[XX,YY,ZZ]`
-- set vbmcd dameon and client on the provisioning node
-- create vbmc ports for them with the following commands to run on the provisioning node
-```
-MASTERS=3
-for num in $(seq 0 $(( MASTERS -1 )))` ; do
-vbmc add openshift-master-$NUM --port 623$NUM --username admin --password password --libvirt-uri qemu:///system
-vbmc start openshift-master-$NUM
-done
-```
 
-- add the masters information in your install-config.yaml with lines similar to this one and by changing NUM depending on the master and PROVISIONING_IP to the ip of your provisioning node
-
-```
-- name: openshift-master-$NUM
-  role: master
-  bmc:
-    address: ipmi://$PROVISIONING_IP:623$NUM
-    username: admin
-    password: password
-  bootMACAddress: aa:bb:cc:dd:ee:0$NUM
-  hardwareProfile: libvirt
-```
-
-- launch the install as usual
+- copy the install-config.yaml.virtual_masters to install-config.yaml and edit it to add correct apiVip, dnsVip and ingressVip. Let the DONTCHANGEME key as it is for your virtual masters, as virtual bmc will be deployed on the installer vm and those ipmi ports added.
+- launch the install as usual but setting virtual to True in your parameters file
