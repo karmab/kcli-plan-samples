@@ -68,6 +68,7 @@ The deployed vm comes with a set of helpers for you:
 |provisioning_range        | 172.22.0.10,172.22.0.100          |
 |provisioning_installer_ip |172.22.0.253                       |
 |cache                     |False                              |
+|disconnected              |False                              |
 |baremetal_net             |baremetal                          |
 |pullsecret_path           | ./openshift_pull.json             |
 |installconfig_path        | ./install-config.yaml             |

@@ -22,6 +22,7 @@ parameters:
  deploy: true
  build: false
  wait_workers: false
+ disconnected: false
  prefix: openshift
  prs: []
  go_version: 1.12.12
@@ -92,6 +93,9 @@ parameters:
    mode: 700
  - path: /root/cache.sh
    origin: cache.sh
+   mode: 700
+ - path: /root/disconnected.sh
+   origin: disconnected.sh
    mode: 700
 {% if virtual  %}
  - path: /root/virtual.sh

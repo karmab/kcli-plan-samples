@@ -15,6 +15,10 @@ bash /root/get_installer.sh
 bash /root/cache.sh
 {% endif %}
 
+{% if disconnected %}
+bash /root/disconnected.sh
+{% endif %}
+
 cd /root
 if [ -z "$COMMIT_ID" ] ; then
 export COMMIT_ID=$(openshift-baremetal-install version | grep '^built from commit' | awk '{print $4}')
