@@ -14,5 +14,6 @@ export RHCOS_OPENSTACK_SHA_COMPRESSED=$(curl -s -S https://raw.githubusercontent
 curl -L ${RHCOS_PATH}${RHCOS_QEMU_URI} > $RHCOS_QEMU_URI
 curl -L ${RHCOS_PATH}${RHCOS_OPENSTACK_URI} > $RHCOS_OPENSTACK_URI
 SPACES=$(grep apiVIP /root/install-config.yaml | sed 's/apiVIP.*//' | sed 's/ /\\ /'g)
-sed -i "/apiVIP/i${SPACES}bootstrapOSImage: http://{{ provisioning_installer_ip }}/$RHCOS_QEMU_URI?sha256=$RHCOS_QEMU_SHA_UNCOMPRESSED" /root/install-config.yaml
-sed -i "/apiVIP/i${SPACES}clusterOSImage: http://{{ provisioning_installer_ip }}/$RHCOS_OPENSTACK_URI?sha256=$RHCOS_OPENSTACK_SHA_COMPRESSED" /root/install-config.yaml
+export PROVISIONING_IP=$(ip -4 -o addr show provisioning | awk '{print $4}' | cut -d'/' -f1)
+sed -i "/apiVIP/i${SPACES}bootstrapOSImage: http://${PROVISIONING_IP}/${RHCOS_QEMU_URI}?sha256=${RHCOS_QEMU_SHA_UNCOMPRESSED}" /root/install-config.yaml
+sed -i "/apiVIP/i${SPACES}clusterOSImage: http://${PROVISIONING_IP}/${RHCOS_OPENSTACK_URI}?sha256=${RHCOS_OPENSTACK_SHA_COMPRESSED}" /root/install-config.yaml
