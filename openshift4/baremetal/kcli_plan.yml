@@ -26,7 +26,7 @@ parameters:
  prefix: openshift
  prs: []
  go_version: 1.12.12
- tag: 4.4
+ openshift_image: registry.svc.ci.openshift.org/ocp/release:4.4
  keys: []
  rhnwait: 30
  cnf: false

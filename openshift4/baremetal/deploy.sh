@@ -1,5 +1,5 @@
 echo export KUBECONFIG=/root/ocp/auth/kubeconfig >> /root/.bashrc
-echo export OPENSHIFT_INSTALL_RELEASE_IMAGE_OVERRIDE=registry.svc.ci.openshift.org/ocp/release:{{ tag }} >> /root/.bashrc
+echo export OPENSHIFT_INSTALL_RELEASE_IMAGE_OVERRIDE={{ openshift_image }} >> /root/.bashrc
 echo export OS_CLOUD=metal3-bootstrap >> /root/.bashrc
 echo export OS_ENDPOINT=http://172.22.0.2:6385 >> /root/.bashrc
 bash /root/network.sh

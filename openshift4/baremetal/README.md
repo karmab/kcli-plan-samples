@@ -53,36 +53,36 @@ The deployed vm comes with a set of helpers for you:
 
 ## Parameters
 
-|Parameter                 |Default Value                      |
-|--------------------------|-----------------------------------|
-|image                     |centos8                            |
-|image_url                 |                                   |
-|network                   |default                            |
-|pool                      |default                            |
-|memory                    | 12288                             |
-|disk_size                 | 20                                |
-|provisioning_interface    |eno1                               |
-|provisioning_net          |provisioning                       |
-|provisioning_ip           |172.22.0.3                         |
-|provisioning_cidr         |24                                 |
-|provisioning_range        | 172.22.0.10,172.22.0.100          |
-|provisioning_installer_ip |172.22.0.253                       |
-|cache                     |False                              |
-|disconnected              |False                              |
-|baremetal_net             |baremetal                          |
-|pullsecret_path           | ./openshift_pull.json             |
-|installconfig_path        | ./install-config.yaml             |
-|deploy                    |True                               |
-|wait_workers              |True                               |
-|build                     |False                              |
-|prefix                    |openshift                          |
-|prs                       |[]                                 |
-|go_version                |1.12.12                            |
-|tag                       |4.4                                |
-|rhnwait                   |30                                 |
-|cnf                       |False                              |
-|cnf_features              |performance,ptp,sriov,dpdk, sctp   |
-|virtual                   |false                              |
+|Parameter                 |Default Value                                 |
+|--------------------------|----------------------------------------------|
+|image                     |centos8                                       |
+|image_url                 |                                              |
+|network                   |default                                       |
+|pool                      |default                                       |
+|memory                    |12288                                         |
+|disk_size                 |20                                            |
+|provisioning_interface    |eno1                                          |
+|provisioning_net          |provisioning                                  |
+|provisioning_ip           |172.22.0.3                                    |
+|provisioning_cidr         |24                                            |
+|provisioning_range        |172.22.0.10,172.22.0.100                      |
+|provisioning_installer_ip |172.22.0.253                                  |
+|cache                     |False                                         |
+|disconnected              |False                                         |
+|baremetal_net             |baremetal                                     |
+|pullsecret_path           |openshift_pull.json                           |
+|installconfig_path        |install-config.yaml                           |
+|deploy                    |True                                          |
+|wait_workers              |True                                          |
+|build                     |False                                         |
+|prefix                    |openshift                                     |
+|prs                       |[]                                            |
+|go_version                |1.12.12                                       |
+|openshift_image           |registry.svc.ci.openshift.org/ocp/release:4.4 |
+|rhnwait                   |30                                            |
+|cnf                       |False                                         |
+|cnf_features              |performance,ptp,sriov,dpdk, sctp              |
+|virtual                   |false                                         |
 
 ## I want to use virtual masters and physical workers
 

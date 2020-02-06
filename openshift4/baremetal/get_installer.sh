@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 export PULL_SECRET="/root/openshift_pull.json"
-export OPENSHIFT_RELEASE_IMAGE=registry.svc.ci.openshift.org/ocp/release:{{ tag }}
+export OPENSHIFT_RELEASE_IMAGE={{ openshift_image }}
 oc adm release extract --registry-config $PULL_SECRET --command=oc --to . $OPENSHIFT_RELEASE_IMAGE
 oc adm release extract --registry-config $PULL_SECRET --command=openshift-baremetal-install --to . $OPENSHIFT_RELEASE_IMAGE
