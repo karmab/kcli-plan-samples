@@ -11,7 +11,7 @@ with open(installfile) as f:
     hosts = data['platform']['baremetal']['hosts']
     for host in hosts:
         name = host['name']
-        address = host['bmc']['address'].replace('ipmi://', '')
+        address = host['bmc']['address'].replace('ipmi://', '').replace('[', '').replace(']', '')
         if ':' in address:
             address, port = address.split(':')
             port = '-p %s' % port
