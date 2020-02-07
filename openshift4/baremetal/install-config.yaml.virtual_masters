@@ -18,6 +18,7 @@ platform:
     ingressVIP: 192.168.122.253
     dnsVIP: 192.168.122.252
     provisioningBridge: provisioning
+    provisioningNetworkInterface: eth0
     externalBridge: baremetal
     hosts:
       - name: openshift-master-0
