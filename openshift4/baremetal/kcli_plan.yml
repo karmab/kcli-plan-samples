@@ -66,10 +66,8 @@ parameters:
  disks:                                                                                                                                           
  - {{ disk_size }}                                                                                                                                          
  files:                                                                                                                                             
-{% if not build %}
  - origin: {{ pullsecret_path }}                                                                                                                     
    path: /root/openshift_pull.json                                                                                                                    
-{% endif %}
  - path: /root/install-config.yaml                                                                                                                           
    origin: {{ installconfig_path }}
  - path: /root/ipmi.py
