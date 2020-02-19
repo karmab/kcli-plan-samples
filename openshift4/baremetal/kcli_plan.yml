@@ -17,15 +17,16 @@ parameters:
  pullsecret_path: openshift_pull.json
  installconfig_path: install-config.yaml
  notifyscript: check.sh
- cache: false
+ cache: true
  notify: true
  deploy: true
  build: false
  wait_workers: false
  disconnected: false
+ imageregistry: false
  prefix: openshift
  prs: []
- go_version: 1.12.12
+ go_version: 1.13.8
  openshift_image: registry.svc.ci.openshift.org/ocp/release:4.4
  keys: []
  rhnwait: 30
@@ -96,6 +97,12 @@ parameters:
    mode: 700
  - path: /root/disconnected.sh
    origin: disconnected.sh
+   mode: 700
+ - path: /root/nfs.sh
+   origin: nfs.sh
+   mode: 700
+ - path: /root/nfs.yml
+   origin: nfs.yml
    mode: 700
 {% if virtual  %}
  - path: /root/virtual.sh
