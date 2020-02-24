@@ -6,6 +6,7 @@ export HOME=/root
 export KUBECONFIG=/root/ocp/auth/kubeconfig
 export OS_CLOUD=metal3-bootstrap
 export OPENSHIFT_INSTALL_RELEASE_IMAGE_OVERRIDE={{ openshift_image}}
+bash /root/clean.sh
 mkdir -p ocp/openshift
 {% if config_host is defined %}
 TESTLIBVIRT=$(grep libvirtURI /root/install-config.yaml)
