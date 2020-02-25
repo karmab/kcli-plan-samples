@@ -7,6 +7,17 @@ chcon -t svirt_sandbox_file_t /pv001
 chmod 777 /pv001
 exportfs -r
 systemctl enable --now nfs-server
-envsubst < /root/nfs.yml  | oc create -f -
-#oc patch configs.imageregistry.operator.openshift.io cluster --type merge -p '{"spec":{"storage":{"pvc":{}}}}'
+echo """apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv001
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+  - ReadWriteMany
+  nfs:
+    path: /pv001
+    server: ${PRIMARY_IP}
+  persistentVolumeReclaimPolicy: Recycle""" | oc create -f -
 oc patch configs.imageregistry.operator.openshift.io cluster --type merge -p '{"spec":{"managementState":"Managed","storage":{"pvc":{}}}}'

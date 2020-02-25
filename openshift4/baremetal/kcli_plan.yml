@@ -99,9 +99,6 @@ parameters:
  - path: /root/nfs.sh
    origin: nfs.sh
    mode: 700
- - path: /root/nfs.yml
-   origin: nfs.yml
-   mode: 700
 {% if virtual  %}
  - path: /root/virtual.sh
    origin: virtual.sh
