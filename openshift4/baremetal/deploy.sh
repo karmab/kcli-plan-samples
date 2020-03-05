@@ -2,6 +2,8 @@ echo export KUBECONFIG=/root/ocp/auth/kubeconfig >> /root/.bashrc
 echo export OPENSHIFT_INSTALL_RELEASE_IMAGE_OVERRIDE={{ openshift_image }} >> /root/.bashrc
 echo export OS_CLOUD=metal3-bootstrap >> /root/.bashrc
 echo export OS_ENDPOINT=http://172.22.0.2:6385 >> /root/.bashrc
+echo export PATH=/usr/local/bin:/root/bin:\$PATH >> /root/.bashrc
+echo export LIBVIRT_DEFAULT_URI=qemu+ssh://root@{{ config_host }}/system >> /root/.bashrc
 bash /root/network.sh
 export PATH=/root/bin:$PATH
 mkdir /root/bin
@@ -27,6 +29,11 @@ export RHCOS_URI=$(curl -s -S https://raw.githubusercontent.com/openshift/instal
 export RHCOS_PATH=$(curl -s -S https://raw.githubusercontent.com/openshift/installer/$COMMIT_ID/data/data/rhcos.json | jq .baseURI | sed 's/"//g')
 export PRIMARY_IP=$(hostname -I | cut -d" " -f1)
 envsubst < metal3-config.yaml.sample > metal3-config.yaml
+
+bash /root/patch_installconfig.sh
+{% if virtual %}
+bash /root/virtual.sh
+{% endif %}
 
 {% if deploy %}
 bash deploy_openshift.sh

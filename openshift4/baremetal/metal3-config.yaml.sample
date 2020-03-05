@@ -11,6 +11,6 @@ data:
   http_port: "6180"	
   ironic_endpoint: http://{{ provisioning_ip }}:6385/v1/	
   ironic_inspector_endpoint: http://{{ provisioning_ip }}:5050/v1/	
-  provisioning_interface: {{ provisioning_interface }}	
+  provisioning_interface: {{ 'ens3' if virtual else provisioning_interface }}	
   provisioning_ip: {{ provisioning_ip }}/{{ provisioning_cidr.split('/')[1] }}	
   rhcos_image_url: {{ "http://${PRIMARY_IP}/" if cache else "${RHCOS_PATH}" }}${RHCOS_URI}

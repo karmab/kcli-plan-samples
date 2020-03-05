@@ -2,7 +2,7 @@
 
 # set -euo pipefail
 
-yum -y install pkgconf-pkg-config libvirt-devel gcc python3-libvirt
+yum -y install pkgconf-pkg-config libvirt-devel gcc python3-libvirt python3
 pip3 install virtualbmc
 export PATH=/usr/local/bin:$PATH
 vbmcd
@@ -13,5 +13,6 @@ api_vip=$(grep apiVIP /root/install-config.yaml | awk -F: '{print $2}' | xargs)
 cluster=$(grep -m 1 name /root/install-config.yaml | awk -F: '{print $2}' | xargs)
 domain=$(grep baseDomain /root/install-config.yaml | awk -F: '{print $2}' | xargs)
 IP=$(hostname -I | cut -f1 -d' ')
+IP=$(ip -o addr show {{ baremetal_net }} | awk '{print $4}' | cut -d "/" -f 1 | head -1)
 sed -i "s/DONTCHANGEME/$IP/" /root/install-config.yaml
 echo $api_vip api.$cluster.$domain >> /etc/hosts

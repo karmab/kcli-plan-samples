@@ -8,30 +8,6 @@ export OS_CLOUD=metal3-bootstrap
 export OPENSHIFT_INSTALL_RELEASE_IMAGE_OVERRIDE={{ openshift_image}}
 bash /root/clean.sh
 mkdir -p ocp/openshift
-{% if config_host is defined %}
-TESTLIBVIRT=$(grep libvirtURI /root/install-config.yaml)
-if [ "$TESTLIBVIRT" == "" ] ; then
-  SPACES=$(grep apiVIP /root/install-config.yaml | sed 's/apiVIP.*//' | sed 's/ /\\ /'g)
-  sed -i "/hosts/i${SPACES}libvirtURI: qemu+ssh://root@{{ config_host }}/system" /root/install-config.yaml
-fi
-{% endif %}
-PROVISIONING_IP=$(grep libvirtURI install-config.yaml | awk -F'/' '{ print $3 }' | awk -F'@' '{ print $2 }')
-ssh-keyscan -H $PROVISIONING_IP >> ~/.ssh/known_hosts
-echo -e "Host=*\nStrictHostKeyChecking=no\n" > .ssh/config
-TESTPULLSECRET=$(grep pullSecret /root/install-config.yaml)
-if [ "$TESTPULLSECRET" == "" ] ; then
-    PULLSECRET=$(cat $HOME/openshift_pull.json | tr -d [:space:])
-    echo -e "pullSecret: |\n  $PULLSECRET" >> /root/install-config.yaml
-fi
-TESTSSHKEY=$(grep sshKey /root/install-config.yaml)
-if [ "$TESTSSHKEY" == "" ] ; then
-    SSHKEY=$(cat $HOME/.ssh/id_?sa.pub)
-    echo -e "sshKey: |\n  $SSHKEY" >> /root/install-config.yaml
-fi
-
-{% if virtual %}
-bash /root/virtual.sh
-{% endif %}
 PYTHON="python"
 which python3 >/dev/null 2>&1 && PYTHON="python3"
 $PYTHON /root/ipmi.py off

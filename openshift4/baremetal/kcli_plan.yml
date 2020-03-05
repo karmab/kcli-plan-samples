@@ -1,64 +1,102 @@
 parameters:
  image: centos8
+ openshift_image: registry.svc.ci.openshift.org/ocp/release:4.4
+ cluster: openshift
+ domain: karmalabs.com
+ keys: []
+ api_ip:
+ dns_ip:
+ ingress_ip:
  image_url:
  network: default
  pool: default                                                                                                                                 
  numcpus: 16   
+ masters: []
+ workers: []
  memory: 32768
  disk_size: 30
+ extra_disks: []
  rhnregister: true
+ rhnwait: 30
  provisioning_interface: eno1
  provisioning_net: provisioning
  provisioning_ip: 172.22.0.3
  provisioning_cidr: 172.22.0.0/24
  provisioning_range: 172.22.0.10,172.22.0.100
  provisioning_installer_ip: 172.22.0.253
+ provisioning_macs: []
+ provisioning_mac_prefix: aa:aa:aa:aa:aa
+ ipmi_user: root
+ ipmi_password: calvin
  baremetal_net: baremetal
- pullsecret_path: openshift_pull.json
- installconfig_path: install-config.yaml
+ baremetal_cidr:
+ baremetal_macs: []
+ pullsecret: openshift_pull.json
  notifyscript: check.sh
+ virtual: false
+ virtual_numcpus: 8
+ virtual_memory: 32768
  cache: true
  notify: true
  deploy: true
- build: false
  wait_workers: false
  disconnected: false
+ registry_user: dummy
+ registry_password: dummy
  imageregistry: false
- prefix: openshift
- prs: []
+ build: false
  go_version: 1.13.8
- openshift_image: registry.svc.ci.openshift.org/ocp/release:4.4
- keys: []
- rhnwait: 30
+ prs: []
  cnf: false
- virtual: false
  cnf_features:
  - performance
  - ptp
  - sctp
  - sriov
 
+
 {{ image }}:
  type: image
  url: {{ image_url }}
 
-{{ prefix }}-installer: 
+{% if virtual %}
+{%- for num in range(0, 3) %}
+{{ cluster }}-master-{{ num }}:
+ numcpus: {{ virtual_numcpus }}
+ start: false
+ memory: {{ virtual_memory }}
+ nets:
+  - name: {{ provisioning_net }}
+    mac: {{ provisioning_mac_prefix + ":" + "%02.d" | format(num + 1)| string }}
+  - name: {{ baremetal_net }}
+{%- if baremetal_macs|length >= num %}
+    mac: {{ baremetal_macs[num] }}
+{%- endif %}
+ disks:
+{%- for size in [disk_size] + extra_disks %}
+  - size: {{ size }}
+    interface: scsi
+{%- endfor %}
+{%- endfor %}
+{%- endif %}
+
+{{ cluster }}-installer: 
  image: {{ image }} 
  pool: {{ pool }} 
  numcpus: {{ numcpus }}
  keys: {{ keys }}
-{% if 'rhel' in image %}
+{%- if 'rhel' in image %}
  rhnregister: {{ rhnregister }}
  rhnwait: {{ rhnwait }}
-{% endif %}
+{%- endif %}
  memory: {{ memory }}
  privatekey: true
  notify: {{ notify }}
-{% if deploy %}
+{%- if deploy %}
  notifyscript: {{ notifyscript }}
-{% else %}
+{%- else %}
  notifycmd: ls /root/bin/openshift-baremetal-install
-{% endif %}
+{%- endif %}
  nets:                                                                                                                                         
  - name: {{ baremetal_net }}                                                                                                                    
  - name: {{ provisioning_net }}
@@ -66,10 +104,12 @@ parameters:
  disks:                                                                                                                                           
  - {{ disk_size }}                                                                                                                                          
  files:                                                                                                                                             
- - origin: {{ pullsecret_path }}                                                                                                                     
+ - origin: {{ pullsecret }}
    path: /root/openshift_pull.json                                                                                                                    
- - path: /root/install-config.yaml                                                                                                                           
-   origin: {{ installconfig_path }}
+ - install-config.yaml                                                                                                                           
+ - path: /root/patch_installconfig.sh
+   origin: patch_installconfig.sh
+   mode: 700
  - path: /root/ipmi.py
    origin: ipmi.py
    mode: 700
@@ -88,7 +128,7 @@ parameters:
    origin: get_installer.sh
    mode: 700
  - path: /root/network.sh
-   origin: network8.sh
+   origin: network.sh
    mode: 700
  - path: /root/cache.sh
    origin: cache.sh
@@ -99,20 +139,20 @@ parameters:
  - path: /root/nfs.sh
    origin: nfs.sh
    mode: 700
-{% if virtual  %}
+{%- if virtual  %}
  - path: /root/virtual.sh
    origin: virtual.sh
    mode: 700
  - path: /root/vbmc.py
    origin: vbmc.py
    mode: 700
-{% endif %}
+{%- endif %}
  - origin: cnf
    path: /root/cnf
  - origin: manifests
    path: /root/manifests
  scripts:
-{% if build %}
+{%- if build %}
  - build.sh
-{% endif %}
+{%- endif %}
  - deploy.sh
