@@ -8,9 +8,7 @@ export OS_CLOUD=metal3-bootstrap
 export OPENSHIFT_INSTALL_RELEASE_IMAGE_OVERRIDE={{ openshift_image}}
 bash /root/clean.sh
 mkdir -p ocp/openshift
-PYTHON="python"
-which python3 >/dev/null 2>&1 && PYTHON="python3"
-$PYTHON /root/ipmi.py off
+python3 /root/ipmi.py off
 cp install-config.yaml ocp
 openshift-baremetal-install --dir ocp --log-level debug create manifests
 cp metal3-config.yaml ocp/openshift/99_metal3-config.yaml

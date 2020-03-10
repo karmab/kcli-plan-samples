@@ -1,5 +1,5 @@
 export KUBECONFIG=/root/ocp/auth/kubeconfig
-export PRIMARY_IP=$(ip -o addr show baremetal  | awk '{print $4}' | cut -d'/' -f1)
+export PRIMARY_IP=$(ip -o addr show baremetal | head -1 | awk '{print $4}' | cut -d'/' -f1)
 yum -y install nfs-utils
 mkdir /pv001
 echo "/pv001 *(rw,no_root_squash)"  >>  /etc/exports

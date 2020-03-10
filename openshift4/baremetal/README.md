@@ -55,10 +55,14 @@ The deployed vm comes with a set of helpers for you:
 
 |Parameter                 |Default Value                                 |
 |--------------------------|----------------------------------------------|
+|api_ip                    |None                                          |
+|dns_ip                    |None                                          |
+|ingress_ip                |None                                          |
 |image                     |centos8                                       |
 |image_url                 |                                              |
 |network                   |default                                       |
 |pool                      |default                                       |
+|numcpus                   |16                                            |
 |memory                    |12288                                         |
 |disk_size                 |20                                            |
 |provisioning_interface    |eno1                                          |
@@ -67,14 +71,17 @@ The deployed vm comes with a set of helpers for you:
 |provisioning_cidr         |24                                            |
 |provisioning_range        |172.22.0.10,172.22.0.100                      |
 |provisioning_installer_ip |172.22.0.253                                  |
-|cache                     |False                                         |
+|cache                     |True                                          |
 |disconnected              |False                                         |
 |baremetal_net             |baremetal                                     |
-|pullsecret_path           |openshift_pull.json                           |
-|installconfig_path        |install-config.yaml                           |
+|baremetal_cidr            |                                              |
+|baremetal_macs            |                                              |
+|baremetal_ips             |                                              |
+|pullsecret                |openshift_pull.json                           |
 |deploy                    |True                                          |
 |wait_workers              |True                                          |
 |build                     |False                                         |
+|imageregistry             |False                                         |
 |prefix                    |openshift                                     |
 |prs                       |[]                                            |
 |go_version                |1.12.12                                       |
@@ -83,16 +90,14 @@ The deployed vm comes with a set of helpers for you:
 |cnf                       |False                                         |
 |cnf_features              |performance,ptp,sriov,dpdk, sctp              |
 |virtual                   |false                                         |
+|virtual_numcpus           |8                                             |
+|virtual_memory            |32768                                         |
+|ipmi_user                 |root                                          |
+|ipmi_password             |calvin                                        |
+|registry_user             |dummy                                         |
+|registry_password         |dummy                                         |
 
-## I want to use virtual masters and physical workers
-
-Although this is not the primary scope of this repository, you can.
+## I want to use virtual masters and physical workers on real network
 
 - make sure you have proper dns set for the virtual masters. The masters need to be named xx-master-$num for openshift install to succeed
-- make sure you have dhcp entries associated to the virtual masters macs. Collect those macs.
-- create 3 empty master vms using the `masters.yml` plan and by passing as a parameter the list of external macs
- 
- `kcli create plan -f masters.yml -P external_macs=[XX,YY,ZZ]`
-
-- copy the install-config.yaml.virtual_masters to install-config.yaml and edit it to add correct apiVip, dnsVip and ingressVip. Let the DONTCHANGEME key as it is for your virtual masters, as virtual bmc will be deployed on the installer vm and those ipmi ports added.
-- launch the install as usual but setting virtual to True in your parameters file
+- make sure you have dhcp entries associated to the virtual masters macs.
