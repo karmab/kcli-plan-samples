@@ -19,7 +19,7 @@ parameters:
  rhnregister: true
  rhnwait: 30
  provisioning_interface: eno1
- provisioning_net: provisioning2
+ provisioning_net: provisioning
  provisioning_ip: 172.22.0.3
  provisioning_cidr: 172.22.0.0/24
  provisioning_range: 172.22.0.10,172.22.0.100
