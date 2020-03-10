@@ -59,7 +59,7 @@ parameters:
  type: image
  url: {{ image_url }}
 
-{% if baremetal_ips is defined and baremetal_ips|length >0 %}
+{% if baremetal_ips and baremetal_ips|length >0 %}
 api:
  type: dns
  net: {{ baremetal_net }}
@@ -88,10 +88,10 @@ apps:
   - name: {{ provisioning_net }}
     mac: {{ provisioning_mac_prefix + ":" + "%02.d" | format(num + 1)| string }}
   - name: {{ baremetal_net }}
-{%- if baremetal_macs is defined and baremetal_macs|length >= num %}
+{%- if baremetal_macs and baremetal_macs|length >= num %}
     mac: {{ baremetal_macs[num] }}
 {%- endif %}
-{%- if baremetal_ips is defined and baremetal_ips|length >= num %}
+{%- if baremetal_ips and baremetal_ips|length >= num %}
     ip: {{ baremetal_ips[num] }}
     reserveip: true
 {%- endif %}
