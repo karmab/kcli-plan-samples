@@ -19,7 +19,7 @@ parameters:
  rhnregister: true
  rhnwait: 30
  provisioning_interface: eno1
- provisioning_net: provisioning
+ provisioning_net: provisioning2
  provisioning_ip: 172.22.0.3
  provisioning_cidr: 172.22.0.0/24
  provisioning_range: 172.22.0.10,172.22.0.100
@@ -31,6 +31,7 @@ parameters:
  baremetal_net: baremetal
  baremetal_cidr:
  baremetal_macs: []
+ baremetal_ips: []
  pullsecret: openshift_pull.json
  notifyscript: check.sh
  virtual: false
@@ -38,7 +39,7 @@ parameters:
  virtual_memory: 32768
  cache: true
  notify: true
- deploy: true
+ deploy: false
  wait_workers: false
  disconnected: false
  registry_user: dummy
@@ -54,10 +55,28 @@ parameters:
  - sctp
  - sriov
 
-
 {{ image }}:
  type: image
  url: {{ image_url }}
+
+{% if baremetal_ips|length >0 %}
+api:
+ type: dns
+ net: {{ baremetal_net }}
+ ip: {{ api_ip }}
+ alias:
+ - api.{{ cluster }}.{{ domain }}
+ - api-int.{{ cluster }}.{{ domain }}
+
+apps:
+ type: dns
+ net: {{ baremetal_net }}
+ ip: {{ ingress_ip }}
+ alias:
+ - console-openshift-console.apps..{{ cluster }}.{{ domain }}
+ - oauth-openshift.apps.{{ cluster }}.{{ domain }}
+ - prometheus-k8s-openshift-monitoring.{{ cluster }}.{{ domain }}
+{%- endif %}
 
 {% if virtual %}
 {%- for num in range(0, 3) %}
@@ -71,6 +90,10 @@ parameters:
   - name: {{ baremetal_net }}
 {%- if baremetal_macs|length >= num %}
     mac: {{ baremetal_macs[num] }}
+{%- endif %}
+{%- if baremetal_ips|length >= num %}
+    ip: {{ baremetal_ips[num] }}
+    reserveip: true
 {%- endif %}
  disks:
 {%- for size in [disk_size] + extra_disks %}
