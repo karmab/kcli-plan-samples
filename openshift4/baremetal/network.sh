@@ -5,6 +5,7 @@ subscription-manager repos --enable=openstack-15-tools-for-rhel-8-x86_64-rpms
 yum -y install python3-openstackclient python3-ironicclient
 {% else %}
 yum clean all
+sleep 30
 yum -y install python36
 pip3 install python-openstackclient python-ironicclient
 {% endif %}

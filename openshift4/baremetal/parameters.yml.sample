@@ -1,6 +1,22 @@
-prefix: myenv
-image: rhel-8.1-x86_64-kvm.qcow2
-cache: true
-installconfig_path: ./install-config.yaml.mine
-keys:
-- ssh-rsa XXX
+openshift_image: registry.svc.ci.openshift.org/ocp/release:4.4
+deploy: true
+domain: willybonka.com 
+cluster: ocp4
+ipmi_user: jimi
+ipmi_password: hendrix
+baremetal_cidr: 11.0.0.0/24
+dns_ip: 11.0.0.1
+api_ip: 11.0.0.2
+ingress_ip: 11.0.0.3
+ipmi_user: root
+ipmi_password: calvin
+masters:
+- ipmi_address: 10.0.0.1
+  provisioning_mac: aa:aa:aa:bb:cc:01
+- ipmi_address: 10.0.0.2
+  provisioning_mac: aa:aa:aa:bb:cc:02
+- ipmi_address: 10.0.0.3
+  provisioning_mac: aa:aa:aa:bb:cc:03
+workers:
+- ipmi_address: 10.0.0.4
+  provisioning_mac: aa:aa:aa:bb:cc:04
