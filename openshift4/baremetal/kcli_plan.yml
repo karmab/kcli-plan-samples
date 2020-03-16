@@ -54,6 +54,7 @@ parameters:
  - ptp
  - sctp
  - sriov
+ imagecontentsources: []
 
 {{ image }}:
  type: image

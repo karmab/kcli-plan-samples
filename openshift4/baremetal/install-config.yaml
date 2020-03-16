@@ -76,4 +76,10 @@ imageContentSources:
 - mirrors:
   - {{ disconnected_url }}/ocp/release
   source: registry.svc.ci.openshift.org/ocp/release
+{%- elif imagecontentsources %}
+{%- for source in imagecontentsources %}
+- mirrors:
+  - {{ source }}
+  source: source: image-registry.openshift-image-registry.svc:5000/openshift/{{ source | basename }}
+{%- endfor %}
 {%- endif %}
