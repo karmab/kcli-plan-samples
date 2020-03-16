@@ -9,7 +9,7 @@ sleep 30
 yum -y install python36
 pip3 install python-openstackclient python-ironicclient
 {% endif %}
-yum -y install libvirt-libs libvirt-client ipmitool mkisofs tmux make
+yum -y install libvirt-libs libvirt-client ipmitool mkisofs tmux make git
 nmcli connection add ifname {{ provisioning_net }} type bridge con-name {{ provisioning_net }}
 nmcli con add type bridge-slave ifname eth1 master {{ provisioning_net }}
 nmcli connection add ifname baremetal type bridge con-name baremetal

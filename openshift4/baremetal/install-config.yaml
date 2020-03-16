@@ -81,6 +81,6 @@ imageContentSources:
 {%- for source in imagecontentsources %}
 - mirrors:
   - {{ source }}
-  source: source: image-registry.openshift-image-registry.svc:5000/openshift/{{ source | basename }}
+  source: image-registry.openshift-image-registry.svc:5000/openshift/{{ source | basename }}
 {%- endfor %}
 {%- endif %}
