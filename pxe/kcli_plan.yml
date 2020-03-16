@@ -5,7 +5,7 @@ parameters:
  user: centos
  password: unix1234
  url: http://repo.nixval.com/CentOS/7/isos/x86_64/CentOS-7-x86_64-Minimal-1804.iso
- test: false
+ client_test: false
  server_memory: 12288
  client_memory: 4096
 
@@ -15,7 +15,7 @@ parameters:
  pxe: 192.168.127.2
 
 pxeserver:
- image: {{ template }}
+ image: {{ image }}
  memory: {{ server_memory }}
  nets:
  - name: {{ network }}
@@ -31,7 +31,7 @@ pxeserver:
  scripts:
  - setup.sh
 
-{% if test %}
+{% if client_test %}
 pxeclient:
  cloudinit: false
  memory: {{ client_memory }}
