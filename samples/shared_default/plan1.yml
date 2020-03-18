@@ -1,0 +1,4 @@
+vm1:
+  memory: {{ memory }}
+  numcpus: {{ numcpus }}
+  start: false
