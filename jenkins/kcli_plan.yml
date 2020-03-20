@@ -3,6 +3,8 @@ parameters:
  memory: 8192
  network: default
  pool: default
+ notify: true
+ notifycmd: echo "Jenkins available at http://$(hostname -I | cut -d' ' -f1):8080 with password $(cat /var/lib/jenkins/secrets/initialAdminPassword)"
 
 jenkins:
  image: {{ image }}
@@ -14,6 +16,8 @@ jenkins:
   - size: 40
  pool: {{ pool }}
  reservedns: true
+ notify: {{ notify }}
+ notifycmd: {{ notifycmd }}
  cmds: 
   - yum -y install wget
   - wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo
