@@ -14,12 +14,12 @@ jenkins:
  disks:
   - size: 40
  pool: {{ pool }}
- files:
- - credentials.sh
  notify: {{ notify }}
  notifycmd: {{ notifycmd }}
  cmds: 
   - yum -y install git podman
+  - echo jenkins:100000:65536 > /etc/subuid
+  - echo jenkins:100000:65536 > /etc/subgid
   - curl -L https://pkg.jenkins.io/redhat/jenkins.repo > /etc/yum.repos.d/jenkins.repo
   - rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
   - yum -y install java jenkins
