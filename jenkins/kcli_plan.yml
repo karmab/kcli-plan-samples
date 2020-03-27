@@ -1,5 +1,5 @@
 parameters:
- image: CentOS-7-x86_64-GenericCloud.qcow2
+ image: centos8
  memory: 8192
  network: default
  pool: default
@@ -10,18 +10,19 @@ jenkins:
  image: {{ image }}
  memory: {{ memory }}
  numcpus: 2
- nets:
-  - {{ network }}
+ nets: [{{ network }}]
  disks:
   - size: 40
  pool: {{ pool }}
- reservedns: true
+ files:
+ - credentials.sh
  notify: {{ notify }}
  notifycmd: {{ notifycmd }}
  cmds: 
-  - yum -y install wget
-  - wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo
+  - yum -y install git podman
+  - curl -L https://pkg.jenkins.io/redhat/jenkins.repo > /etc/yum.repos.d/jenkins.repo
   - rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
   - yum -y install java jenkins
   - systemctl enable jenkins
   - systemctl start jenkins
+  - sleep 20
