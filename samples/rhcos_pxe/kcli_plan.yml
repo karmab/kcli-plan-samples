@@ -1,0 +1,11 @@
+parameters:
+ ignition_url: "http://192.168.122.1/core.ign"
+ baseurl: https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/latest/latest/rhcos-4.3.8-x86_64
+ network: default
+ 
+myvm:
+ memory: 4096
+ nets: [{{ network }}]
+ kernel: {{ baseurl }}-installer-kernel-x86_64
+ initrd: {{ baseurl }}-installer-initramfs.x86_64.img
+ cmdline: coreos.inst=yes coreos.inst.install_dev=vda coreos.inst.image_url={{ baseurl }}-metal.x86_64.raw.gz ip=dhcp console=tty0 console=ttyS0 rd.neednet=1 coreos.inst.ignition_url={{ ignition_url }}
