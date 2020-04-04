@@ -4,7 +4,9 @@ parameters:
  network: default
  
 myvm:
- memory: 4096
+ memory: 8192
+ disks: 
+ - 20
  nets: [{{ network }}]
  kernel: {{ baseurl }}-installer-kernel-x86_64
  initrd: {{ baseurl }}-installer-initramfs.x86_64.img
