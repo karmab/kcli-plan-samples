@@ -1,3 +1,6 @@
+parameters:
+ description: advanced
+
 vm1:
   memory: 512
   numcpus: 2

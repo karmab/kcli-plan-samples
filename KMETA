@@ -1,15 +1,9 @@
 - name: samples_advanced
-  file: samples/advanced.yml
-  description: advanced
+  file: samples/advancedplan.yml
   numvms: 2
-
-- name: samples_coreos
-  file: samples/coreos.yml
-  description: download stable coreos and run a vm from it
 
 - name: samples_createpool
   file: samples/createpool.yml
-  description: create a pool and deploy a vm using it
   numvms: 1
 
 - name: samples_crossdns

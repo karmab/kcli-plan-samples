@@ -8,6 +8,9 @@ parameters:
  client_test: false
  server_memory: 12288
  client_memory: 4096
+ info: |
+    pxeserver with optional kickstart and test machine
+    enjoy it
 
 {{ network }}:
  type: network

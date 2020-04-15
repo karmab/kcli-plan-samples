@@ -1,3 +1,6 @@
+parameters:
+ description: create a pool and deploy a vm using it
+
 mypool:
   type: pool
   path: /home/mypool
