@@ -13,5 +13,5 @@ and others!
 It can also be used through product by adding the repo with
 
 ```
-kcli repo -u https://github.com/karmab/kcli-plans karmab
+kcli create repo -u https://github.com/karmab/kcli-plans karmab
 ```
