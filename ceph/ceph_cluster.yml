@@ -1,0 +1,40 @@
+parameters:
+ nodes: 3
+ pool: default
+ network: default
+ domain: cephlab.com
+ prefix: ceph
+ deploy_app: false
+ node_memory: 4096
+ template: CentOS-7-x86_64-GenericCloud.qcow2
+ notify: false
+
+{% if template == 'CentOS-7-x86_64-GenericCloud.qcow2' %}
+CentOS-7-x86_64-GenericCloud.qcow2:
+ type: template
+ url: http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
+{% endif %}
+
+ vms:
+{% for number in range(0, nodes) %}
+{{prefix }}-node-0{{ number }}:
+ template: {{ template }}
+ numcpus: 2
+ memory: {{ node_memory }}
+ reservedns: true
+ sharedkey: true
+ domain: {{ domain }}
+ nets:
+  - {{ network }}
+ disks:
+  - size: 150
+  - size: 150
+ pool: {{ pool }}
+ cmds:
+ - yum -y install python3 chrony lvm2 podman
+ - setenforce 0
+ {% if number == 0 %}
+ scripts:
+  - bootstrap-cluster.sh
+ {% endif %}
+{% endfor %}
