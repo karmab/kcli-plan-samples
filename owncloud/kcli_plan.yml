@@ -1,0 +1,17 @@
+parameters:
+ image: CentOS-8-GenericCloud-8.1.1911-20200113.3.x86_64.qcow2
+ network: localnet
+ memory: 6144
+ notify: true
+ notifycmd: echo "Owncloud available at http://$(hostname -I | cut -d' ' -f1):8080 with credentials admin/admin"
+
+owncloud:
+  memory: {{ memory }}
+  numcpus: 4
+  notify: {{ notify }}
+  notifycmd: {{ notifycmd }}
+  nets: [{{ network }}]
+  pool: default
+  image: {{ image }}
+  scripts:
+  - deploy.sh
