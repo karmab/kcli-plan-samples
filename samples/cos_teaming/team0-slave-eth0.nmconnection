@@ -1,0 +1,8 @@
+[connection]
+id=team0-slave-eth0
+type=ethernet
+interface-name=eth0
+master=team0
+slave-type=team
+[team-port]
+config={"prio": 100}

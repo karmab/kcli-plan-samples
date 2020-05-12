@@ -1,0 +1,14 @@
+[connection]
+id=team0
+type=team
+interface-name=team0
+[team]
+config={"runner": {"name": "activebackup"}, "link_watch": {"name": "ethtool"}}
+{% if ip != None and prefix != None and gateway != None and dns != None and dns-search != None -%}
+[ipv4]
+method=manual
+addresses={{ ip }}/{{ prefix }}
+gateway={{ gateway }}
+dns={{ dns }}
+dns-search={{ domain }}
+{%- endif %}

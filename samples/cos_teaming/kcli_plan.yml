@@ -1,0 +1,25 @@
+parameters:
+ image: fcos
+ ip:
+ prefix:
+ gateway:
+ dns:
+ domain:
+
+tudela:
+ image: {{ image }}
+ nets:
+ - default
+ - default
+ files:
+ - path: /etc/NetworkManager/system-connections/team0.nmconnection
+   origin: team0.nmconnection
+   mode: 600
+ - path: /etc/NetworkManager/system-connections/team0-slave-eth0.nmconnection
+   origin: team0-slave-eth0.nmconnection
+   mode: 600
+ - path: /etc/NetworkManager/system-connections/team0-slave-eth1.nmconnection
+   origin: team0-slave-eth1.nmconnection
+   mode: 600
+     
+
