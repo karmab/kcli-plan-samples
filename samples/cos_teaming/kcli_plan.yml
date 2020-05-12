@@ -9,7 +9,7 @@ parameters:
  - default
  - default
 
-tudela:
+teamvm:
  image: {{ image }}
  nets: {{ nets }}
  files:
