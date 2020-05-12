@@ -1,0 +1,7 @@
+image: rhcos-45.81.202005050429-0-qemu.x86_64.qcow2
+ip: 192.168.123.207
+prefix: 24
+gateway: 192.168.123.1
+nets:
+- tudela
+- tudela
