@@ -1,7 +1,7 @@
 [connection]
 id=team0-slave-eth0
 type=ethernet
-interface-name=eth0
+interface-name={{ 'ens3' if 'rhcos' in image else 'eth0' }}
 master=team0
 slave-type=team
 [team-port]
