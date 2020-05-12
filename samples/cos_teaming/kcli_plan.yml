@@ -3,8 +3,8 @@ parameters:
  ip:
  prefix:
  gateway:
- dns:
- domain:
+ dns: 8.8.8.8
+ domain: karmalabs.com
 
 tudela:
  image: {{ image }}
