@@ -4,34 +4,30 @@ parameters:
  network: default
  domain: cephlab.com
  prefix: ceph
- deploy_app: false
- node_memory: 4096
- template: CentOS-7-x86_64-GenericCloud.qcow2
- notify: false
-
-{% if template == 'CentOS-7-x86_64-GenericCloud.qcow2' %}
-CentOS-7-x86_64-GenericCloud.qcow2:
- type: template
- url: http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
-{% endif %}
-
- vms:
-{% for number in range(0, nodes) %}
-{{prefix }}-node-0{{ number }}:
- template: {{ template }}
  numcpus: 2
- memory: {{ node_memory }}
+ memory: 4096
+ image: centos8
+ notify: false
+ admin_password: password
+ disks:
+ - 150
+ - 150
+
+{% for number in range(0, nodes) %}
+{{ prefix }}-node-0{{ number }}:
+ image: {{ image }}
+ numcpus: {{ numcpus }}
+ memory: {{ memory }}
  reservedns: true
  sharedkey: true
  domain: {{ domain }}
  nets:
   - {{ network }}
- disks:
-  - size: 150
-  - size: 150
+ disks: {{ disks }}
  pool: {{ pool }}
  cmds:
  - yum -y install python3 chrony lvm2 podman
+ - sed -i "s/SELINUX=enforcing/SELINUX=permissive/" /etc/selinux/config
  - setenforce 0
  {% if number == 0 %}
  scripts:
