@@ -5,12 +5,13 @@ parameters:
  gateway:
  dns: 8.8.8.8
  domain: karmalabs.com
-
-tudela:
- image: {{ image }}
  nets:
  - default
  - default
+
+tudela:
+ image: {{ image }}
+ nets: {{ nets }}
  files:
  - path: /etc/NetworkManager/system-connections/team0.nmconnection
    origin: team0.nmconnection
