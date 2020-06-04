@@ -1,4 +1,8 @@
 parameters:
+ info: |
+     This plan allows to build openshift installer binary from source code and applying an optional list of PRS.
+     a different (typically) forked url of the installer code can be specified with the user_repo variable.
+     A different branch can also be specified to cover for modifications living in a forked repo with not yet any PR associated
  cluster: openshift
  image: centos8
  image_url:
@@ -10,6 +14,8 @@ parameters:
  memory: 8192
  disk_size: 30
  go_version: 1.13.8
+ user_repo: openshift
+ branch: master
  prs: []
 
 {{ image }}:

@@ -10,16 +10,16 @@ mkdir -p ${GOPATH}/{bin,pkg,src}
 mkdir -p ${GOPATH}/src/github.com/openshift
 cd ${GOPATH}/src/github.com/openshift
 curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-git clone https://github.com/openshift/installer.git
+git clone https://github.com/{{ user_repo }}/installer.git
 cd installer
-dep ensure
+git checkout {{ branch }}
 export HOME=/root
 git config --global user.email "you@example.com"
 git config --global user.name "Your Name"
 export COMMIT_ID=$(git rev-parse HEAD)
 {% if prs %}
 {% for pr in prs %}
-curl -L https://github.com/openshift/installer/pull/{{ pr }}.patch | git am
+curl -L https://github.com/{{ user_repo }}/installer/pull/{{ pr }}.patch | git am
 {% endfor %}
 {% endif %}
 TAGS='libvirt baremetal' hack/build.sh
