@@ -9,7 +9,6 @@ echo alias go_installer=\"cd \$GOPATH/src/github.com/openshift/installer\">> ~/.
 mkdir -p ${GOPATH}/{bin,pkg,src}
 mkdir -p ${GOPATH}/src/github.com/openshift
 cd ${GOPATH}/src/github.com/openshift
-curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 git clone https://github.com/{{ user_repo }}/installer.git
 cd installer
 git checkout {{ branch }}
