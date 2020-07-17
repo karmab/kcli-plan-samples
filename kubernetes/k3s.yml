@@ -1,9 +1,14 @@
 parameters:
- image: debian-9
- flavor: f1-micro
+ image: debian9
+
+k3sprofile:
+ type: profile
+ numcpus: 4
+ memory: 4096
 
 k3s:
- image: {{ template }}
- flavor: {{ flavor }}
+ image: {{ image }}
+ profile: k3sprofile
  cmds:
+ - apt-get -Y install curl
  - curl -sfL https://get.k3s.io | sh -
