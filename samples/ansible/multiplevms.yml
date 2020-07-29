@@ -1,22 +1,26 @@
+parameters:
+ image: CentOS-7-x86_64-GenericCloud.qcow2
+ network: default
+
 myplay:
  type: ansible
  verbose: false
  playbook: prout.yml
 
 testansible01:
- image: CentOS-7-x86_64-GenericCloud.qcow2
+ image: {{ image }} 
  memory: 1024
  numcpus: 1
  disks:
   - size: 10
  nets:
-  - default
+  - {{ network }}
 
 testansible02:
- image: CentOS-7-x86_64-GenericCloud.qcow2
+ image: {{ image }} 
  memory: 1024
  numcpus: 1
  disks:
   - size: 10
  nets:
-  - default
+  - {{ network }}
