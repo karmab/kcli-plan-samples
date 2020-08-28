@@ -1,0 +1,8 @@
+myprof:
+  image: CentOS-8-GenericCloud-8.2.2004-20200611.2.x86_64.qcow2
+  numcpus: 2
+  memory: 4096
+  disks:
+  - size: 20
+  nets:
+  - name: default
