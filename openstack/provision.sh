@@ -2,7 +2,7 @@ export ADMIN_PASSWORD="{{ admin_password }}"
 export EXTERNAL_SUBNET="{{ external_subnet }}"
 export EXTERNAL_START="{{ external_start }}"
 export EXTERNAL_END="{{ external_end }}"
-export EXTERNAL_GATEWAY="{{ external_fateway }}"
+export EXTERNAL_GATEWAY="{{ external_gateway }}"
 export EXTERNAL_FLOATING="{{ external_floating }}"
 cp ~/keystonerc_admin ~/keystonerc_{{ user }}
 sed -i "s/OS_USERNAME=admin/OS_USERNAME={{ user }}/" ~/keystonerc_{{ user }}
