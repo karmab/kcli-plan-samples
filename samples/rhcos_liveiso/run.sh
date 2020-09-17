@@ -1,3 +1,4 @@
+rm -rf source.ign
 kcli create plan -f source.yml
 cp /tmp/source.ign .
 kcli delete vm --yes source

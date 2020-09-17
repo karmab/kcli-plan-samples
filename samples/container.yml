@@ -1,0 +1,14 @@
+parameters:
+ ldap_password: unix1234
+
+prout:
+ type: container
+ image: docker.io/library/alpine:3.10
+ environment:
+  - LDAP_ROOTPASS: {{ ldap_password }}
+ ports:
+  - 389
+ cmds:
+  - echo prout
+  - echo {{ ldap_password }} >> /tmp/result
+  - sleep 3600

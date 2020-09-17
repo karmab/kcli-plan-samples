@@ -12,7 +12,7 @@ builder:
  privatekey: true
  memory: {{ memory }}
  files:
- - path: /root/ignition
+ - path: /root/source.ign
    origin: {{ ignition }}
  scripts:
  - builder.sh
