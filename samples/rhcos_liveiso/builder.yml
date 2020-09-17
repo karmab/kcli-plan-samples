@@ -1,0 +1,21 @@
+parameters:
+ image: rhcos-46.82.202009162040-0-qemu.x86_64.qcow2
+ ignition: source.ign
+ memory: 6144
+ copy: true
+ wait: true
+ iso_path: /home/images/klive.iso
+
+builder:
+ image: {{ image }}
+ wait: {{ wait }}
+ privatekey: true
+ memory: {{ memory }}
+ files:
+ - path: /root/ignition
+   origin: {{ ignition }}
+ scripts:
+ - builder.sh
+{% if copy %}
+ - copy.sh
+{% endif %}

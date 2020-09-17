@@ -1,0 +1,9 @@
+parameters:
+ start: false
+ image: rhcos-46.82.202009162040-0-qemu.x86_64.qcow2
+
+source:
+ image: {{ image }}
+ start: {{ start }}
+ scripts:
+ - source.sh
