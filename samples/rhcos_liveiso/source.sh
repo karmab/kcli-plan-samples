@@ -1,15 +1,13 @@
 #!/usr/bin/bash
 
 sleep 20
+ignition_url="http://karmatron.mooo.com/worker.ign"
 GATEWAY=$(ip r | grep default | cut -d' ' -f3)
 if [ "${GATEWAY}" == "192.168.122.1" ]; then
   IP=${GATEWAY}
   FILE="worker.ign"
-else
-  IP="karmatron.mooo.com"
-  FILE="worker.ign.$(hostname)"
+  ignition_url="http://${IP}/${FILE}"
 fi
-ignition_url="http://${IP}/${FILE}"
 firstboot_args='console=tty0'
 if [ -b /dev/vda ]; then
   install_device='/dev/vda'
