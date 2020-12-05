@@ -16,10 +16,10 @@ for vmid in $VMIDS ; do
   ssh -o 'StrictHostKeyChecking=no' root@${ip} hostnamectl set-hostname ${newname}
 done
 
-{% if infras > 0 -%}
+{% if infras > 0 %}
 default_subdomain=${ip_infra}.xip.io
 {% else %}
 default_subdomain=${ip_master}.xip.io
-{%- endif %}
+{% endif %}
 sed -i "s/#openshift_master_default_subdomain=.*/openshift_master_default_subdomain=apps.${default_subdomain}/" /root/inventory
 sed -i "s/#openshift_master_cluster_hostname=.*/openshift_master_cluster_hostname=m01.${ip_master}.xip.io/" /root/inventory

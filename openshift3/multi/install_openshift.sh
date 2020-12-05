@@ -7,7 +7,7 @@ sleep 360
 {% endif %}
 {% if type == 'kvm' %}
 export MASTERIP=`dig +short m01.{{ domain }}`
-{% if infras > 0 -%}
+{% if infras > 0 %}
 export ROUTERIP=`dig +short i01.{{ domain }}`
 {% else %}
 export ROUTERIP=$MASTERIP

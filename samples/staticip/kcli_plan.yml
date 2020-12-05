@@ -1,5 +1,5 @@
 parameters:
- image: CentOS-7-x86_64-GenericCloud.qcow2
+ image: centos8
  disk_size: 20
  memory: 2048
  ip: 192.168.122.99

@@ -1,4 +1,4 @@
-{%- set releaseurls = {
+{% set releaseurls = {
                   'v3.2'  : 'v1.2.2/openshift-origin-client-tools-v1.2.2-565691c',
                   'v3.3'  : 'v1.3.3/openshift-origin-client-tools-v1.3.3-bc17c1527938fa03b719e1a117d584442e3727b8',
                   'v3.4'  : 'v1.4.1/openshift-origin-client-tools-v1.4.1-3f9807a',
@@ -9,7 +9,7 @@
                   'v3.10' : 'v3.10.0/openshift-origin-client-tools-v3.10.0-dd10d17',
                   'v3.11' : 'v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b',
                }
--%}
+%}
 sleep 30
 yum -y install wget docker git patch
 wget -P /root/ https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64

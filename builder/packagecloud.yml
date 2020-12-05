@@ -1,10 +1,10 @@
 parameters:
  numcpus: 2
  memory: 6144
- image: ubuntu-19.04-server-cloudimg-amd64.img
+ image: focal-server-cloudimg-amd64.img
 
 packagecloud:
- image: {{ template }}
+ image: {{ image }}
  numcpus: {{ numcpus }}
  memory: {{ memory }}
  nets:

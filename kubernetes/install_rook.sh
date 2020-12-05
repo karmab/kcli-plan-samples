@@ -1,1 +1,0 @@
-sh /root/rook.sh

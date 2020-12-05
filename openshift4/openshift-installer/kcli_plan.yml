@@ -26,10 +26,10 @@ parameters:
  image: {{ image }} 
  pool: {{ pool }} 
  numcpus: {{ numcpus }}
-{%- if 'rhel' in image %}
+{% if 'rhel' in image %}
  rhnregister: {{ rhnregister }}
  rhnwait: {{ rhnwait }}
-{%- endif %}
+{% endif %}
  memory: {{ memory }}
  nets:                                                                                                                                         
  - name: {{ network }}

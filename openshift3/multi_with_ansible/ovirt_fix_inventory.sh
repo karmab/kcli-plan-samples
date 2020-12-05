@@ -15,11 +15,11 @@ for vmid in $VMIDS ; do
   ssh-keyscan -H ${ip}.xip.io >> ~/.ssh/known_hosts
 done
 
-{% if infras > 0 -%}
+{% if infras > 0 %}
 default_subdomain=${ip_infra}.xip.io
 {% else %}
 default_subdomain=${ip_master}.xip.io
-{%- endif %}
+{% endif %}
 sed -i "s/##openshift_master_default_subdomain=.*/#openshift_master_default_subdomain=${default_subdomain}/" /root/inventory
 sed -i "s/#openshift_master_cluster_hostname=.*/openshift_master_cluster_hostname=${ip_master}.xip.io/" /root/inventory
 sed -i "s/#openshift_master_cluster_public_hostname=.*/openshift_master_cluster_public_hostname=${ip_master}.xip.io/" /root/inventory
