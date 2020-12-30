@@ -20,7 +20,3 @@ vm2:
   reservedns: False
   cmds:
    - echo this stuff works > /tmp/result.txt
-vm3:
-  memory: 2048
-  numcpus: 6
-  cloudinit: false

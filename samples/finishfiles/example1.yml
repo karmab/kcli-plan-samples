@@ -1,0 +1,13 @@
+vm1:
+ image: centos8
+ privatekey: true
+ wait: true
+ cmds:
+ - cp /root/example1.ign /root/vm2.ign
+ files:
+ - example1.ign
+ finishfiles:
+ - vm2.ign
+
+vm2:
+ image: rhcos47
