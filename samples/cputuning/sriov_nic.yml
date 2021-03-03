@@ -1,14 +1,20 @@
-numa-yuval:
+srio-vm:
+  machine: pc-q35-5.0
+  image: rhcos48
   numcpus: 8
   memory: 7168
   nets: 
    - name: default
      numa: 0
+     type: e1000e
+     vfio: true
    - name: default
      numa: 1
-     noconf: yes
+     type: e1000e
+   - name: default
+     numa: 1
+     type: e1000e
   pool: default
-  mage: rhcos45
   numamode: preferred
   cpupinning:
   - vcpus: 0-6
@@ -18,7 +24,7 @@ numa-yuval:
   numa:
   - id: 0
     vcpus: 0-1
-    memory: 2048
+    memory: 5120
   - id: 1
     vcpus: 2-3
-    memory: 5120
+    memory: 2048
