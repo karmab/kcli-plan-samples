@@ -15,7 +15,7 @@ nova flavor-list | grep -q m1.tiny || nova flavor-create --is-public true m1.tin
 openstack project create {{ project }}
 openstack user create  --project {{ project }} --password {{ password }} {{ user }}
 openstack role add --user={{ user }} --project={{ project }} admin
-grep -q 'type_drivers = vxlan' /etc/neutron/plugin.ini && sed -i 's/type_drivers =.*/type_drivers = vxlan,flat/' /etc/neutron/plugin.ini && systemctl restart neutron-server
+#grep -q 'type_drivers = vxlan' /etc/neutron/plugin.ini && sed -i 's/type_drivers =.*/type_drivers = vxlan,flat/' /etc/neutron/plugin.ini && systemctl restart neutron-server
 neutron net-create extnet --provider:network_type flat --provider:physical_network extnet --router:external || neutron net-create extnet --router:external
 neutron subnet-create --name ${EXTERNAL_SUBNET} --allocation-pool start=${EXTERNAL_START},end=${EXTERNAL_END} --disable-dhcp --gateway ${EXTERNAL_GATEWAY} extnet ${EXTERNAL_SUBNET}
 OLD_PASSWORD=`grep PASSWORD /root/keystonerc_admin | cut -f2 -d'='`
@@ -26,11 +26,11 @@ curl {{ cirros_image }} > /tmp/c.img
 glance image-create --name "cirros" --disk-format qcow2 --container-format bare --file /tmp/c.img
 tail -1 /root/.ssh/authorized_keys > ~/{{ user }}.pub
 nova keypair-add --pub-key ~/{{ user }}.pub {{ user }}
-neutron net-create private -- --port_security_enabled={{ port_security }}
-neutron subnet-create --name 10.0.0.0/24 --allocation-pool start=10.0.0.2,end=10.0.0.254 --gateway 10.0.0.1 --dns-nameserver {{ dns }} private 10.0.0.0/24 
+neutron net-create private --
+neutron subnet-create --name 11.0.0.0/24 --allocation-pool start=11.0.0.2,end=11.0.0.254 --gateway 11.0.0.1 --dns-nameserver {{ dns }} private 11.0.0.0/24 
 neutron router-create router
 neutron router-gateway-set router extnet
-neutron router-interface-add router 10.0.0.0/24
+neutron router-interface-add router 11.0.0.0/24
 seq 5 | xargs -I -- neutron floatingip-create extnet
 neutron security-group-create {{ user }}
 neutron security-group-rule-create --direction ingress --protocol tcp --port_range_min 22 --port_range_max 22 --remote-ip-prefix 0.0.0.0/0 {{ user }}

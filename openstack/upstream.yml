@@ -1,5 +1,7 @@
 parameters:
- version: rocky
+ version: victoria
+ network: default
+ pool: default
  numcpus: 4
  memory: 10240
  disk_size: 90
@@ -30,14 +32,14 @@ parameters:
  external_floating: 192.168.122.202
 
 {{ version }}:
- image: CentOS-7-x86_64-GenericCloud.qcow2
+ image: centos8
  memory: {{ memory }}
  numcpus: {{ numcpus }}
  disks: 
   - size: {{ disk_size }}
  nets:
- - default
- pool: default
+ - {{ network }}
+ pool: {{ pool }}
  scripts: 
   - repo.sh
   - install.sh

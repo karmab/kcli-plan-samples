@@ -20,9 +20,8 @@ parameters:
  port_security: false
  virt_type: kvm
 
-
 {{ version }}:
- image: {{ template }}
+ image: {{ image }}
  memory: 8096
  rhnregister: true
  numcpus: 2

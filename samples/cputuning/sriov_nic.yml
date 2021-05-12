@@ -1,6 +1,5 @@
 srio-vm:
-  machine: pc-q35-5.0
-  image: rhcos48
+  image: centos8
   numcpus: 8
   memory: 7168
   nets: 

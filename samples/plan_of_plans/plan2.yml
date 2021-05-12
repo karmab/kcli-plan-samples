@@ -6,7 +6,7 @@ vm3:
   nets: 
    - default
   pool: default
-  image: CentOS-7-x86_64-GenericCloud.qcow2
+  image: CentOS-8-GenericCloud-8.3.2011-20201204.2.x86_64.qcow2
   cmds:
    - echo {{ password }} | passwd --stdin root
 vm4:
@@ -16,4 +16,4 @@ vm4:
   nets: 
    - default
   pool: default
-  image: CentOS-7-x86_64-GenericCloud.qcow2
+  image: CentOS-8-GenericCloud-8.3.2011-20201204.2.x86_64.qcow2
