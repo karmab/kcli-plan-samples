@@ -8,7 +8,7 @@ numa-yuval:
      numa: 1
      noconf: yes
   pool: default
-  mage: rhcos45
+  image: rhcos45
   numamode: preferred
   cpupinning:
   - vcpus: 0-6
