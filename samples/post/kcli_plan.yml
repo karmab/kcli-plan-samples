@@ -1,0 +1,7 @@
+vm1:
+  memory: 512
+  numcpus: 2
+  nets: 
+   - default
+  pool: default
+  image: centos8

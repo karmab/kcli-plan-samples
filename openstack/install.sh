@@ -1,7 +1,7 @@
 export ADMIN_PASSWORD="{{ password }}"
 echo `hostname -I` `hostname -s` >> /etc/hosts
 yum update -y
-yum install -y openstack-packstack wget vim screen
+yum install -y openstack-packstack wget vim
 HOME=/root packstack --gen-answer-file=/root/answers.txt
 {% if swift %}
 sed -i "s/CONFIG_SWIFT_INSTALL=y/CONFIG_SWIFT_INSTALL=n/" /root/answers.txt

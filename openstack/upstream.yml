@@ -39,6 +39,7 @@ parameters:
   - size: {{ disk_size }}
  nets:
  - {{ network }}
+ - br-prov
  pool: {{ pool }}
  scripts: 
   - repo.sh
