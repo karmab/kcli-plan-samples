@@ -12,6 +12,13 @@ Using Cephadm:
 https://docs.ceph.com/docs/master/cephadm/
 
 
+Create a Ceph cluster:
 ```
 # kcli create plan -f ceph_cluster.yml
 ```
+
+Create a Ceph cluster for development use:
+```
+kcli create plan -f ceph_cluster.yml -P ceph_dev_folder=/home/me/Code/ceph
+```
+The parameter <<ceph_dev_folder>> must point to the folder where your Ceph code lives.
