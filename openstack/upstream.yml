@@ -9,8 +9,8 @@ parameters:
  password: testk
  project: testk
  admin_password: unix1234
- ovn: false
- cirros_image: http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img
+ ovn: true
+ cirros_image: http://download.cirros-cloud.net/0.5.2/cirros-0.5.2-x86_64-disk.img
  ironic: true
  lbaas: true
  manila: false
@@ -39,7 +39,6 @@ parameters:
   - size: {{ disk_size }}
  nets:
  - {{ network }}
- - br-prov
  pool: {{ pool }}
  scripts: 
   - repo.sh

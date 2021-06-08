@@ -22,7 +22,7 @@ OLD_PASSWORD=`grep PASSWORD /root/keystonerc_admin | cut -f2 -d'='`
 openstack user password set  --original-password ${OLD_PASSWORD} --password ${ADMIN_PASSWORD} || openstack user set --password ${ADMIN_PASSWORD} admin || keystone password-update --new-password ${ADMIN_PASSWORD}
 sed -i "s/OS_PASSWORD=.*/OS_PASSWORD=$ADMIN_PASSWORD/" ~/keystonerc_admin
 source ~/keystonerc_{{ user }}
-curl {{ cirros_image }} > /tmp/c.img
+curl -L {{ cirros_image }} > /tmp/c.img
 glance image-create --name "cirros" --disk-format qcow2 --container-format bare --file /tmp/c.img
 tail -1 /root/.ssh/authorized_keys > ~/{{ user }}.pub
 nova keypair-add --pub-key ~/{{ user }}.pub {{ user }}
