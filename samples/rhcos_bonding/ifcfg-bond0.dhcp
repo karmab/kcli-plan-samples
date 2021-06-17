@@ -1,0 +1,9 @@
+NAME="bond0"
+DEVICE="bond0"
+ONBOOT=yes
+NETBOOT=yes
+IPV6INIT=yes
+BOOTPROTO=dhcp
+BONDING_OPTS="mode=1"
+NAME="bond0"
+TYPE=Bond

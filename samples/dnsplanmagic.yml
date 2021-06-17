@@ -1,0 +1,6 @@
+yyy:
+ type: dns
+ net: default
+ ip: 192.168.1.35
+vm1:
+ image: centos8

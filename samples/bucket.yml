@@ -1,0 +1,7 @@
+mybuck1:
+ type: bucket
+
+mybuck2:
+ type: bucket
+ files:
+ - bucket_file1.txt

@@ -1,0 +1,7 @@
+NAME="ens4"
+TYPE=Ethernet
+ONBOOT=yes
+NETBOOT=yes
+SLAVE=yes
+MASTER="bond0"
+DEVICE="ens4"

@@ -1,0 +1,5 @@
+parameters:
+ fail: true
+
+vm1:
+  image: centos8

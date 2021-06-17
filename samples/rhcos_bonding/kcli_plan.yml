@@ -1,0 +1,21 @@
+parameters:
+ image: rhcos47
+ network: default
+ dns:
+ - 8.8.8.8
+ - 1.1.1.1
+
+bondcos:
+ image: {{ image }}
+ disks:
+ - 20
+ nets:
+ - {{ network }}
+ - {{ network }}
+ files:
+ - path: /etc/sysconfig/network-scripts/ifcfg-bond0
+   origin: ifcfg-bond0
+ - path: /etc/sysconfig/network-scripts/ifcfg-ens4
+   origin: ifcfg-ens4
+ - path: /etc/sysconfig/network-scripts/ifcfg-ens3
+   origin: ifcfg-ens3
