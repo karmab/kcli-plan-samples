@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 export PATH=/root/bin:$PATH
 mkdir /root/bin
 {% if ceph_dev_folder is defined %}

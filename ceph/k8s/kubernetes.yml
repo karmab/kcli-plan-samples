@@ -1,0 +1,70 @@
+parameters:
+ masters: 1
+ workers: 2
+ domain: rook
+ pool: default
+ network: default
+ prefix: k8s
+ sdn: flannel
+ master_memory: 6144
+ node_memory: 4096
+ image: centos7
+
+{% if masters > 1 %}
+{{ prefix }}-master:
+ type: loadbalancer
+ nets:
+ - name: {{ network }}
+ ports:
+ - 6443
+ vms:
+{% for number in range(0, masters) %}
+  - {{prefix}}-master-0{{ number }}
+{% endfor %}
+{%endif %}
+
+{% for number in range(0, masters) %}
+{{prefix}}-master-0{{ number }}:
+ image: {{ image }}
+ numcpus: 2
+ memory: {{ master_memory }}
+ reservedns: true
+ sharedkey: true
+ domain: {{ domain }}
+ nets:
+  - {{ network }}
+ disks:
+  - size: 50
+  - size: 50
+ pool: {{ pool }}
+ files:
+  - path: /etc/yum.repos.d/kubernetes.repo
+    origin: kubernetes.repo
+ scripts:
+  - pre.sh
+{% if number == 0 %}
+  - kubernetes.sh
+  - rook.sh
+{% endif %}
+{% endfor %}
+
+{% for number in range(0, workers) %}
+{{prefix }}-worker-0{{ number }}:
+ image: {{ image }}
+ numcpus: 2
+ memory: {{ node_memory }}
+ reservedns: true
+ sharedkey: true
+ domain: {{ domain }}
+ nets:
+  - {{ network }}
+ disks:
+  - size: 50
+  - size: 50
+ pool: {{ pool }}
+ files:
+  - path: /etc/yum.repos.d/kubernetes.repo
+    origin: kubernetes.repo
+ scripts:
+  - pre.sh
+{% endfor %}
