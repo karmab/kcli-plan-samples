@@ -1,0 +1,13 @@
+parameters:
+ image: centos8
+ motd: Welcome to this super friday box
+
+vm1:
+  memory: 512
+  numcpus: 2
+  nets: 
+   - default
+  pool: default
+  image: {{ image }}
+ cmds:
+ - echo {{ motd }} > /etc/motd
