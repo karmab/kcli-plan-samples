@@ -3,29 +3,21 @@ on:
   workflow_dispatch:
     inputs:
       RUNNER:
-        description: 'Github Action Runner Name'
+        description: 'Runner Name'
         required: true
         default: 'twix'
       PLAN:
         description: 'Plan Name'
         required: true
-        default: 'simplebiloute'
+        default: simplebiloute
       MOTD:
         description: 'motd'
         required: false
-        default: 'Welcome to my home'
-      PLAN:
-        description: 'plan'
-        required: false
-        default: 'simplebiloute'
-      RUNNER:
-        description: 'runner'
-        required: false
-        default: 'twix'
+        default: Welcome to my home
 
 jobs:
     requirements:
-      runs-on: ${{github.event.inputs.RUNNER}} 
+      runs-on:  ${{github.event.inputs.RUNNER}} 
       steps:
        - uses: actions/checkout@v2
        - run: git pull origin ${GITHUB_REF##*/}
@@ -37,8 +29,7 @@ jobs:
 
     deploy-plan:
       needs: requirements
-      runs-on: ${{github.event.inputs.RUNNER}}   
+      runs-on:  ${{github.event.inputs.RUNNER}}   
       steps:
         - name: Deploy kcli plan
-          run: |
-            kcli create plan --force -f samples/ghactions/kcli_plan.yml  -P motd=${{github.event.inputs.MOTD}} -P plan=${{github.event.inputs.PLAN}} -P runner=${{github.event.inputs.RUNNER}}  ${{github.event.inputs.PLAN}} 
+          run: kcli create plan --force -f samples/ghactions/kcli_plan.yml  -P motd=${{github.event.inputs.MOTD}} -P runner=${{github.event.inputs.RUNNER}}  ${{github.event.inputs.PLAN}} 
