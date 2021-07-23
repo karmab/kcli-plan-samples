@@ -1,0 +1,45 @@
+name: simplebiloute 
+on:
+  workflow_dispatch:
+    inputs:
+      RUNNER:
+        description: 'Github Action Runner Name'
+        required: true
+        default: 'twix'
+      PLAN:
+        description: 'Plan Name'
+        required: true
+        default: simplebiloute
+      MOTD:
+        description: 'motd'
+        required: false
+        default: Welcome to my home
+      PLAN:
+        description: 'plan'
+        required: false
+        default: simplebiloute
+      RUNNER:
+        description: 'runner'
+        required: false
+        default: twix
+
+jobs:
+    requirements:
+      runs-on:  ${{github.event.inputs.RUNNER}} 
+      steps:
+       - name: Install kcli
+         run: |
+           curl https://raw.githubusercontent.com/karmab/kcli/master/install.sh | bash
+           # kcli create pool -p /var/lib/libvirt/images default
+           # sudo setfacl -m u:$(id -un):rwx /var/lib/libvirt/images
+
+       - uses: actions/checkout@v2
+       - run: git pull origin ${GITHUB_REF##*/}
+
+    deploy-plan:
+      needs: requirements
+      runs-on:  ${{github.event.inputs.RUNNER}}   
+      steps:
+        - name: Deploy kcli plan
+          run: |
+            kcli create plan --force -f samples/ghactions/kcli_plan.yml  -P motd=${{github.event.inputs.MOTD}} -P plan=${{github.event.inputs.PLAN}} -P runner=${{github.event.inputs.RUNNER}}  ${{github.event.inputs.PLAN}} 
