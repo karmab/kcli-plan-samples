@@ -9,5 +9,5 @@ vm1:
    - default
   pool: default
   image: {{ image }}
- cmds:
- - echo {{ motd }} > /etc/motd
+  cmds:
+  - echo {{ motd }} > /etc/motd

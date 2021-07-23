@@ -32,4 +32,4 @@ jobs:
       runs-on:  ${{github.event.inputs.RUNNER}}   
       steps:
         - name: Deploy kcli plan
-          run: kcli create plan --force -f samples/ghactions/kcli_plan.yml  -P motd=${{github.event.inputs.MOTD}} -P runner=${{github.event.inputs.RUNNER}}  ${{github.event.inputs.PLAN}} 
+          run: kcli create plan --force -f samples/ghactions/kcli_plan.yml  -P motd='${{github.event.inputs.MOTD}}'  ${{github.event.inputs.PLAN}} 
