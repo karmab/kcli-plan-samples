@@ -31,5 +31,7 @@ jobs:
       needs: requirements
       runs-on:  ${{github.event.inputs.RUNNER}}   
       steps:
+        - name: Test kcli keywords
+          run: kcli list keyword
         - name: Deploy kcli plan
           run: kcli create plan --force -f samples/ghactions/kcli_plan.yml  -P motd='${{github.event.inputs.MOTD}}'  ${{github.event.inputs.PLAN}} 
