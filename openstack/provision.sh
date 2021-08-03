@@ -39,4 +39,4 @@ nova boot --flavor m1.tiny --security-groups testk --key-name testk --image cirr
 sleep 8
 ip=$(neutron  floatingip-list -f value -c floating_ip_address  | head -1) ; nova floating-ip-associate {{ user }} ${ip} || openstack server add floating ip {{ user }} ${ip}
 projectid=$(openstack project show {{ project }} -f value -c id)
-nova quota-update --instances -1 --cores -1 --ram -1  $projectid
+openstack quota set --instances -1 --cores -1 --ram -1 $projectid
