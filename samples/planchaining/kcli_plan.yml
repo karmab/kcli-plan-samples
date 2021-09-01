@@ -1,0 +1,8 @@
+vm1:
+ image: {{ image }}
+ memory: 1024
+ scripts:
+ - script1.sh
+
+vm2:
+ image: {{ image }}

@@ -1,0 +1,9 @@
+vm1:
+ baseplan: kcli_plan.yml
+ memory: 2048
+ scripts:
+ - script2.sh
+
+vm3:
+ image: centos8
+ start: false
