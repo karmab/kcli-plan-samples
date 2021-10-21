@@ -1,0 +1,5 @@
+---
+- hosts: secondnodes
+  tasks:
+   - debug:
+       msg: "i am play2"

@@ -1,71 +1,30 @@
 parameters:
+ image: centos8
  groups:
-   nodes:
-   - node
-   masters:
-   - master
+   firstnodes:
+   - node1
+   secondnodes:
+   - node2
 
-1_openshift:
+1_play:
  type: ansible
- verbose: false
- playbook: openshift.yaml
+ verbose: true
+ playbook: play1.yml
+ groups: {{ groups }}
+
+2_play:
+ type: ansible
+ playbook: play2.yml
  groups: {{ groups }}
  vms:
-  - master
-  - nodes
+ - node1
 
-2_storage:
- type: ansible
- verbose: false
- playbook: storage.yaml
- groups: {{ groups }}
- vms:
-  - master
-
-3_kubevirt:
- type: ansible
- verbose: false
- playbook: kubevirt.yaml
- groups: {{ groups }}
- vms:
-  - master
-
-kubedemo:
- type: network
- cidr: 192.168.201.0/24
- dhcp: True
- nat: true
-
-master:
- image: CentOS-7-x86_64-GenericCloud.qcow2
+node1:
+ image: {{ image }}
  numcpus: 2
  memory: 3096
- nets:
- - name: kubedemo
-   ip: 192.168.201.2
-   mask: 255.255.255.0
-   gateway: 192.168.201.1
-   dns: 192.168.201.1
- disks:
- - size: 10
- pool: default
- cmds:
-  - yum -y install NetworkManager
-  - systemctl enable NetworkManager
-  - systemctl start NetworkManager
 
-
-node:
- image: CentOS-7-x86_64-GenericCloud.qcow2
+node2:
+ image: {{ image }}
  numcpus: 2
  memory: 2048
- nets:
-  - name: kubedemo
-    ip: 192.168.201.3
-    mask: 255.255.255.0
-    gateway: 192.168.201.1
-    dns: 192.168.201.1
- cmds:
-  - yum -y install NetworkManager
-  - systemctl enable NetworkManager
-  - systemctl start NetworkManager

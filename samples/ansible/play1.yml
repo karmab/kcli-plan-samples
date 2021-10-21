@@ -1,0 +1,5 @@
+---
+- hosts: firstnodes
+  tasks:
+   - debug:
+       msg: "i am play1"
