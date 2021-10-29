@@ -1,0 +1,8 @@
+---
+- hosts: all
+  tasks:
+  - name: Deploy microshift
+    shell: "curl -sfL https://raw.githubusercontent.com/redhat-et/microshift/main/install.sh | bash"
+    become: true
+    environment:
+      HOME: /root

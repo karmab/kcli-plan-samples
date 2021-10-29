@@ -1,0 +1,26 @@
+parameters:
+ memory: 8192
+ numcpus: 4
+ image: centos8stream
+ domain: karmalabs.com
+ nodes: 1
+
+microshift_profile:
+ type: profile
+ domain: {{ domain }}
+ image: {{ image }}
+ memory: {{ memory }}
+ numcpus: {{ numcpus }}
+ files:
+ - path: /etc/profile.d/microshift.sh
+   mode: 644
+   content: |
+     export PATH=/usr/local/bin:$PATH
+ ansible:
+ - playbook: microshift.yml
+   verbose: false
+
+{% for number in range(0, nodes) %}
+microshift-{{ number }}:
+  profile: microshift_profile
+{% endfor %}
