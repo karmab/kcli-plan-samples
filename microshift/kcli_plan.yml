@@ -1,7 +1,7 @@
 parameters:
- memory: 8192
+ memory: 4096
  numcpus: 4
- image: centos8stream
+ image: ubuntu1804
  domain: karmalabs.com
  nodes: 1
 
@@ -16,9 +16,10 @@ microshift_profile:
    mode: 644
    content: |
      export PATH=/usr/local/bin:$PATH
- ansible:
- - playbook: microshift.yml
-   verbose: false
+     export KUBECONFIG=/var/lib/microshift/resources/kubeadmin/kubeconfig
+ cmds:
+ - apt-get update
+ - HOME=/root curl -sfL https://raw.githubusercontent.com/redhat-et/microshift/main/install.sh | bash
 
 {% for number in range(0, nodes) %}
 microshift-{{ number }}:
