@@ -1,17 +1,7 @@
-this is a collection of plans i use to deploy :
+this is a collection of sample plans to demonstrate functionality
 
-- openshift
-- kubevirt
-- kubernetes
-- openstack
-- ovirt
-- foreman
-- samples 
-
-and others!
-
-It can also be used through product by adding the repo with
+They can also be used through product by adding the repo with
 
 ```
-kcli create repo -u https://github.com/karmab/kcli-plans karmab
+kcli create repo -u https://github.com/karmab/kcli-plan-samples karmab-plan-samples
 ```

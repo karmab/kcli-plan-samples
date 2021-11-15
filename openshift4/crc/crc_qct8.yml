@@ -1,5 +1,0 @@
-network: br1
-memory: 32768
-numcpus: 16
-vm_numcpus: 8
-vm_memory: 16384
