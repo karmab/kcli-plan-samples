@@ -7,5 +7,5 @@ vm1:
       - 'jimmy.local' 
       - 'john.macenroe'
   pool: default
-  image: CentOS-7-x86_64-GenericCloud.qcow2
+  image: centos8
   reservedns: True

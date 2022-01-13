@@ -5,7 +5,7 @@ bob:
  nat: true
 
 bob01:
- image: CentOS-7-x86_64-GenericCloud.qcow2
+ image: centos8
  memory: 512
  numcpus: 1
  disks:

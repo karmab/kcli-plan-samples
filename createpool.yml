@@ -11,4 +11,4 @@ vm1:
   nets: 
    - default
   pool: default
-  image: CentOS-7-x86_64-GenericCloud.qcow2
+  image: centos8

@@ -1,5 +1,5 @@
 vm1:
- image: CentOS-7-x86_64-GenericCloud.qcow2
+ image: centos8
  memory: 1024
  numcpus: 2
  sharedkey: true
@@ -12,7 +12,7 @@ vm1:
   - echo unix1234 | passwd --stdin root
 
 vm2:
- image: CentOS-7-x86_64-GenericCloud.qcow2
+ image: centos8
  memory: 1024
  numcpus: 2
  sharedkey: true

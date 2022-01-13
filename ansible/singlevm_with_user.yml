@@ -1,5 +1,5 @@
 testansible:
- image: CentOS-7-x86_64-GenericCloud.qcow2
+ image: centos8
  numcpus: 2
  nets:
   - default

@@ -1,6 +1,6 @@
-CentOS-7-x86_64-GenericCloud.qcow2:
- type: template
- url: http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
+mycentos:
+ type: image
+ url: https://cloud.centos.org/centos/8-stream/x86_64/images/CentOS-Stream-GenericCloud-8-20210603.0.x86_64.qcow2
 
 vm1:
   memory: 512
@@ -8,4 +8,4 @@ vm1:
   nets: 
    - default
   pool: default
-  image: CentOS-7-x86_64-GenericCloud.qcow2
+  image: mycentos

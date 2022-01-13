@@ -6,6 +6,6 @@ vm1:
    - name: default
      noconf: true
   pool: default
-  image: CentOS-7-x86_64-GenericCloud.qcow2
+  image: centos8
   reservedns: False
   reservehost: False
