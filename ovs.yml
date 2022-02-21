@@ -1,12 +1,12 @@
 vm1:
- image: centos8
+ image: centos8stream
  nets: 
   - default
   - name: testbrk
     ovs: true
 
 vm2:
- image: centos8
+ image: centos8stream
  nets: 
   - default
   - name: testbrk

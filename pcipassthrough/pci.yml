@@ -3,6 +3,6 @@ pci1:
   nets: 
    - default
   pool: default
-  image: centos8
+  image: centos8stream
   pcidevices:
   - "01:00.0"

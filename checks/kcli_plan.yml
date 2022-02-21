@@ -2,4 +2,4 @@ parameters:
  fail: true
 
 vm1:
-  image: centos8
+  image: centos8stream

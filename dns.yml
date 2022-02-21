@@ -7,5 +7,5 @@ vm1:
       - 'jimmy.local' 
       - 'john.macenroe'
   pool: default
-  image: centos8
+  image: centos8stream
   reservedns: True

@@ -1,5 +1,5 @@
 parameters:
- image: centos8
+ image: centos8stream
  disk_size: 20
  memory: 2048
  ip: 192.168.122.99

@@ -4,7 +4,7 @@ vm1:
   nets: 
    - default
   pool: default
-  image: centos8
+  image: centos8stream
   reservedns: True
   reservehost: False
 vm2:
@@ -16,7 +16,7 @@ vm2:
   disks:
    - 10
   pool: default
-  image: centos8
+  image: centos8stream
   reservedns: False
   cmds:
    - echo this stuff works > /tmp/result.txt

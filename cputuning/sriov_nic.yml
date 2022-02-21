@@ -1,5 +1,5 @@
 srio-vm:
-  image: centos8
+  image: centos8stream
   numcpus: 8
   memory: 7168
   nets: 

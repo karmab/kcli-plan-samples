@@ -4,7 +4,7 @@ numa:
   nets: 
    - default
   pool: default
-  image: centos8
+  image: centos8stream
   numamode: preferred
   cpupinning:
   - vcpus: 0-6

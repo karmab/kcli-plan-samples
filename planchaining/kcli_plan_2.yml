@@ -5,5 +5,5 @@ vm1:
  - script2.sh
 
 vm3:
- image: centos8
+ image: centos8stream
  start: false

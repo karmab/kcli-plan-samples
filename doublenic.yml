@@ -6,6 +6,6 @@ vm1:
    - name: default
      noconf: true
   pool: default
-  image: centos8
+  image: centos8stream
   reservedns: False
   reservehost: False

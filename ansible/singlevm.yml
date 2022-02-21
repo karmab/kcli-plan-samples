@@ -1,5 +1,5 @@
 testansible:
- image: centos8
+ image: centos8stream
  numcpus: 2
  nets:
   - default

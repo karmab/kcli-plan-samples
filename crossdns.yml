@@ -4,7 +4,7 @@ vm1:
   nets: 
    - default
   pool: default
-  image: centos8
+  image: centos8stream
   reservedns: False
   reservehost: False
   domain: cnvlab.gce.sysdeseng.com

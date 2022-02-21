@@ -1,5 +1,5 @@
 parameters:
- image: centos8
+ image: centos8stream
  motd: Welcome to this super friday box
 
 vm1:

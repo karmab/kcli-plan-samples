@@ -4,7 +4,7 @@ vm1:
   nets: 
    - default
   pool: default
-  image: centos8
+  image: centos8stream
   client: bumblefoot
 vm2:
   memory: 512
@@ -13,5 +13,5 @@ vm2:
   nets: 
    - default
   pool: default
-  image: centos8
+  image: centos8stream
   client: twix

@@ -1,6 +1,6 @@
 parameters:
   password: hendrix
 vm3:
-  image: centos8
+  image: centos8stream
   cmds:
     - echo {{ password }} | passwd --stdin root

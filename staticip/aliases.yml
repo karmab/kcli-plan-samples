@@ -1,5 +1,5 @@
 roberto:
- image: centos8
+ image: centos8stream
  memory: 512
  numcpus: 1
  disks:

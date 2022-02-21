@@ -3,4 +3,4 @@ yyy:
  net: default
  ip: 192.168.1.35
 vm1:
- image: centos8
+ image: centos8stream

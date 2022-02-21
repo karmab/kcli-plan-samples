@@ -1,5 +1,5 @@
 vm1:
- image: centos8
+ image: centos8stream
  privatekey: true
  wait: true
  cmds:
