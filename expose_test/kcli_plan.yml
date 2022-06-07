@@ -1,0 +1,8 @@
+parameters:
+  cluster: prout
+  number: 2
+
+{% for num in range(0, number) %}
+{{ cluster }}-{{ num }}:
+  image: centos8stream
+{% endfor %}
