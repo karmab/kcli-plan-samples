@@ -5,7 +5,7 @@ parameters:
   - /tmp/y
 
 sharedfoldersvm:
- image: {{ template }}
+ image: {{ image }}
  memory: 1024
  numcpus: 2
  disks:
