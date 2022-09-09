@@ -1,0 +1,12 @@
+parameters:
+  cluster: xxx
+  supername: prince
+
+{{ cluster }}-workflow:
+ type: workflow
+ files:
+ - file1.yml
+ - file2.yml
+ scripts:
+ - 01_script.sh
+ - 02_script.sh
