@@ -4,7 +4,7 @@ parameters:
  prefix:
  gateway:
  dns: 8.8.8.8
- domain: karmalabs.com
+ domain: karmalabs.local
  nets:
  - default
  - default

@@ -2,7 +2,7 @@
 
 sleep 20
 ignition_url="http://karmatron.mooo.com/worker.ign"
-networks_args='ip=192.168.122.205::192.168.122.1:24:biloute.karmalabs.com:ens3:none'                          │·················
+networks_args='ip=192.168.122.205::192.168.122.1:24:biloute.karmalabs.local:ens3:none'
 dns_args='nameserver=192.168.122.1'
 firstboot_args='console=tty0'
 if [ -b /dev/vda ]; then
