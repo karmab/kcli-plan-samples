@@ -1,15 +1,15 @@
 parameters:
-  cluster1_masters: 1
+  cluster1_ctlplanes: 1
   cluster1_workers: 1
-  cluster2_masters: 1
+  cluster2_ctlplanes: 1
   cluster2_workers: 0
 
 cluster1:
  type: kube
- masters: {{ cluster1_masters }}
+ ctlplanes: {{ cluster1_ctlplanes }}
  workers: {{ cluster1_workers }}
 
 cluster2:
  type: kube
- masters: {{ cluster2_masters }}
+ ctlplanes: {{ cluster2_ctlplanes }}
  workers: {{ cluster2_workers }}

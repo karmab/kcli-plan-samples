@@ -108,7 +108,7 @@
 
 - name: samples_ansiblecomplex
   file: ansible/complex_plan.yml
-  description: deploy a master and node vm and execute 3 playbooks against them
+  description: deploy a ctlplane and node vm and execute 3 playbooks against them
   numvms: 2
 
 - name: samples_injectfiles
