@@ -1,4 +1,5 @@
 parameters:
+  info: This is a sample plan which create $number centos8stream vms
   cluster: prout
   number: 2
 
