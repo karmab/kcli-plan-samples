@@ -6,7 +6,7 @@ mkdir /root/bin
   cp /mnt/{{ ceph_dev_folder }}/src/cephadm/cephadm /root/bin/cephadm
 {% else %}
   cd /root/bin
-  curl --silent --remote-name --location https://github.com/ceph/ceph/raw/quincy/src/cephadm/cephadm
+  curl --silent --output cephadm --location https://raw.githubusercontent.com/ceph/ceph/main/src/cephadm/cephadm.py
 {% endif %}
 chmod +x /root/bin/cephadm
 mkdir -p /etc/ceph
