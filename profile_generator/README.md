@@ -108,3 +108,5 @@ Options:
 ```
 
 ### Example Report 
+
+![20230303172337](https://i.imgur.com/7IE6dPc.png)
