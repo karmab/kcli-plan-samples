@@ -93,3 +93,18 @@ fedora37:
 # Display help message
 python3 profile_generator/profile_generator.py update-yaml --help
 ```
+
+## Print Kcli Report
+```
+$ python3 profile_generator/kcli_profile_report.py --help                                                         05:21:38 PM
+Usage: kcli_profile_report.py [OPTIONS]
+
+Options:
+  -i, --input PATH              Path to input file
+  -o, --output PATH             Path to output file
+  --passwords / --no-passwords  Hide passwords
+  --console / --no-console      Print to console
+  -h, --help                    Display help message
+```
+
+### Example Report 
