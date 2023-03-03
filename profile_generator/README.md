@@ -2,17 +2,24 @@
 # Profile Generator for Kcli
 A Python script to update a YAML file with new data based on a Jinja2 template.
 
-Installation
+## Installation
 Clone this repository:
 ```sh
 git clone https://github.com/tosin2013/kcli-plan-samples.git
 ```
 
+Cd into the profile_generator directory:
+```sh
+cd kcli-plan-samples/profile_generator
+```
+
 Install the required dependencies:
 ```sh
 pip install -r requirements.txt
+cd ..
 ```
-Usage
+
+## Usage
 To update the YAML file with new data, use the update-yaml command:
 
 ```sh
@@ -41,7 +48,7 @@ Options:
 
 The update-yaml command updates the YAML file with the new data based on the Jinja2 template and saves it to `kcli-profiles.yml`. If the `--help` flag is passed, the command displays a help message with the available options and exits.
 
-Examples
+## Examples
 Here are some examples of using the update-yaml command:
 
 ```sh
