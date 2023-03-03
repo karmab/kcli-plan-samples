@@ -89,7 +89,7 @@ def generate_html_report(input, output, passwords, console, help):
     </body>
     </html>''')
 
-    report = template.render(data=data)
+    report = template.render(data=data, passwords=passwords)
 
     with open(output, 'w') as f:
         f.write(report)

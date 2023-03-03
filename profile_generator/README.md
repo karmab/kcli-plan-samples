@@ -95,6 +95,7 @@ python3 profile_generator/profile_generator.py update-yaml --help
 ```
 
 ## Print Kcli Report
+**Still working on  --no-passwords flag**
 ```
 $ python3 profile_generator/kcli_profile_report.py --help                                                         05:21:38 PM
 Usage: kcli_profile_report.py [OPTIONS]
