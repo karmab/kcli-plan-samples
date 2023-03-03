@@ -16,7 +16,7 @@ Usage
 To update the YAML file with new data, use the update-yaml command:
 
 ```sh
-python profile_generator/profile_generator.py update-yaml OS_NAME TEMPLATE_PATH --image IMAGE_NAME --user USER_NAME --user-password USER_PASSWORD [OPTIONS]
+python profile_generator/profile_generator.py update-yaml OS_NAME TEMPLATE_PATH --image IMAGE_NAME --user USER_NAME --user-password USER_PASSWORD
 ```
 Where:
 
