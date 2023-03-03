@@ -1,0 +1,15 @@
+{{ os_name }}:
+  image: {{ image }}
+  numcpus: {{ numcpus }}
+  memory: {{ memory }}
+  nets:
+    - name: {{ net_name }}
+  reservedns: {{ reservedns }}
+  disks:
+    - size: {{ disk_size }}
+  cmds:
+    - echo {{ root_password }} | passwd --stdin root
+    - useradd {{ user }}
+    - usermod -aG wheel {{ user }}
+    - echo "{{ user }} ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/{{ user }}
+    - echo {{ user_password }} | passwd --stdin {{ user }}
