@@ -1,6 +1,7 @@
 import click
 import yaml
 from jinja2 import Template
+import os.path
 
 @click.group()
 def cli():
@@ -29,11 +30,17 @@ def update_yaml(os_name, template_path, image, rhnregister, rhnorg, rhnactivatio
         click.echo(click.get_current_context().get_help())
         return
 
+    if not os.path.isfile('kcli-profiles.yml'):
+        open('kcli-profiles.yml', 'w').close()
+
+    with open('kcli-profiles.yml', 'r') as f:
+        data = yaml.safe_load(f) or {}
+
     with open(template_path, 'r') as f:
         template_data = f.read()
 
     template = Template(template_data)
-    data = yaml.load(template.render(
+    data[os_name] = yaml.load(template.render(
         os_name=os_name,
         image=image,
         rhnregister=rhnregister,
@@ -49,10 +56,10 @@ def update_yaml(os_name, template_path, image, rhnregister, rhnorg, rhnactivatio
         offline_token=offline_token,
     ), Loader=yaml.SafeLoader)
 
-    with open('kcli-profiles.yml', 'a') as f:
+    with open('kcli-profiles.yml', 'w') as f:
         yaml.dump(data, f)
 
     print(f'Successfully updated {os_name} entry in kcli-profiles.yml')
 
 if __name__ == '__main__':
-    cli()  # call the click CLI function
+    cli()

@@ -20,10 +20,10 @@ cd ..
 ```
 
 ## Usage
-To update the YAML file with new data, use the update-yaml command:
+To update the YAML file with new data, use the update_yaml command:
 
 ```sh
-python profile_generator/profile_generator.py update-yaml OS_NAME TEMPLATE_PATH --image IMAGE_NAME --user USER_NAME --user-password USER_PASSWORD
+python profile_generator/profile_generator.py update_yaml OS_NAME TEMPLATE_PATH --image IMAGE_NAME --user USER_NAME --user-password USER_PASSWORD
 ```
 Where:
 
@@ -46,17 +46,17 @@ Options:
 * `--offline-token:` Offline token (default: '').
 * `--help, -h:` Display help message.
 
-The update-yaml command updates the YAML file with the new data based on the Jinja2 template and saves it to `kcli-profiles.yml`. If the `--help` flag is passed, the command displays a help message with the available options and exits.
+The update_yaml command updates the YAML file with the new data based on the Jinja2 template and saves it to `kcli-profiles.yml`. If the `--help` flag is passed, the command displays a help message with the available options and exits.
 
 ## Examples
-Here are some examples of using the update-yaml command:
+Here are some examples of using the update_yaml command:
 
 ```sh
 # Update RHEL 9 entry in the YAML file with new data
-python3 profile_generator/profile_generator.py update-yaml rhel9 rhel9/template.yaml --image rhel-baseos-9.1-x86_64-kvm.qcow2 --user admin --user-password secret
+python3 profile_generator/profile_generator.py update_yaml rhel9 rhel9/template.yaml --image rhel-baseos-9.1-x86_64-kvm.qcow2 --user admin --user-password secret
 
 # Update Fedora 37 entry in the YAML file with new data
-python3 profile_generator/profile_generator.py update-yaml fedora37 fedora37/template.yaml --image Fedora-Cloud-Base-37-1.7.x86_64.qcow2 --user admin --user-password secret --disk-size 30 --numcpus 4 --memory 8192 --user admin --user-password secret
+python3 profile_generator/profile_generator.py update_yaml fedora37 fedora37/template.yaml --image Fedora-Cloud-Base-37-1.7.x86_64.qcow2 --user admin --user-password secret --disk-size 30 --numcpus 4 --memory 8192 --user admin --user-password secret
 
 # The kcli profiles yaml will be appened with the new data
 $ cat kcli-profiles.yml                                                                                             04:51:01 PM
@@ -91,7 +91,7 @@ fedora37:
   reservedns: false
 
 # Display help message
-python3 profile_generator/profile_generator.py update-yaml --help
+python3 profile_generator/profile_generator.py update_yaml --help
 ```
 
 ## Print Kcli Report
