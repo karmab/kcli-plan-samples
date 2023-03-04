@@ -1,4 +1,3 @@
-{{ os_name }}:
   image: {{ image }}
 {% if rhnregister %}
   rhnregister: true
