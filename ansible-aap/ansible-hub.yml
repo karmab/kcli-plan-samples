@@ -1,0 +1,11 @@
+ansible-hub:
+ image: {{ image }}
+ numcpus: 4
+ memory: 16384
+ rhnregister: true
+ reservedns: true
+ rhnorg: {{ rhnorg }}
+ rhnactivationkey: {{ rhnactivationkey }}
+ pool: default
+ disks:
+ - size: 200
