@@ -6,6 +6,7 @@ reservedns: true
 rhnorg: {{ rhnorg }}
 rhnactivationkey: {{ rhnactivationkey }}
 pool: default
+wait: true
 disks:
 - size: 100
 cmds:

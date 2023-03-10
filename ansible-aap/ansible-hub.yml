@@ -3,6 +3,7 @@ numcpus: 4
 memory: 16384
 rhnregister: true
 reservedns: true
+wait: true
 rhnorg: {{ rhnorg }}
 rhnactivationkey: {{ rhnactivationkey }}
 pool: default
