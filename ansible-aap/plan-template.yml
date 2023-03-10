@@ -1,24 +1,4 @@
-parameters:
- groups:
-   firstnodes:
-   - node1
-   secondnodes:
-   - node2
-
-1_play:
- type: ansible
- verbose: true
- playbook: play1.yml
- groups: {{ groups }}
-
-2_play:
- type: ansible
- playbook: play2.yml
- groups: {{ groups }}
- vms:
- - node1
-
-node1:
+ansible-aap:
  image: {{ image }}
  numcpus: 4
  memory: 16384
@@ -29,9 +9,8 @@ node1:
  pool: default
  disks:
  - size: 100
- 
 
-node2:
+ansible-hub:
  image: {{ image }}
  numcpus: 4
  memory: 16384
