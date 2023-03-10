@@ -14,5 +14,5 @@ cmds:
 - usermod -aG wheel {{ user }}
 - echo "{{ user }} ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/{{ user }}
 - echo {{ user_password }} | passwd --stdin {{ user }}
-- export OFFLINE_TOKEN={{ offline_token }}}
+- export OFFLINE_TOKEN={{ offline_token }}
 - echo $OFFLINE_TOKEN > /root/offline_token
