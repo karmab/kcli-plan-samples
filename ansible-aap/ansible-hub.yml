@@ -8,3 +8,11 @@ rhnactivationkey: {{ rhnactivationkey }}
 pool: default
 disks:
 - size: 200
+cmds:
+- echo {{ user_password }} | passwd --stdin root
+- useradd {{ user }}
+- usermod -aG wheel {{ user }}
+- echo "{{ user }} ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/{{ user }}
+- echo {{ user_password }} | passwd --stdin {{ user }}
+- export OFFLINE_TOKEN=CHANGEOFFLINETOKEN
+- echo $OFFLINE_TOKEN > /root/offline_token
