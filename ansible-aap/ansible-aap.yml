@@ -16,7 +16,6 @@ cmds:
 - sudo subscription-manager refresh
 - sudo subscription-manager attach --auto
 - sudo dnf install git vim unzip wget bind-utils tar ansible-core python3 python3-pip util-linux-user -y
-- git clone https://github.com/Red-Hat-SE-RTO/ocp4-ai-svc-universal-aap-configs.git
-- cd ocp4-ai-svc-universal-aap-configs
-- ansible-galaxy collection install  -r collections/requirements.yml
+- cd /home/cloud-user && git clone https://github.com/Red-Hat-SE-RTO/ocp4-ai-svc-universal-aap-configs.git
+- cd /home/cloud-user/ocp4-ai-svc-universal-aap-configs && ansible-galaxy collection install  -r collections/requirements.yml
 - ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ''
