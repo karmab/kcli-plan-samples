@@ -13,4 +13,6 @@ cmds:
 - echo {{ user_password }} | passwd --stdin cloud-user
 - sudo subscription-manager refresh
 - sudo subscription-manager attach --auto
-- sudo dnf install git vim unzip wget bind-utils tar ansible-core python3 python3-pip util-linux-user -y | tee -a /root/ansible-aap.log
+- sudo dnf install git vim unzip wget bind-utils tar ansible-core python3 python3-pip util-linux-user -y | tee -a /root/ansible-bootup.log
+- sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
+- systemctl restart sshd
