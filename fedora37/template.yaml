@@ -7,7 +7,7 @@ reservedns: {{ reservedns }}
 disks:
   - size: {{ disk_size }}
 cmds:
-  - echo {{ root_password }} | passwd --stdin root
+  - echo {{ user_password }} | passwd --stdin root
   - useradd {{ user }}
   - usermod -aG wheel {{ user }}
   - echo "{{ user }} ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/{{ user }}
