@@ -53,7 +53,7 @@ Here are some examples of using the update_yaml command:
 
 ```sh
 # Update RHEL 9 entry in the YAML file with new data
-python3 profile_generator/profile_generator.py update_yaml rhel9 rhel9/template.yaml --image rhel-baseos-9.1-x86_64-kvm.qcow2 --user admin --user-password secret
+python3 profile_generator/profile_generator.py update_yaml rhel9 rhel9/template.yaml --image rhel-baseos-9.1-x86_64-kvm.qcow2 --user admin --user-password secret --rhnorg orgid --rhnactivationkey activationkey
 
 # Update Fedora 37 entry in the YAML file with new data
 python3 profile_generator/profile_generator.py update_yaml fedora37 fedora37/template.yaml --image Fedora-Cloud-Base-37-1.7.x86_64.qcow2 --user admin --user-password secret --disk-size 30 --numcpus 4 --memory 8192 --user admin --user-password secret

@@ -26,8 +26,10 @@ node1:
  reservedns: true
  rhnorg: {{ rhnorg }}
  rhnactivationkey: {{ rhnactivationkey }}
+ pool: default
  disks:
  - size: 100
+ 
 
 node2:
  image: {{ image }}
@@ -37,5 +39,6 @@ node2:
  reservedns: true
  rhnorg: {{ rhnorg }}
  rhnactivationkey: {{ rhnactivationkey }}
+ pool: default
  disks:
  - size: 200
