@@ -10,9 +10,9 @@ disks:
 - size: 200
 cmds:
 - echo {{ user_password }} | passwd --stdin root
-- useradd {{ user }}
-- usermod -aG wheel {{ user }}
-- echo "{{ user }} ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/{{ user }}
-- echo {{ user_password }} | passwd --stdin {{ user }}
-- export OFFLINE_TOKEN={{ offline_token }}}
+- echo {{ user_password }} | passwd --stdin cloud-user
+- export OFFLINE_TOKEN={{ offline_token }}
 - echo $OFFLINE_TOKEN > /root/offline_token
+- sudo subscription-manager refresh
+- sudo subscription-manager attach --auto
+- sudo dnf install git vim unzip wget bind-utils tar ansible-core python3 python3-pip util-linux-user -y
