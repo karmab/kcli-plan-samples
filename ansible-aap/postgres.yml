@@ -1,6 +1,6 @@
 image: {{ image }}
 numcpus: 4
-memory: 16384
+memory: 4096
 rhnregister: true
 reservedns: true
 wait: true
