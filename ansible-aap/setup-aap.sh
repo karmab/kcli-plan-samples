@@ -9,6 +9,7 @@ fi
 ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ''
 ssh-copy-id root@ansible-aap
 ssh-copy-id root@ansible-hub
+ssh-copy-id root@postgres
 
 cd $HOME/ocp4-ai-svc-universal-aap-configs
 
@@ -47,7 +48,7 @@ all:
     # can be automationhub if you do not have a specific server for this
     builder:
       hosts:
-        HERE:
+        ansible-hub:
 
     # only needed if installing AAP with automation, can be removed if you are not
     database:
@@ -58,7 +59,7 @@ all:
 ...
 EOF
 
-ansible-playbook -i inventory_dev.yml playbooks/install_aap.yml --ask-vault-pass  -e "aap_setup_rhel_version=9"
+ansible-playbook -i inventory_dev.yml playbooks/install_aap.yml --ask-vault-pass 
 
 
 ansible-playbook -i inventory_dev.yml -l dev playbooks/install_configure.yml --ask-vault-pass -e "env=dev" 

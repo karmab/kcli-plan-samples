@@ -20,5 +20,4 @@ sudo kcli create plan -f ansible-aap/plan.yml
 
 ```
 sudo kcli delete plan dope-amouranth
-sudo kcli delete plan -f ansible-aap/plan.yml
 ```

@@ -7,8 +7,10 @@ wait: true
 rhnorg: {{ rhnorg }}
 rhnactivationkey: {{ rhnactivationkey }}
 pool: default
+nets:
+  - name: qubinet
 disks:
-- size: 200
+- size: 100
 cmds:
 - echo {{ user_password }} | passwd --stdin root
 - echo {{ user_password }} | passwd --stdin cloud-user
