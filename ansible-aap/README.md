@@ -10,16 +10,26 @@ PASSWORD=$(yq eval '.admin_user_password' "${ANSIBLE_VAULT_FILE}")
 RHSM_ORG=$(yq eval '.rhsm_org' "${ANSIBLE_VAULT_FILE}")
 RHSM_ACTIVATION_KEY=$(yq eval '.rhsm_activationkey' "${ANSIBLE_VAULT_FILE}")
 OFFLINE_TOKEN=$(yq eval '.offline_token' "${ANSIBLE_VAULT_FILE}")
+NET_NAME=default
 sudo rm -rf kcli-profiles.yml
 sudo python3 profile_generator/profile_generator.py update_yaml ansible-aap ansible-aap/ansible-aap.yml --image rhel-baseos-9.1-x86_64-kvm.qcow2 --user $USER --user-password ${PASSWORD} --rhnorg ${RHSM_ORG} --rhnactivationkey ${RHSM_ACTIVATION_KEY} --offline-token ${OFFLINE_TOKEN}
 sudo python3 profile_generator/profile_generator.py update_yaml ansible-hub ansible-aap/ansible-hub.yml --image rhel-baseos-9.1-x86_64-kvm.qcow2 --user $USER --user-password ${PASSWORD} --rhnorg ${RHSM_ORG} --rhnactivationkey ${RHSM_ACTIVATION_KEY} --offline-token ${OFFLINE_TOKEN}
-sudo python3 profile_generator/profile_generator.py update_yaml postgres ansible-aap/postgres.yml --image rhel-baseos-9.1-x86_64-kvm.qcow2 --user $USER --user-password ${PASSWORD} --rhnorg ${RHSM_ORG} --rhnactivationkey ${RHSM_ACTIVATION_KEY} --offline-token ${OFFLINE_TOKEN}
+sudo python3 profile_generator/profile_generator.py update_yaml postgres ansible-aap/postgres.yml --image rhel-baseos-9.1-x86_64-kvm.qcow2 --user $USER --user-password ${PASSWORD} --rhnorg ${RHSM_ORG} --net_name ${NET_NAME} --rhnactivationkey ${RHSM_ACTIVATION_KEY} --offline-token ${OFFLINE_TOKEN}
 cat  kcli-profiles.yml
 ansiblesafe -f "${ANSIBLE_VAULT_FILE}" -o 1
 sudo cp kcli-profiles.yml ansible-aap/plan.yml
 sudo kcli create plan -f ansible-aap/plan.yml
+
+
+ANSIBLE_AAP=ansible-aap
+ANSIBLE_HUB=ansible-hub
+POSTGRES=postgres
+helper_scripts/get-ips-by-mac.sh ${ANSIBLE_AAP} ${ANSIBLE_HUB} ${POSTGRES} setup-aap.sh
 ```
 
+
+Delete the plan
 ```
-sudo kcli delete plan dope-amouranth
+KILLME=$(sudo kcli list plan | grep -P -i [A-Za-z0-9]+-[A-Za-z0-9] | awk '{print $2}')
+sudo kcli delete plan ${KILLME}
 ```

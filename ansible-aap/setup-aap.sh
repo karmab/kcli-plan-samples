@@ -6,6 +6,19 @@ if [ "$(id -u)" != "0" ]; then
     exit 1
 fi
 
+if ! yq -v  &> /dev/null
+then
+    VERSION=v4.30.6
+    BINARY=yq_linux_amd64
+    sudo wget https://github.com/mikefarah/yq/releases/download/${VERSION}/${BINARY} -O /usr/bin/yq &&\
+    sudo chmod +x /usr/bin/yq
+fi
+
+if ! jq -v  &> /dev/null
+then
+    sudo dnf install -y jq
+fi
+
 ANSIBLE_AAP=ansible-aap
 ANSIBLE_HUB=ansible-hub
 POSTGRES=postgres
@@ -50,9 +63,28 @@ all:
 ...
 EOF
 
-ansible-playbook -i inventory_dev.yml playbooks/install_aap.yml --ask-vault-pass 
+
+ansible -i  inventory_dev.yml all  -m setup 
+ansible-playbook -i inventory_dev.yml playbooks/install_aap.yml --ask-vault-pass  -vv
 
 
-ansible-playbook -i inventory_dev.yml -l dev playbooks/install_configure.yml --ask-vault-pass -e "env=dev" 
+yaml_file="vaults/dev.yml"
+offline_token=$(yq eval '.offline_token' "$yaml_file")
 
-ansible-playbook -i inventory_dev.yml -l dev playbooks/hub_config.yml --ask-vault-pass
+# Execute curl command to get access token
+response=$(curl -sS https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token \
+  -d grant_type=refresh_token \
+  -d client_id=rhsm-api \
+  -d refresh_token="$offline_token")
+
+# Parse access token from response
+access_token=$(echo "$response" | jq -r '.access_token')
+
+# Update YAML file with access token
+yaml_file="vaults/dev.yml"
+yaml_path="."token""
+echo "Updating $yaml_file with access token..."
+yq -i  ''$yaml_path'="'$access_token'"' "$yaml_file"
+
+
+ansible-playbook -i inventory_dev.yml -l dev playbooks/hub_config.yml --ask-vault-pass  -vv

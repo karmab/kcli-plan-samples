@@ -8,7 +8,7 @@ rhnorg: {{ rhnorg }}
 rhnactivationkey: {{ rhnactivationkey }}
 pool: default
 nets:
-  - name: qubinet
+  - name: {{ net_name }}
 disks:
 - size: 200
 cmds:

@@ -8,7 +8,7 @@ rhnactivationkey: {{ rhnactivationkey }}
 pool: default
 wait: true
 nets:
-  - name: qubinet
+  - name: {{ net_name }}
 disks:
 - size: 100
 cmds:
