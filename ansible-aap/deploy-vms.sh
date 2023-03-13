@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x 
+set -xe 
 cd /opt/qubinode-installer/kcli-plan-samples/
 
 export ANSIBLE_VAULT_FILE="$HOME/quibinode_navigator/inventories/localhost/group_vars/control/vault.yml"
@@ -10,9 +10,9 @@ RHSM_ACTIVATION_KEY=$(yq eval '.rhsm_activationkey' "${ANSIBLE_VAULT_FILE}")
 OFFLINE_TOKEN=$(yq eval '.offline_token' "${ANSIBLE_VAULT_FILE}")
 NET_NAME=default
 sudo rm -rf kcli-profiles.yml
-sudo python3 profile_generator/profile_generator.py update_yaml ansible-aap ansible-aap/ansible-aap.yml --image rhel-baseos-9.1-x86_64-kvm.qcow2 --user $USER --user-password ${PASSWORD} --rhnorg ${RHSM_ORG} --net_name ${NET_NAME}  --rhnactivationkey ${RHSM_ACTIVATION_KEY} --offline-token ${OFFLINE_TOKEN}
-sudo python3 profile_generator/profile_generator.py update_yaml ansible-hub ansible-aap/ansible-hub.yml --image rhel-baseos-9.1-x86_64-kvm.qcow2 --user $USER --user-password ${PASSWORD} --rhnorg ${RHSM_ORG} --net_name ${NET_NAME}  --rhnactivationkey ${RHSM_ACTIVATION_KEY} --offline-token ${OFFLINE_TOKEN}
-sudo python3 profile_generator/profile_generator.py update_yaml postgres ansible-aap/postgres.yml --image rhel-baseos-9.1-x86_64-kvm.qcow2 --user $USER --user-password ${PASSWORD} --rhnorg ${RHSM_ORG} --net_name ${NET_NAME} --rhnactivationkey ${RHSM_ACTIVATION_KEY} --offline-token ${OFFLINE_TOKEN}
+sudo python3 profile_generator/profile_generator.py update_yaml ansible-aap ansible-aap/ansible-aap.yml --image rhel-baseos-9.1-x86_64-kvm.qcow2 --user $USER --user-password ${PASSWORD} --rhnorg ${RHSM_ORG} --net-name ${NET_NAME}  --rhnactivationkey ${RHSM_ACTIVATION_KEY} --offline-token ${OFFLINE_TOKEN}
+sudo python3 profile_generator/profile_generator.py update_yaml ansible-hub ansible-aap/ansible-hub.yml --image rhel-baseos-9.1-x86_64-kvm.qcow2 --user $USER --user-password ${PASSWORD} --rhnorg ${RHSM_ORG} --net-name ${NET_NAME}  --rhnactivationkey ${RHSM_ACTIVATION_KEY} --offline-token ${OFFLINE_TOKEN}
+sudo python3 profile_generator/profile_generator.py update_yaml postgres ansible-aap/postgres.yml --image rhel-baseos-9.1-x86_64-kvm.qcow2 --user $USER --user-password ${PASSWORD} --rhnorg ${RHSM_ORG} --net-name ${NET_NAME} --rhnactivationkey ${RHSM_ACTIVATION_KEY} --offline-token ${OFFLINE_TOKEN}
 cat  kcli-profiles.yml
 ansiblesafe -f "${ANSIBLE_VAULT_FILE}" -o 1
 sudo cp kcli-profiles.yml ansible-aap/plan.yml
