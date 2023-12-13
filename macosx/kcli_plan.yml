@@ -1,0 +1,15 @@
+{{ plan }}:
+  uefi: true
+  cloudinit: false
+  numcpus: {{ numcpus }}
+  memory: {{ memory }}
+  diskinterface: sata
+  boot_order: true
+  nets:
+  - name: {{ network }}
+    # type: e1000-82545em
+    type: virtio-net-pci
+  disks:
+  - size: 256
+  - name: OpenCore.qcow2
+  - source: {{ version|capitalize }}.img

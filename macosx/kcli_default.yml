@@ -1,0 +1,5 @@
+numcpus: 8
+memory: 16144
+disk_size: 256
+network: baremetal
+version: ventura
